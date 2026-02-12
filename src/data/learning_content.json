@@ -1,0 +1,120 @@
+{
+    "pillars": [
+        {
+            "pillar_name": "The Theoretical Pillar (Intuition & Logic)",
+            "modules": [
+                {
+                    "section_title": "Introduction to Intelligence: From Logic to neurons",
+                    "body_text": "The quest to create artificial intelligence began with the assumption that intelligence is simply the manipulation of symbols according to formal rules. This paradigm, known as Symbolic AI or GOFAI (Good Old-Fashioned AI), relied on explicit 'If-Then' logic to encode human knowledge. While powerful for well-defined problems like chess, it crumbled under the ambiguity of the real world—recognizing a face or understanding a spoken sentence requires intuition, not just rules. The failure of Symbolic AI led to the rise of Connectionism, inspired by the biological brain. Instead of programming explicit rules, Connectionism proposes that intelligence emerges from the parallel interaction of simple processing units (neurons). This shift from 'logic-based' to 'learning-based' systems marks the birth of modern Deep Learning.",
+                    "math_latex_code": null,
+                    "visual_description": "A timeline graphic titled 'The Oscillating History of AI'. It depicts a sine wave. Peaks represent periods of hype (The Perceptron, Expert Systems, Deep Learning Boom) and troughs represent 'AI Winters' (epochs where funding and interest collapsed due to overpromising). The timeline highlights key transition points: 1956 Dartmouth Conference, 1969 Minsky & Papert's critique, 1986 Backpropagation rediscovery, and 2012 ImageNet breakthrough."
+                }
+            ]
+        },
+        {
+            "pillar_name": "The Mathematical Pillar (The Engine)",
+            "modules": [
+                {
+                    "section_title": "Linear Algebra: The Skeleton of Data",
+                    "body_text": "At its core, machine learning is about finding patterns in high-dimensional data. Linear Algebra provides the language to describe these spaces. A fundamental concept is Matrix Decomposition, specifically Eigendecomposition. When we decompose a matrix into its eigenvectors and eigenvalues, we are essentially finding the 'natural axes' of the data. The eigenvectors point in the direction of the greatest variance, and the eigenvalues denote the magnitude of that variance. This is the mathematical backbone of Principal Component Analysis (PCA), which allows us to reduce complex, high-dimensional datasets into lower dimensions while preserving the most critical information.",
+                    "math_latex_code": "Av = \\lambda v \\\\ A = Q \\Lambda Q^{-1}",
+                    "visual_description": "An interactive 3D scatter plot of data points shaped like a flat pancake in 3D space. Arrows (vectors) originate from the center of mass. One long arrow (the principal eigenvector) points along the widest part of the pancake, and a shorter arrow (secondary eigenvector) points along the width. A slider allows the user to 'project' the data onto these axes, flattening it into 2D."
+                },
+                {
+                    "section_title": "Calculus: The Engine of Learning",
+                    "body_text": "If Linear Algebra is the skeleton, Calculus is the muscle that moves it. Training a neural network is an optimization problem: we want to minimize a loss function. To do this, we need to know how changing a weight affects the error. This is where Partial Derivatives come in—they measure the rate of change of the loss with respect to a single weight, holding all others constant. Because neural networks are composed of nested functions, we use the Chain Rule to propagate these gradients backward from the output to the input. This process, Backpropagation, allows the network to 'learn' by iteratively adjusting its weights to reduce error.",
+                    "math_latex_code": "\\frac{\\partial L}{\\partial w} = \\frac{\\partial L}{\\partial y} \\cdot \\frac{\\partial y}{\\partial h} \\cdot \\frac{\\partial h}{\\partial w}",
+                    "visual_description": "A computational graph animation. Nodes light up in sequence from left to right (Forward Pass), then a red pulse travels from right to left (Backward Pass). As the red pulse passes through each connection (weight), a small mathematical expression for the local gradient pops up."
+                },
+                {
+                    "section_title": "Signal Processing: Seeing Sound",
+                    "body_text": "Neural networks are exceptionally good at processing images (2D data). But what about sound, ECG signals, or stock prices (1D time-series)? To leverage powerful image-based models (CNNs, ViTs) on 1D data, we transform it into 2D representations. The Fourier Transform decomposes a signal into its constituent frequencies, but loses time information. The Spectrogram fixes this by applying Fourier Transforms in sliding windows, creating a Time-Frequency image. For non-stationary signals like biomedical data, wavelets and the Superlet Transform provide even higher resolution, allowing models to 'see' transient anomalies in frequency space as distinct visual patterns.",
+                    "math_latex_code": "STFT(t, \\omega) = \\int_{-\\infty}^{\\infty} x(\\tau) w(\\tau - t) e^{-j\\omega\\tau} d\\tau",
+                    "visual_description": "A split-screen visualization. Top: A raw, noisy 1D ECG waveform scrolling horizontally. Bottom: A vibrant, heat-map style Spectrogram appearing in real-time below the waveform. As a spike occurs in the ECG, a bright vertical flare appears in the Spectrogram."
+                }
+            ]
+        },
+        {
+            "pillar_name": "The Implementation Pillar (Code & 3D Space)",
+            "modules": [
+                {
+                    "section_title": "Deep Learning: Efficiency & Speed",
+                    "body_text": "Modern Deep Learning is constrained by GPU memory. Two critical techniques for scaling are Gradient Checkpointing and Mixed Precision Training. Gradient Checkpointing trades compute for memory by not storing all intermediate activations during the forward pass; instead, it re-computes them during the backward pass. Mixed Precision uses 16-bit floating-point numbers (FP16/BF16) instead of 32-bit for matrix multiplications, doubling throughput and halving memory usage, while maintaining model accuracy through loss scaling.",
+                    "math_latex_code": "\\text{MemorySaved} \\propto O(\\sqrt{N}) \\quad \\text{vs} \\quad O(N)",
+                    "visual_description": "A bar chart comparison of GPU VRAM usage. One bar shows 'Standard Training' (full, red). The second bar shows 'Gradient Checkpointing' (lower, green). An animation shows blocks of memory being freed and then re-calculated on the fly."
+                },
+                {
+                    "section_title": "Computer Vision: 3D Cephalometric Landmark Detection",
+                    "body_text": "In medical imaging, identifying precise anatomical points (landmarks) in 3D space is crucial for diagnosis. Unlike 2D detection, 3D Cephalometry works with Voxel grids (3D pixels). The challenge is regression in a volumetric coordinate system (X, Y, Z). We use specialized architectures like 3D U-Nets to predict heatmaps (probability distributions) for each landmark location. The loss function often combines Mean Squared Error (MSE) for coordinate precision with a Spatial Diversity Loss to ensure landmarks are distinct.",
+                    "math_latex_code": "L_{total} = \\alpha \\sum || P_{pred} - P_{gt} ||^2 + \\beta L_{heatmap}",
+                    "visual_description": "A rotating 3D skull model (transparent/wireframe representation). Bright glowing dots appear at specific anatomical points (e.g., Sella, Nasion). A coordinate grid (X, Y, Z) surrounds the skull, and as the model rotates, the coordinates of the highlighted landmarks update in a side panel."
+                }
+            ]
+        },
+        {
+            "pillar_name": "User Interface Elements",
+            "modules": [],
+            "ui_components": {
+                "tooltips": [
+                    {
+                        "term": "Softmax",
+                        "definition": "A function that turns a vector of numbers into probabilities that sum to 1."
+                    },
+                    {
+                        "term": "ReLU (Rectified Linear Unit)",
+                        "definition": "Activation function f(x) = max(0, x). It introduces non-linearity and solves the vanishing gradient problem."
+                    },
+                    {
+                        "term": "Cross-Entropy Loss",
+                        "definition": "Measures the difference between two probability distributions (predicted vs. actual)."
+                    },
+                    {
+                        "term": "Epoch",
+                        "definition": "One complete pass of the entire training dataset through the neural network."
+                    },
+                    {
+                        "term": "Batch Size",
+                        "definition": "The number of training examples used in one iteration to update the model weights."
+                    },
+                    {
+                        "term": "Learning Rate",
+                        "definition": "A hyperparameter that controls how much to change the model in response to the estimated error each time the model weights are updated."
+                    },
+                    {
+                        "term": "Overfitting",
+                        "definition": "When a model learns the training data too well, capturing noise instead of the underlying pattern, leading to poor performance on new data."
+                    },
+                    {
+                        "term": "Dropout",
+                        "definition": "Regularization technique where randomly selected neurons are ignored during training to prevent overfitting."
+                    },
+                    {
+                        "term": "Tensors",
+                        "definition": "Multi-dimensional arrays that are the fundamental data structure in deep learning (Scalar=0D, Vector=1D, Matrix=2D, Tensor=nD)."
+                    },
+                    {
+                        "term": "Convolution",
+                        "definition": "A mathematical operation where a kernel (filter) slides over an input (image) to extract features like edges or textures."
+                    }
+                ],
+                "call_to_actions": [
+                    {
+                        "label": "Interactive Sandbox",
+                        "action": "open_sandbox_modal",
+                        "icon": "box"
+                    },
+                    {
+                        "label": "Download Mathematical Proofs",
+                        "action": "download_pdf",
+                        "icon": "file-text"
+                    },
+                    {
+                        "label": "Run in Colab",
+                        "action": "open_colab_link",
+                        "icon": "code"
+                    }
+                ]
+            }
+        }
+    ]
+}
