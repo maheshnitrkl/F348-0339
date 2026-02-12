@@ -1,6 +1,6 @@
 import React from 'react';
 import { MathEquation } from './components/common/MathEquation';
-import { Waves, Activity, Radio, Cpu, Mic, Layers, Zap, Music, Brain, Filter, Sigma, Move, Grid, Code, ArrowRight } from 'lucide-react';
+import { Waves, Activity, Radio, Mic, Layers, Zap, Music, Brain, Filter, Sigma, Move, Grid, Code, ArrowRight } from 'lucide-react';
 
 export const SignalProcessingTheory: React.FC = () => {
     return (
