@@ -1,10 +1,43 @@
 import React from 'react';
 import { MathEquation } from './components/common/MathEquation';
+import { AliasingVisualizer } from './components/AliasingVisualizer';
+import { UNetDiagram } from './components/UNetDiagram';
+import { SPRoadmap } from './components/SPRoadmap';
+import { AudioComparison } from './components/common/AudioComparison';
 import { Waves, Activity, Radio, Mic, Layers, Zap, Music, Brain, Filter, Sigma, Move, Grid, Code, ArrowRight } from 'lucide-react';
 
-export const SignalProcessingTheory: React.FC = () => {
+interface SignalProcessingTheoryProps {
+    onNavigate?: (view: 'theory' | 'code' | 'visualization') => void;
+}
+
+import { useRef, useState } from 'react';
+
+export const SignalProcessingTheory: React.FC<SignalProcessingTheoryProps> = ({ onNavigate }) => {
+    const fftRef = useRef<HTMLDivElement>(null);
+    const stftRef = useRef<HTMLDivElement>(null);
+    const waveletRef = useRef<HTMLDivElement>(null);
+    const dlRef = useRef<HTMLDivElement>(null);
+    const [toast, setToast] = useState<string | null>(null);
+
+    const handleRoadmapClick = (id: string) => {
+        if (id === 'fft') fftRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (id === 'stft') stftRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (id === 'wavelet') waveletRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (id === 'dl') dlRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        if (id === 'gen') {
+            setToast('Coming Soon in Phase 3!');
+            setTimeout(() => setToast(null), 3000);
+        }
+    };
+
     return (
-        <div className="space-y-24 text-gray-300 leading-relaxed pb-32">
+        <div className="space-y-24 text-gray-300 leading-relaxed pb-32 relative">
+            {toast && (
+                <div className="fixed top-24 left-1/2 -translate-x-1/2 bg-pink-500 text-white px-6 py-3 rounded-full shadow-xl z-50 animate-bounce font-bold">
+                    🚀 {toast}
+                </div>
+            )}
             {/* Intro Header */}
             <div className="border-b border-white/10 pb-12">
                 <h1 className="text-5xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600">
@@ -20,6 +53,13 @@ export const SignalProcessingTheory: React.FC = () => {
                         Spotify's recommendation engine to OpenAI's Voice Mode.
                     </p>
                 </div>
+            </div>
+
+
+            {/* Classical to Neural Roadmap */}
+            <div className="border-b border-white/10 pb-12">
+                <h3 className="text-xl font-bold text-white mb-6 text-center">From Fourier to Deep Generative Models</h3>
+                <SPRoadmap onStepClick={handleRoadmapClick} />
             </div>
 
             {/* Module 1: The Physics of Sampling */}
@@ -71,20 +111,12 @@ export const SignalProcessingTheory: React.FC = () => {
                         </p>
                         <MathEquation formula={String.raw`|1900 - 2000| = 100 \text{ Hz}`} block />
 
-                        <div className="bg-blue-900/10 border border-blue-500/20 rounded-xl p-6 relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 p-4 opacity-50"><Code className="text-blue-500" /></div>
-                            <h4 className="font-bold text-blue-300 mb-2">Python Perspective</h4>
-                            <pre className="text-xs text-blue-200 font-mono bg-black/50 p-4 rounded-lg overflow-x-auto">
-                                {`# Create a 40Hz signal
-t = np.linspace(0, 1, fs)
-y = np.sin(2 * np.pi * 40 * t)
+                        <AliasingVisualizer />
 
-# If fs=50Hz (Too low!), we perceive 10Hz
-# 40Hz becomes indistinguishable from 10Hz`}
-                            </pre>
-                        </div>
-
-                        <div className="flex items-center gap-4 bg-blue-600/20 p-4 rounded-lg border border-blue-500/30 cursor-pointer hover:bg-blue-600/30 transition-colors">
+                        <div
+                            onClick={() => onNavigate?.('visualization')}
+                            className="flex items-center gap-4 bg-blue-600/20 p-4 rounded-lg border border-blue-500/30 cursor-pointer hover:bg-blue-600/30 transition-colors"
+                        >
                             <div className="bg-blue-500 p-2 rounded-full text-white"><ArrowRight size={20} /></div>
                             <div className="text-sm font-bold text-blue-200">Go to Simulation: Try the "Wagon Wheel" Experiment</div>
                         </div>
@@ -116,7 +148,7 @@ y = np.sin(2 * np.pi * 40 * t)
             </section>
 
             {/* Module 2: The Frequency Domain */}
-            <section className="space-y-12">
+            <section className="space-y-12" ref={fftRef}>
                 <div className="flex items-center gap-6 mb-8 border-b border-white/5 pb-6">
                     <div className="p-5 bg-purple-500/20 rounded-2xl text-purple-400 border border-purple-500/30 shadow-[0_0_20px_rgba(168,85,247,0.15)]">
                         <Radio size={48} />
@@ -159,6 +191,26 @@ y = np.sin(2 * np.pi * 40 * t)
                                 <p className="text-sm">"Where" the wave is in its cycle. Determines the shape of transients and edges. Crucial for realism.</p>
                             </div>
                         </div>
+
+
+                        {/* Inverse DFT & Orthogonality */}
+                        <div className="bg-white/5 p-6 rounded-xl border border-white/10 mt-8">
+                            <h4 className="font-bold text-purple-300 mb-4 flex items-center gap-2">
+                                <Activity size={18} /> The Inverse DFT (Synthesis)
+                            </h4>
+                            <p className="mb-4">
+                                Just as we can decompose a sound into sine waves, we can <strong>reconstruct</strong> the original sound perfectly by summing them back up.
+                            </p>
+                            <MathEquation
+                                formula={String.raw`x[n] = \frac{1}{N} \sum_{k=0}^{N-1} X[k] \cdot e^{j 2\pi \frac{kn}{N}}`}
+                                block
+                                className="text-xl"
+                            />
+                            <p className="text-sm text-gray-400 mt-4">
+                                <strong>Orthogonality Principle:</strong> Sine waves of different frequencies are "orthogonal" to each other.
+                                Their dot product is zero unless the frequencies match. This effectively "filters out" all other frequencies during analysis.
+                            </p>
+                        </div>
                     </div>
 
                     {/* STFT Sidebar */}
@@ -183,10 +235,50 @@ y = np.sin(2 * np.pi * 40 * t)
                         </div>
                     </div>
                 </div>
-            </section>
+
+                {/* Expanded Windowing Section */}
+                <div ref={stftRef} className="mt-12 pt-12 border-t border-white/10">
+                    <div className="flex items-center gap-4 mb-6">
+                        <div className="p-3 bg-blue-500/20 rounded-xl text-blue-400">
+                            <Layers size={32} />
+                        </div>
+                        <div>
+                            <h3 className="text-2xl font-bold text-white">Windowing & Spectral Leakage</h3>
+                            <p className="text-blue-300">Why we can't just chop signals into blocks.</p>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <p className="mb-4">
+                                If you cut a sine wave abruptly (Rectangular Window), you create sharp edges.
+                                Sharp edges in Time <MathEquation formula={String.raw`\iff`} /> Infinite ripples in Frequency.
+                                This smears a single pitch into a mess of frequencies.
+                            </p>
+                            <div className="bg-black/30 p-4 rounded-xl border border-white/5">
+                                <h4 className="font-bold text-white mb-2">Common Window Functions</h4>
+                                <ul className="space-y-2 text-sm text-gray-400">
+                                    <li><strong className="text-white">Rectangular:</strong> Best Resolution, Worst Leakage.</li>
+                                    <li><strong className="text-white">Hann / Hamming:</strong> Good balance. Smooths edges to zero.</li>
+                                    <li><strong className="text-white">Blackman:</strong> Low Resolution, Best Leakage suppression.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div className="bg-white/5 p-6 rounded-xl border border-white/10 flex flex-col justify-center items-center">
+                            <div className="text-center">
+                                <div className="text-sm font-mono text-blue-300 mb-2">Hann Window Equation</div>
+                                <MathEquation formula={String.raw`w[n] = 0.5 \left( 1 - \cos\left( \frac{2\pi n}{N-1} \right) \right)`} block />
+                            </div>
+                            <p className="text-xs text-gray-500 mt-4 text-center">
+                                Multiplying your signal by this bell-curve shape eliminates the sharp edges at the boundaries!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section >
 
             {/* Module 3: Feature Architecture */}
-            <section className="space-y-12">
+            < section className="space-y-12" >
                 <div className="flex items-center gap-6 mb-8 border-b border-white/5 pb-6">
                     <div className="p-5 bg-green-500/20 rounded-2xl text-green-400 border border-green-500/30 shadow-[0_0_20px_rgba(34,197,94,0.15)]">
                         <Brain size={48} />
@@ -232,13 +324,170 @@ y = np.sin(2 * np.pi * 40 * t)
                             For music, linear frequency bins (FFT) are useless. Notes are exponential (<MathEquation formula={String.raw`f`} />, <MathEquation formula={String.raw`2f`} />, <MathEquation formula={String.raw`4f`} />).
                             CQT uses geometrically spaced center frequencies, so each bin corresponds to a musical semitone.
                         </p>
+
+
                     </div>
-                    <div className="bg-white/5 border border-white/10 rounded-xl p-6">
-                        <h3 className="font-bold text-white text-xl mb-3 flex items-center gap-2"><Activity className="text-green-400" /> Wavelets</h3>
-                        <p className="text-sm text-gray-300">
-                            Wavelets solve the STFT resolution issue by using "Multi-resolution Analysis".
-                            They use short windows for high frequencies (transients) and long windows for low frequencies (bass).
+                </div>
+            </section >
+
+            <section className="space-y-12" ref={waveletRef}>
+                <div className="flex items-center gap-6 mb-8 border-b border-white/5 pb-6">
+                    <div className="p-5 bg-teal-500/20 rounded-2xl text-teal-400 border border-teal-500/30 shadow-[0_0_20px_rgba(20,184,166,0.15)]">
+                        <Activity size={48} />
+                    </div>
+                    <div>
+                        <div className="text-sm font-bold text-teal-500 uppercase tracking-wider mb-1">Module 4</div>
+                        <h2 className="text-4xl font-bold text-white">Wavelets</h2>
+                        <p className="text-teal-300 text-lg mt-2">Multi-Resolution Analysis.</p>
+                    </div>
+                </div>
+
+                <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+                    <h3 className="font-bold text-white text-xl mb-3 flex items-center gap-2"><Activity className="text-green-400" /> Wavelets: Multi-Resolution Analysis</h3>
+                    <p className="text-sm text-gray-300 mb-4">
+                        Wavelets solve the STFT resolution issue. Instead of a fixed window size, they use <strong>Scaled</strong> and <strong>Shifted</strong> versions of a "Mother Wavelet" <MathEquation formula={String.raw`\psi(t)`} />.
+                    </p>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div className="bg-black/30 p-4 rounded-lg border border-white/5">
+                            <h4 className="text-green-400 font-bold mb-2">Continuous Wavelet Transform (CWT)</h4>
+                            <MathEquation
+                                formula={String.raw`X_w(a, b) = \frac{1}{\sqrt{|a|}} \int_{-\infty}^{\infty} x(t) \psi^*\left(\frac{t-b}{a}\right) dt`}
+                                block
+                                className="text-sm mb-2"
+                            />
+                            <p className="text-xs text-gray-500">
+                                <MathEquation formula={String.raw`a`} /> = Scale (Dilation), <MathEquation formula={String.raw`b`} /> = Translation (Shift).
+                            </p>
+                        </div>
+
+                        <div className="bg-black/30 p-4 rounded-lg border border-white/5 overflow-hidden relative group">
+                            <div className="absolute top-2 right-2 text-green-500/50 text-xs font-mono">PyWavelets Snippet</div>
+                            <pre className="text-xs text-green-200 font-mono overflow-x-auto p-2">
+                                {`import pywt
+import numpy as np
+
+# Decompose signal using Daubechies wavelet
+coeffs = pywt.wavedec(data, 'db1', level=5)
+cA5, cD5, cD4, cD3, cD2, cD1 = coeffs
+
+# cA = Approximation (Low Freq)
+# cD = Detail (High Freq)`}
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Module 6: Deep Learning for Signals */}
+            <section className="space-y-12" ref={dlRef}>
+                <div className="flex items-center gap-6 mb-8 border-b border-white/5 pb-6">
+                    <div className="p-5 bg-indigo-500/20 rounded-2xl text-indigo-400 border border-indigo-500/30 shadow-[0_0_20px_rgba(99,102,241,0.15)]">
+                        <Brain size={48} />
+                    </div>
+                    <div>
+                        <div className="text-sm font-bold text-indigo-500 uppercase tracking-wider mb-1">Module 5</div>
+                        <h2 className="text-4xl font-bold text-white">Deep Learning for Time-Series</h2>
+                        <p className="text-indigo-300 text-lg mt-2">Beyond Feature Engineering: End-to-End Learning.</p>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div className="space-y-6">
+                        <h3 className="text-2xl font-bold text-white">1D-Convolutional Neural Networks (1D-CNN)</h3>
+                        <p className="text-gray-300">
+                            While 2D-CNNs scan images with a square kernel (<MathEquation formula={String.raw`3 \times 3`} />), 1D-CNNs slide a kernel along the <strong>Time Axis</strong> (<MathEquation formula={String.raw`k \times 1`} />).
                         </p>
+                        <ul className="space-y-3 text-gray-400 list-disc list-inside">
+                            <li><strong>Local Patterns:</strong> Detects sharp transients, onsets, or specific frequency bursts.</li>
+                            <li><strong>Translation Invariance:</strong> Recognizes a pattern regardless of <em>when</em> it occurs.</li>
+                            <li><strong>Efficiency:</strong> Much faster than RNNs/Transfomers for local features.</li>
+                        </ul>
+
+                        <div className="bg-black/40 border border-indigo-500/20 rounded-xl p-4 overflow-hidden relative group">
+                            <div className="absolute top-2 right-2 text-indigo-500/50 text-xs font-mono">PyTorch Snippet</div>
+                            <pre className="text-xs text-indigo-200 font-mono overflow-x-auto p-2">
+                                {`class AudioCNN(nn.Module):
+    def __init__(self):
+        super().__init__()
+        # Input: (Batch, 1, 16000) -> 1 Sec Audio
+        self.conv1 = nn.Conv1d(1, 64, kernel_size=80, stride=4)
+        self.bn1 = nn.BatchNorm1d(64)
+        self.pool = nn.MaxPool1d(4)
+        
+    def forward(self, x):
+        x = self.conv1(x)
+        x = F.relu(self.bn1(x))
+        return self.pool(x)`}
+                            </pre>
+                        </div>
+                    </div>
+
+                    <div className="space-y-6">
+                        <h3 className="text-2xl font-bold text-white">LSTMs & Recurrent Networks</h3>
+                        <p className="text-gray-300">
+                            For long-term dependencies (e.g., rhythm, melody, sentence structure), we need memory.
+                            <strong>LSTMs (Long Short-Term Memory)</strong> units maintain a cell state <MathEquation formula={String.raw`c_t`} /> that flows through time.
+                        </p>
+                        <div className="bg-white/5 p-6 rounded-xl border border-white/10">
+                            <MathEquation
+                                formula={String.raw`h_t = \tanh(W_c [h_{t-1}, x_t] + b_c)`}
+                                block
+                                className="text-lg mb-4"
+                            />
+                            <p className="text-sm text-gray-400">
+                                Unlike CNNs which see a fixed window, RNNs interpret the signal sequentially, making them ideal for <strong>Forecasting</strong> and <strong>Transcription</strong>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Module 7: Advanced Frontiers */}
+            <section className="space-y-12">
+                <div className="flex items-center gap-6 mb-8 border-b border-white/5 pb-6">
+                    <div className="p-5 bg-teal-500/20 rounded-2xl text-teal-400 border border-teal-500/30 shadow-[0_0_20px_rgba(20,184,166,0.15)]">
+                        <Activity size={48} />
+                    </div>
+                    <div>
+                        <div className="text-sm font-bold text-teal-500 uppercase tracking-wider mb-1">Module 6</div>
+                        <h2 className="text-4xl font-bold text-white">Advanced Frontiers</h2>
+                        <p className="text-teal-300 text-lg mt-2">Graph Signal Processing & Bio-Signals.</p>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    {/* Graph Signal Processing */}
+                    <div className="space-y-6">
+                        <h3 className="text-2xl font-bold text-white">Graph Signal Processing (GSP)</h3>
+                        <p className="text-gray-300">
+                            Standard DSP assumes signals live on a regular Grid (Time/Image). What if the data lives on a Social Network or Power Grid?
+                        </p>
+                        <p className="text-gray-300">
+                            We define the <strong>Graph Laplacian</strong> <MathEquation formula={String.raw`L = D - A`} /> to generalize the Fourier Transform.
+                        </p>
+                        <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                            <MathEquation formula={String.raw`\text{GFT}(x) = U^T x`} block className="text-xl" />
+                            <p className="text-xs text-center mt-2 text-gray-500">where U are the eigenvectors of the Laplacian.</p>
+                        </div>
+                    </div>
+
+                    {/* Bio-Signals */}
+                    <div className="space-y-6">
+                        <h3 className="text-2xl font-bold text-white">Bio-Signals (EEG/ECG)</h3>
+                        <p className="text-gray-300">
+                            Deep Learning has revolutionized Biomedical Engineering.
+                        </p>
+                        <ul className="space-y-3 text-gray-400 text-sm">
+                            <li className="flex items-start gap-3">
+                                <span className="text-teal-400 font-bold">EEG:</span>
+                                Using CNN-LSTMs to decode Motor Imagery (Mind-controlled limbs) from noisy brainwaves.
+                            </li>
+                            <li className="flex items-start gap-3">
+                                <span className="text-teal-400 font-bold">ECG:</span>
+                                Detecting Arrhythmia using 1D-ResNets that surpass cardiologists in accuracy.
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </section>
@@ -250,7 +499,7 @@ y = np.sin(2 * np.pi * 40 * t)
                         <Filter size={48} />
                     </div>
                     <div>
-                        <div className="text-sm font-bold text-orange-500 uppercase tracking-wider mb-1">Module 4</div>
+                        <div className="text-sm font-bold text-orange-500 uppercase tracking-wider mb-1">Module 7</div>
                         <h2 className="text-4xl font-bold text-white">Filters & Neural Enhancement</h2>
                         <p className="text-orange-300 text-lg mt-2">From Analog Circuits to U-Nets.</p>
                     </div>
@@ -290,16 +539,7 @@ y = np.sin(2 * np.pi * 40 * t)
                         </p>
 
                         {/* ASCII Diagram for U-Net */}
-                        <div className="font-mono text-xs leading-none text-center bg-black/40 p-6 rounded-xl text-orange-200 border border-white/5 overflow-hidden">
-                            {`
-Input Spec      Encoder         Bottleneck        Decoder        Output Mask
-  [=====]  ->   [===]    ->       [=]      ->      [===]    ->    [=====]
-  (H x W)      (H/2 x W/2)    (Latent Rep)     (H/2 x W/2)        (H x W)
-                  |                                   ^
-                  |___________________________________|
-                            Skip Connections
-`}
-                        </div>
+                        <UNetDiagram />
                         <p className="text-xs text-gray-500 mt-4 text-center">
                             The skip connections preserve high-frequency details (phase info) lost during compression.
                         </p>
@@ -314,7 +554,7 @@ Input Spec      Encoder         Bottleneck        Decoder        Output Mask
                         <Zap size={48} />
                     </div>
                     <div>
-                        <div className="text-sm font-bold text-pink-500 uppercase tracking-wider mb-1">Module 5</div>
+                        <div className="text-sm font-bold text-pink-500 uppercase tracking-wider mb-1">Module 8</div>
                         <h2 className="text-4xl font-bold text-white">Generative Audio & Diffusion</h2>
                         <p className="text-pink-300 text-lg mt-2">Dreaming in Waveforms.</p>
                     </div>
@@ -327,6 +567,13 @@ Input Spec      Encoder         Bottleneck        Decoder        Output Mask
                             Most Generative Models (like TTS) generate Mel-Spectrograms because they are easier to model than raw waves.
                             But Spectrograms throw away Phase. Converting back to audio with random phase sounds robotic and metallic (Griffin-Lim artifact).
                         </p>
+
+                        <AudioComparison
+                            samples={[
+                                { label: 'Griffin-Lim (Phase Guess)', type: 'robotic', description: 'Reconstructing audio from spectrogram magnitude only. Notice the metallic buzzing.' },
+                                { label: 'HiFi-GAN (Neural Vocoder)', type: 'natural', description: 'A GAN hallucinates the correct phase, restoring natural timbre.' }
+                            ]}
+                        />
                         <div className="bg-pink-900/10 border border-pink-500/20 p-6 rounded-xl">
                             <h4 className="font-bold text-pink-300 mb-2 flex items-center gap-2"><Sigma /> Neural Vocoders</h4>
                             <p className="text-sm">
@@ -354,6 +601,6 @@ Input Spec      Encoder         Bottleneck        Decoder        Output Mask
                     </div>
                 </div>
             </section>
-        </div>
+        </div >
     );
 };

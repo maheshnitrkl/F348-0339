@@ -97,7 +97,7 @@ export function LessonView({ moduleId }: LessonViewProps) {
                         >
                             <h1 className="text-4xl font-bold mb-6 text-left bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">{module.title}</h1>
                             <div className="prose prose-invert prose-lg max-w-none w-full pb-20">
-                                <TheoryComponent />
+                                <TheoryComponent onNavigate={(view: 'theory' | 'code' | 'visualization') => setViewMode(view)} />
                             </div>
                         </motion.div>
                     )}

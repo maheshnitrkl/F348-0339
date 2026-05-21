@@ -7,6 +7,9 @@ import { BackPropagationModule } from './math/backpropagation';
 import { SignalProcessingModule } from './math/signal-processing';
 import { DLEfficiencyModule } from './advanced/dl-efficiency';
 import { CephalometryModule } from './application/cephalometry';
+import { MedicalImagingModule } from './medical-imaging';
+import { StatisticalLearningModule } from './advanced/statistical-learning';
+import { NeuralNetworksModule } from './foundation/neural-networks';
 
 // Registry of all available modules (Force Refresh)
 const modules: Record<string, ConceptModule> = {
@@ -18,6 +21,9 @@ const modules: Record<string, ConceptModule> = {
     [SignalProcessingModule.id]: SignalProcessingModule,
     [DLEfficiencyModule.id]: DLEfficiencyModule,
     [CephalometryModule.id]: CephalometryModule,
+    [MedicalImagingModule.id]: MedicalImagingModule,
+    [StatisticalLearningModule.id]: StatisticalLearningModule,
+    [NeuralNetworksModule.id]: NeuralNetworksModule,
 };
 
 export const getModule = (id: string): ConceptModule | undefined => {
