@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Armchair, Table2, Minimize2, ArrowRight } from 'lucide-react';

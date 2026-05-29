@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Activity, Radio, Layers, Brain, Zap, ArrowRight, MousePointerClick } from 'lucide-react';

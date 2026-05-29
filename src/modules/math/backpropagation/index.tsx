@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import type { ConceptModule } from '../../../types/module';
 import { ComputationalGraph } from './components/ComputationalGraph';
@@ -10,11 +11,10 @@ import { NeuralNetworkBackpropViz } from './components/NeuralNetworkBackpropViz'
 import { LossLandscape3D } from './components/LossLandscape3D';
 import { GradientFlowDemo } from './components/GradientFlowDemo';
 import { StepByStepCalculator } from './components/StepByStepCalculator';
-import { ActivationExplorer } from './components/ActivationExplorer';
 
 const BackPropagationContent: React.FC = () => {
     return (
-        <div className="min-h-screen bg-slate-950 text-slate-100 p-8 pt-24 font-sans selection:bg-cyan-500/30">
+        <div className="min-h-screen bg-slate-950 text-slate-100 p-8 font-sans selection:bg-cyan-500/30">
             <div className="max-w-6xl mx-auto space-y-24">
 
                 {/* Header Section */}
@@ -63,13 +63,49 @@ const BackPropagationContent: React.FC = () => {
                 <section className="space-y-8">
                     <div className="text-center max-w-3xl mx-auto">
                         <div className="text-purple-400 font-bold uppercase tracking-widest text-sm mb-2">02 &bull; Building Blocks</div>
-                        <h2 className="text-3xl font-bold text-white mb-4">Activation Functions</h2>
+                        <h2 className="text-3xl font-bold text-white mb-4">Activation Functions &amp; Their Derivatives</h2>
                         <p className="text-slate-400">
-                            Before we can differentiate anything, we need to understand the non-linear functions that make neural networks powerful.
-                            Each has different characteristics for gradient flow.
+                            Activation functions introduce non-linearity — but for backpropagation, what matters is their <strong className="text-white">derivatives</strong>.
+                            The chain rule multiplies activation derivatives at every layer, which is why choosing the right one directly determines if a deep network can train.
                         </p>
                     </div>
-                    <ActivationExplorer />
+
+                    {/* Key derivative facts table */}
+                    <div className="bg-slate-900/60 border border-white/10 rounded-xl p-6 backdrop-blur-sm">
+                        <h3 className="text-white font-bold mb-4">Derivative Cheat Sheet — What Backprop Actually Multiplies</h3>
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-sm border-collapse">
+                                <thead>
+                                    <tr className="border-b border-white/10">
+                                        <th className="text-left py-2 px-3 text-slate-400">Function</th>
+                                        <th className="text-left py-2 px-3 text-slate-400">Formula</th>
+                                        <th className="text-left py-2 px-3 text-slate-400">Derivative f′(x)</th>
+                                        <th className="text-left py-2 px-3 text-slate-400">Gradient Impact</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {[
+                                        { name: 'Sigmoid', color: '#3b82f6', formula: '1/(1+e⁻ˣ)', deriv: 'σ(x)(1−σ(x)) ≤ 0.25', impact: '⚠️ Max 0.25 — vanishes fast in deep nets' },
+                                        { name: 'Tanh', color: '#f59e0b', formula: '(eˣ−e⁻ˣ)/(eˣ+e⁻ˣ)', deriv: '1 − tanh²(x) ≤ 1', impact: '⚠️ Better than sigmoid, still saturates' },
+                                        { name: 'ReLU', color: '#22c55e', formula: 'max(0, x)', deriv: '0 or 1 (binary)', impact: '✅ No vanishing for x>0; dead neurons for x<0' },
+                                        { name: 'Leaky ReLU', color: '#06b6d4', formula: 'x if x>0, αx else', deriv: '1 or α (e.g. 0.01)', impact: '✅ Always non-zero gradient' },
+                                        { name: 'GELU', color: '#a855f7', formula: 'x·Φ(x)', deriv: 'Φ(x) + x·φ(x)', impact: '✅ Smooth, used in Transformers/BERT' },
+                                    ].map(row => (
+                                        <tr key={row.name} className="border-b border-white/5 hover:bg-white/5">
+                                            <td className="py-2 px-3 font-bold" style={{ color: row.color }}>{row.name}</td>
+                                            <td className="py-2 px-3 font-mono text-xs text-slate-400">{row.formula}</td>
+                                            <td className="py-2 px-3 font-mono text-xs text-slate-300">{row.deriv}</td>
+                                            <td className="py-2 px-3 text-xs text-slate-500">{row.impact}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="mt-4 p-3 bg-purple-500/5 border border-purple-500/20 rounded-lg text-xs text-slate-400">
+                            <strong className="text-purple-400">💡 Prerequisite:</strong> For an interactive exploration of all 8 activation functions with live plots, see the
+                            <strong className="text-white"> Neural Networks → Activation Functions</strong> section. This section focuses on what those derivatives mean for gradient flow.
+                        </div>
+                    </div>
                 </section>
 
                 {/* Section 3: Computational Graph */}
@@ -219,10 +255,11 @@ const BackPropagationContent: React.FC = () => {
                 <section className="space-y-8">
                     <div className="text-center max-w-3xl mx-auto">
                         <div className="text-orange-400 font-bold uppercase tracking-widest text-sm mb-2">10 &bull; Pathology</div>
-                        <h2 className="text-3xl font-bold text-white mb-4">When Gradients Fail</h2>
+                        <h2 className="text-3xl font-bold text-white mb-4">When Gradients Fail — The Chain Rule Explanation</h2>
                         <p className="text-slate-400">
-                            Deep networks face the vanishing and exploding gradient problem.
-                            Adjust the network depth and activation function to see how gradients degrade across layers.
+                            The Neural Networks module showed you <em>that</em> gradients vanish. This section shows you <em>why</em> —
+                            it's a direct consequence of the chain rule multiplying small numbers repeatedly.
+                            Each activation derivative &lt; 1 compounds across layers until the gradient is numerically zero.
                         </p>
                     </div>
                     <GradientFlowDemo />

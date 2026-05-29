@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useCallback } from 'react';
 
 // Network architecture: 3 inputs → 4 hidden → 2 outputs

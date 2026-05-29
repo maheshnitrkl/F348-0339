@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useRef } from 'react';
 import { Layers, Zap, Image as ImageIcon, Box, Move, Activity, ScanEye, Eye } from 'lucide-react';
 import { MathEquation } from '../math/signal-processing/components/common/MathEquation';

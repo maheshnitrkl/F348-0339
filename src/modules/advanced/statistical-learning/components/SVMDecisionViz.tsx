@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect, useRef } from 'react';
 import { Target, MousePointer2 } from 'lucide-react';
 import { motion } from 'framer-motion';

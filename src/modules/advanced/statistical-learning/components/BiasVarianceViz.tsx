@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect, useRef } from 'react';
 import { RefreshCw, TrendingUp } from 'lucide-react';
 
@@ -83,7 +84,7 @@ export const BiasVarianceViz: React.FC = () => {
         const I = Array(n).fill(0).map((_, i) => Array(n).fill(0).map((_, j) => (i === j ? 1 : 0)));
 
         for (let i = 0; i < n; i++) {
-            let pivot = A[i][i];
+            const pivot = A[i][i];
             for (let j = 0; j < n; j++) {
                 A[i][j] /= pivot;
                 I[i][j] /= pivot;

@@ -5,9 +5,9 @@ export interface ConceptModule {
     title: string;
     description: string;
     components: {
-        Theory: React.ComponentType<any>;
-        Code?: React.ComponentType<any>;
-        Visualization?: React.ComponentType<any>;
+        Theory: React.ComponentType<Record<string, unknown>>;
+        Code?: React.ComponentType<Record<string, unknown>>;
+        Visualization?: React.ComponentType<Record<string, unknown>>;
     };
     // Optional: configuration for the view
     layout?: 'split' | 'full';

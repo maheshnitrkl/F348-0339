@@ -4,6 +4,7 @@ import { Dashboard } from './pages/Dashboard'
 import { Roadmap } from './pages/Roadmap'
 import { LessonView } from './pages/LessonView'
 import { Modules } from './pages/Modules'
+import { Playground } from './pages/Playground'
 
 function App() {
   const [currentView, setCurrentView] = React.useState('dashboard');
@@ -21,6 +22,7 @@ function App() {
       case 'dashboard': return <Dashboard onNavigate={handleNavigate} />;
       case 'roadmap': return <Roadmap onNavigate={handleNavigate} />;
       case 'lesson': return <LessonView moduleId={activeModuleId} />;
+      case 'playground': return <Playground />;
       case 'modules': return <Modules onNavigate={handleNavigate} />;
       default: return <Dashboard onNavigate={handleNavigate} />;
     }

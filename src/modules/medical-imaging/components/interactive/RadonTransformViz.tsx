@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Activity, Play, RefreshCw, Settings } from 'lucide-react';
+import { Activity, Play, RefreshCw } from 'lucide-react';
 
 export const RadonTransformViz: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);

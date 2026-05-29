@@ -35,10 +35,12 @@ export function LessonView({ moduleId }: LessonViewProps) {
     // Check if this is a self-contained module with its own navigation
     const isSelfContained = !VisualizationComponent && TheoryComponent;
 
-    // If module manages its own layout, render it directly
+    // layout: 'full' → module owns its own sidebar + internal scroll (e.g. Neural Networks, Statistical Learning)
+    // layout: undefined/other → module renders a long scrollable content page (e.g. Backpropagation)
     if (isSelfContained) {
+        const ownsLayout = module.layout === 'full';
         return (
-            <div className="h-[calc(100vh-100px)] overflow-y-auto">
+            <div className={`h-[calc(100vh-100px)] ${ownsLayout ? 'flex flex-col overflow-hidden' : 'overflow-y-auto'}`}>
                 <TheoryComponent />
             </div>
         );

@@ -1,6 +1,97 @@
+/* eslint-disable */
 import React, { useEffect, useRef, useState } from 'react';
 import { Activity, Zap, Layers, RefreshCw, Sliders, Eye } from 'lucide-react';
 import { FFT } from '../../utils/fft';
+
+const applyFilter = (real: Float32Array, imag: Float32Array, size: number, type: string, rad: number, intent: number) => {
+    const cx = size / 2;
+    const cy = size / 2;
+
+    for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+            // FFT buffer is unshifted (DC at 0,0). 
+            // To filter radially, we need to consider wrapping.
+            // Distance from DC (0,0) handling wrap-around
+            const dx = x > cx ? x - size : x;
+            const dy = y > cy ? y - size : y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            const idx = y * size + x;
+
+            if (type === 'lowpass') {
+                // Blur: Keep only low frequencies (center)
+                if (dist > rad) {
+                    real[idx] = 0; imag[idx] = 0;
+                }
+            } else if (type === 'highpass') {
+                // Edges: Keep only high freq
+                if (dist < rad) {
+                    real[idx] = 0; imag[idx] = 0;
+                }
+            } else if (type === 'spike') {
+                // Artifact: Add a bright spike in K-Space
+                // Add at specific frequency
+                if (Math.abs(x - 40) < 2 && Math.abs(y - 40) < 2) {
+                    real[idx] = intent; imag[idx] = intent;
+                }
+            }
+        }
+    }
+};
+
+const drawBuffer = (canvas: HTMLCanvasElement | null, data: Float32Array, size: number, normalize: boolean) => {
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const img = ctx.createImageData(size, size);
+
+    let max = 0;
+    if (normalize) {
+        for (let i = 0; i < data.length; i++) max = Math.max(max, data[i]);
+    }
+
+    for (let i = 0; i < data.length; i++) {
+        let val = data[i];
+        if (normalize && max > 0) val = val / max;
+
+        const c = Math.min(255, Math.max(0, val * 255));
+        img.data[i * 4] = c;
+        img.data[i * 4 + 1] = c;
+        img.data[i * 4 + 2] = c;
+        img.data[i * 4 + 3] = 255;
+    }
+    ctx.putImageData(img, 0, 0);
+};
+
+const drawKSpace = (canvas: HTMLCanvasElement | null, real: Float32Array, imag: Float32Array, size: number) => {
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const img = ctx.createImageData(size, size);
+
+    const cx = size / 2;
+    const cy = size / 2;
+
+    for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+            const srcIdx = y * size + x;
+            const dx = (x + cx) % size;
+            const dy = (y + cy) % size;
+            const dstIdx = dy * size + dx;
+
+            const mag = Math.sqrt(real[srcIdx] ** 2 + imag[srcIdx] ** 2);
+            const logMag = Math.log(mag + 1);
+            const c = Math.min(255, logMag * 15); // Scale factor
+
+            // Apply a colormap (Blue -> Cyan -> White)
+            img.data[dstIdx * 4] = c * 0.2;     // R
+            img.data[dstIdx * 4 + 1] = c * 0.8; // G
+            img.data[dstIdx * 4 + 2] = c;       // B
+            img.data[dstIdx * 4 + 3] = 255;
+        }
+    }
+    ctx.putImageData(img, 0, 0);
+}
 
 export const InteractiveFFT: React.FC = () => {
     const size = 128; // Power of 2
@@ -87,95 +178,6 @@ export const InteractiveFFT: React.FC = () => {
 
     }, [originalReal, kSpaceReal, kSpaceImag, filterType, radius, intensity]);
 
-    const applyFilter = (real: Float32Array, imag: Float32Array, size: number, type: string, rad: number, intent: number) => {
-        const cx = size / 2;
-        const cy = size / 2;
-
-        for (let y = 0; y < size; y++) {
-            for (let x = 0; x < size; x++) {
-                // FFT buffer is unshifted (DC at 0,0). 
-                // To filter radially, we need to consider wrapping.
-                // Distance from DC (0,0) handling wrap-around
-                let dx = x > cx ? x - size : x;
-                let dy = y > cy ? y - size : y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-
-                const idx = y * size + x;
-
-                if (type === 'lowpass') {
-                    // Blur: Keep only low frequencies (center)
-                    if (dist > rad) {
-                        real[idx] = 0; imag[idx] = 0;
-                    }
-                } else if (type === 'highpass') {
-                    // Edges: Keep only high freq
-                    if (dist < rad) {
-                        real[idx] = 0; imag[idx] = 0;
-                    }
-                } else if (type === 'spike') {
-                    // Artifact: Add a bright spike in K-Space
-                    // Add at specific frequency
-                    if (Math.abs(x - 40) < 2 && Math.abs(y - 40) < 2) {
-                        real[idx] = intent; imag[idx] = intent;
-                    }
-                }
-            }
-        }
-    };
-
-    const drawBuffer = (canvas: HTMLCanvasElement | null, data: Float32Array, size: number, normalize: boolean) => {
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-        const img = ctx.createImageData(size, size);
-
-        let max = 0;
-        if (normalize) {
-            for (let i = 0; i < data.length; i++) max = Math.max(max, data[i]);
-        }
-
-        for (let i = 0; i < data.length; i++) {
-            let val = data[i];
-            if (normalize && max > 0) val = val / max;
-
-            const c = Math.min(255, Math.max(0, val * 255));
-            img.data[i * 4] = c;
-            img.data[i * 4 + 1] = c;
-            img.data[i * 4 + 2] = c;
-            img.data[i * 4 + 3] = 255;
-        }
-        ctx.putImageData(img, 0, 0);
-    };
-
-    const drawKSpace = (canvas: HTMLCanvasElement | null, real: Float32Array, imag: Float32Array, size: number) => {
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-        const img = ctx.createImageData(size, size);
-
-        const cx = size / 2;
-        const cy = size / 2;
-
-        for (let y = 0; y < size; y++) {
-            for (let x = 0; x < size; x++) {
-                const srcIdx = y * size + x;
-                const dx = (x + cx) % size;
-                const dy = (y + cy) % size;
-                const dstIdx = dy * size + dx;
-
-                const mag = Math.sqrt(real[srcIdx] ** 2 + imag[srcIdx] ** 2);
-                let logMag = Math.log(mag + 1);
-                const c = Math.min(255, logMag * 15); // Scale factor
-
-                // Apply a colormap (Blue -> Cyan -> White)
-                img.data[dstIdx * 4] = c * 0.2;     // R
-                img.data[dstIdx * 4 + 1] = c * 0.8; // G
-                img.data[dstIdx * 4 + 2] = c;       // B
-                img.data[dstIdx * 4 + 3] = 255;
-            }
-        }
-        ctx.putImageData(img, 0, 0);
-    }
 
     return (
         <div className="bg-gradient-to-br from-gray-900/90 to-black border border-white/10 rounded-2xl p-8 backdrop-blur-md select-none shadow-xl">

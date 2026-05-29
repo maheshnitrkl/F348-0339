@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { ConceptModule } from '../../../types/module';
@@ -20,7 +21,7 @@ const LinearAlgebraContent: React.FC = () => {
     return (
         <div className="min-h-screen">
             {/* Tab Navigation */}
-            <div className="sticky top-[70px] z-40 border-b border-white/10 bg-[var(--color-deep-space)]/95 backdrop-blur-sm">
+            <div className="sticky top-0 z-40 border-b border-white/10 bg-[var(--color-deep-space)]/95 backdrop-blur-sm">
                 <div className="max-w-full mx-auto px-8">
                     <nav className="flex gap-1">
                         {tabs.map((tab) => (

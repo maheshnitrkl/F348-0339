@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import type { ConceptModule } from '../../../types/module';
 

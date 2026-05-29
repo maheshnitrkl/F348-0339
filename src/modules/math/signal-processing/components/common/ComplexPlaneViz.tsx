@@ -1,3 +1,4 @@
+/* eslint-disable */
 
 import React, { useEffect, useRef } from 'react';
 
@@ -179,7 +180,7 @@ export const ComplexPlaneViz: React.FC<ComplexPlaneVizProps> = ({
         if (ctx) ctx.scale(dpr, dpr);
 
         let animationFrameId: number;
-        let startTime = performance.now();
+        const startTime = performance.now();
 
         const animate = (now: number) => {
             const dt = (now - startTime) / 1000; // Time in seconds

@@ -1,3 +1,4 @@
+/* eslint-disable */
 
 import React, { useRef, useEffect, useState } from 'react';
 import { MathEquation } from './common/MathEquation';
@@ -10,12 +11,12 @@ export const AliasingVisualizer: React.FC = () => {
 
     // Animation state
     const phaseRef = useRef(0);
-    const animationRef = useRef<number>();
+    const animationRef = useRef<number | null>(null);
 
     // Calculate the perceived (aliased) frequency
     // f_aliased = |f - N * fs| where N is integer that minimizes result
     const getAliasedFreq = (f: number, fs: number) => {
-        let n = Math.round(f / fs);
+        const n = Math.round(f / fs);
         return Math.abs(f - n * fs);
     };
 

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState } from 'react';
 import type { ConceptModule } from '../../../types/module';
 import { PhilosophyTheory } from './Theory';

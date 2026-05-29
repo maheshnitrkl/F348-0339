@@ -18,18 +18,11 @@ interface Spin {
 
 export const MRISimulator: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const [spins, setSpins] = useState<Spin[]>([]);
-    const [b0Field, setB0Field] = useState(true);
-    const [time, setTime] = useState(0);
-    const [historyMz, setHistoryMz] = useState<number[]>([]);
-    const [historyMxy, setHistoryMxy] = useState<number[]>([]);
-
-    // Initialize Spins
-    useEffect(() => {
-        const newSpins: Spin[] = [];
+    const [spins, setSpins] = useState<Spin[]>(() => {
+        const initialSpins: Spin[] = [];
         for (let i = 0; i < GRID_SIZE; i++) {
             for (let j = 0; j < GRID_SIZE; j++) {
-                newSpins.push({
+                initialSpins.push({
                     x: i,
                     y: j,
                     mz: 1, // Start fully aligned with B0
@@ -39,8 +32,13 @@ export const MRISimulator: React.FC = () => {
                 });
             }
         }
-        setSpins(newSpins);
-    }, []);
+        return initialSpins;
+    });
+    
+    const [b0Field, setB0Field] = useState(true);
+    const [historyMz, setHistoryMz] = useState<number[]>([]);
+    const [historyMxy, setHistoryMxy] = useState<number[]>([]);
+
 
     // Physics Loop
     useEffect(() => {
@@ -93,7 +91,6 @@ export const MRISimulator: React.FC = () => {
                 return updated;
             });
 
-            setTime(t => t + 1);
             animationFrame = requestAnimationFrame(updatePhysics);
         };
 

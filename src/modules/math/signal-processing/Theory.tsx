@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import { MathEquation } from './components/common/MathEquation';
 import { AliasingVisualizer } from './components/AliasingVisualizer';

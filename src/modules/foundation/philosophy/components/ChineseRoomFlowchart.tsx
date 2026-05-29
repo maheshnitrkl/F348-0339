@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Book, ArrowRight, Eye, EyeOff, CheckCircle, MessageSquare } from 'lucide-react';

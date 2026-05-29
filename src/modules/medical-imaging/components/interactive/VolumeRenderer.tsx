@@ -143,9 +143,9 @@ const VolumetricCube = ({ threshold, opacity, mainColor }: { threshold: number, 
     // Stable uniforms object - created once
     const uniforms = useMemo(() => ({
         map: { value: texture },
-        threshold: { value: threshold },
-        opacity: { value: opacity },
-        color: { value: new THREE.Color(mainColor) },
+        threshold: { value: 0 }, // Updated dynamically in useFrame
+        opacity: { value: 0 },
+        color: { value: new THREE.Color() },
         steps: { value: 64.0 },
         cameraPosLocal: { value: new THREE.Vector3() }
     }), [texture]);

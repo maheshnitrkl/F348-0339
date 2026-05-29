@@ -75,7 +75,7 @@ export const roadmapData: SkillNode[] = [
         category: 'math',
         track: 'math',
         order: 2,
-        connections: ['math-4', 'adv-1'],
+        connections: ['math-4', 'foundation-neural-networks'],
         status: 'unlocked',
     },
     {
@@ -111,14 +111,14 @@ export const roadmapData: SkillNode[] = [
         status: 'unlocked',
     },
     {
-        id: 'adv-1',
+        id: 'foundation-neural-networks',
         label: 'Neural Networks',
-        description: 'Perceptrons, MLPs, and the building blocks of deep learning.',
+        description: 'Perceptrons, MLPs, activation functions, and the building blocks of deep learning.',
         category: 'advanced',
         track: 'advanced',
         order: 1,
         connections: ['adv-5', 'adv-3', 'rl-1', 'gan-1'],
-        status: 'locked',
+        status: 'in-progress',
     },
     {
         id: 'adv-5',

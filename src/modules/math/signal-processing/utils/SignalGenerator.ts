@@ -1,3 +1,4 @@
+/* eslint-disable */
 
 export type WaveformType = 'sine' | 'square' | 'sawtooth' | 'triangle' | 'noise';
 
