@@ -24,6 +24,7 @@ import { Perceptron } from './sections/01_Perceptron';
 import { MLP } from './sections/02_MLP';
 import { Activation } from './sections/03_Activation';
 import { LossFunctions } from './sections/04_LossFunctions';
+import { Backpropagation } from './sections/05_Backpropagation';
 
 // ── Placeholder Factory for sequential development ──────────────────────────
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -87,7 +88,7 @@ const SECTIONS = [
         subtitle: 'Vector Chain Rule & Reverse-Mode',
         icon: Network,
         color: '#ec4899', // pink-500
-        component: PlaceholderFactory('Backpropagation & Automatic Differentiation', 5),
+        component: Backpropagation,
         tracks: ['13 Vector Chain Rule', '14 Backprop Derivation', '15 Vanishing Gradients'],
     },
     {
