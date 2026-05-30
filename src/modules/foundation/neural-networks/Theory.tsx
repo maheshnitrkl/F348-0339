@@ -10,7 +10,9 @@ import { Training } from './sections/04_Training';
 import { ArchitectureZoo } from './sections/05_ArchitectureZoo';
 import { TransferLearning } from './sections/06_TransferLearning';
 import { StateOfTheArt } from './sections/07_StateOfTheArt';
-import { Repeat, Rocket } from 'lucide-react';
+import { ObjectDetection } from './sections/08_ObjectDetection';
+import { Segmentation } from './sections/09_Segmentation';
+import { Repeat, Rocket, Target, Map } from 'lucide-react';
 
 // ── Section Config ───────────────────────────────────────────────────────────
 const SECTIONS = [
@@ -58,6 +60,24 @@ const SECTIONS = [
         color: '#f59e0b',
         component: ArchitectureZoo,
         tracks: ['13 6 Architectures', 'Timeline', "What's Next"],
+    },
+    {
+        id: 'object-detection',
+        title: 'Object Detection',
+        subtitle: 'Bounding Boxes & YOLO',
+        icon: Target,
+        color: '#10b981',
+        component: ObjectDetection,
+        tracks: ['14 R-CNN', '15 YOLO Grid', '16 Anchors & NMS'],
+    },
+    {
+        id: 'segmentation',
+        title: 'Image Segmentation',
+        subtitle: 'Pixel-Perfect Masks & U-Net',
+        icon: Map,
+        color: '#3b82f6',
+        component: Segmentation,
+        tracks: ['17 Semantic', '18 Instance', '19 U-Net'],
     },
     {
         id: 'transfer-learning',
@@ -240,7 +260,7 @@ export const Theory: React.FC = () => {
                 )}
 
                 {/* Content Area */}
-                <div className="px-8 py-8 max-w-5xl">
+                <div className="px-8 py-8 max-w-7xl w-full">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={activeSection}
