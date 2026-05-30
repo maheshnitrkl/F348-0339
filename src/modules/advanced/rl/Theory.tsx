@@ -31,6 +31,7 @@ import { ModelBased } from './sections/09_ModelBased';
 import { MARL } from './sections/10_MARL';
 import { OfflineRL } from './sections/11_OfflineRL';
 import { Alignment } from './sections/12_Alignment';
+import { Frontier } from './sections/13_Frontier';
 
 // Placeholders for sections 2 to 13 to be populated sequentially
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -169,7 +170,7 @@ const SECTIONS = [
         subtitle: 'DeepSeek-R1, GRPO & Robotics',
         icon: Rocket,
         color: '#38bdf8', // sky-400
-        component: PlaceholderFactory('State-of-the-Art & Frontier Topics (2024–2025)', 13),
+        component: Frontier,
         tracks: ['37 GRPO & Reasoning', '38 World Found. Models', '39 Scientific RL'],
     },
 ];
