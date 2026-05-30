@@ -23,6 +23,7 @@ import { Foundations } from './sections/01_Foundations';
 import { DynamicProgramming } from './sections/02_DynamicProgramming';
 import { ModelFree } from './sections/03_ModelFree';
 import { FunctionApprox } from './sections/04_FunctionApprox';
+import { DeepRL } from './sections/05_DeepRL';
 
 // Placeholders for sections 2 to 13 to be populated sequentially
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -89,7 +90,7 @@ const SECTIONS = [
         subtitle: 'DQN & Improvements',
         icon: Cpu,
         color: '#f59e0b', // amber-500
-        component: PlaceholderFactory('Deep Reinforcement Learning', 5),
+        component: DeepRL,
         tracks: ['13 Deep Q-Networks', '14 Rainbow DQN', '15 Double & Dueling'],
     },
     {
