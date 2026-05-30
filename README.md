@@ -1,73 +1,122 @@
-# React + TypeScript + Vite
+# NeuralNexus — Interactive AI & ML Learning Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive, web-based learning platform for Artificial Intelligence and Machine Learning. Built with React, TypeScript, and Tailwind CSS, featuring structured learning paths, deep theoretical content, live visualizations, and a real-time neural network playground.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 🧠 Structured Learning Roadmap
+A 4-track learning architecture spanning Foundation → Mathematics → Advanced → Applications, with 16+ modules covering topics from Philosophy of AI to Diffusion Models. Modules have dependency connections and status tracking (locked/unlocked/in-progress/completed).
 
-## React Compiler
+### 📚 Deep Learning Modules (11 interactive modules)
+Each module features up to three views:
+- **Theory** — Rich, detailed explanations with mathematical notation (KaTeX)
+- **Code** — Implementation walkthroughs and examples
+- **Visualization** — Interactive simulations and animations
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Available modules include:
+- Philosophy of AI
+- Linear Algebra
+- Calculus & Probability
+- Backpropagation
+- Signal Processing
+- Neural Networks
+- Statistical Learning
+- Training Optimization (DL Efficiency)
+- Medical Image Processing
+- 3D Cephalometry
+- And more...
 
-## Expanding the ESLint configuration
+### ⚡ Neural Network Playground
+A TensorFlow-Playground-style sandbox built from scratch:
+- **Full neural network engine** with forward pass and backpropagation
+- **Adam optimizer** with Xavier weight initialization
+- Configurable activation functions (ReLU, Sigmoid, Tanh, Linear)
+- L1/L2 regularization
+- Multiple dataset types (spiral, circle, XOR, clusters, etc.)
+- Real-time **decision boundary visualization** on HTML Canvas
+- Interactive **network architecture builder** — add/remove layers and neurons
+- Live **weight heatmaps** per neuron
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 🎨 Design
+- Dark glassmorphism UI with `backdrop-blur` and `border-white/10` effects
+- Electric Cyan (`#00f3ff`) + Soft Violet (`#c084fc`) accent palette
+- Smooth Framer Motion animations
+- Inter typeface via Google Fonts
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Tech Stack
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+| Technology | Purpose |
+|---|---|
+| **React 19** | UI framework |
+| **TypeScript** | Type safety |
+| **Vite 7** | Build tool & dev server |
+| **Tailwind CSS 4** | Utility-first styling |
+| **Framer Motion** | Animations & transitions |
+| **React Router** | Client-side routing |
+| **KaTeX** | Mathematical notation rendering |
+| **Lucide React** | Icon library |
+| **Three.js / R3F** | 3D visualizations (select modules) |
+| **mathjs** | Mathematical computations |
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Getting Started
+
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+
+### Installation
+
+```bash
+# Clone the repository
+git clone <repo-url>
+cd F348-0339
+
+# Install dependencies
+npm install
+
+# Start the dev server
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The app will be available at `http://localhost:5173`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Build for Production
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run build
+npm run preview
 ```
+
+## Project Structure
+
+```
+src/
+├── components/           # Shared UI components
+│   ├── Layout.tsx        # Sidebar + main content layout
+│   ├── GlassCard.tsx     # Reusable glass-effect card
+│   ├── SkillNode.tsx     # Roadmap node component
+│   └── visualizations/   # Shared visualization components
+├── pages/                # Top-level page views
+│   ├── Dashboard.tsx     # Home page with stats & quick links
+│   ├── Roadmap.tsx       # Learning path visualization
+│   ├── LessonView.tsx    # Module theory/code/viz viewer
+│   ├── Modules.tsx       # Module catalog
+│   ├── Playground.tsx    # Neural network sandbox
+│   └── playground/       # Playground engine & components
+├── modules/              # Learning module content
+│   ├── registry.ts       # Module registry (plug-and-play)
+│   ├── foundation/       # Foundation track modules
+│   ├── math/             # Mathematics track modules
+│   ├── advanced/         # Advanced track modules
+│   ├── application/      # Application track modules
+│   └── medical-imaging/  # Medical imaging module
+├── data/                 # Static data (roadmap nodes, content)
+├── types/                # TypeScript type definitions
+├── App.tsx               # Root component with Routes
+├── main.tsx              # Entry point with BrowserRouter
+└── index.css             # Global styles & Tailwind theme
+```
+
+## License
+
+Private project.

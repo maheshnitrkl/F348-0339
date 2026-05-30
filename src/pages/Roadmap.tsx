@@ -1,12 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { roadmapData, tracks, type SkillNode as SkillNodeType } from '../data/roadmapData';
 import { SkillNode } from '../components/SkillNode';
 import { ChevronRight } from 'lucide-react';
-
-interface RoadmapProps {
-    onNavigate: (view: string, moduleId?: string) => void;
-}
 
 const CATEGORY_COLORS: Record<string, string> = {
     foundation: '#64748b',
@@ -15,7 +12,8 @@ const CATEGORY_COLORS: Record<string, string> = {
     application: '#06b6d4',
 };
 
-export function Roadmap({ onNavigate }: RoadmapProps) {
+export function Roadmap() {
+    const navigate = useNavigate();
     // Group nodes by track
     const nodesByTrack = React.useMemo(() => {
         const grouped: Record<string, SkillNodeType[]> = {};
@@ -34,11 +32,11 @@ export function Roadmap({ onNavigate }: RoadmapProps) {
     const progressPct = Math.round((completedNodes / totalNodes) * 100);
 
     const handleNodeClick = (node: SkillNodeType) => {
-        onNavigate('lesson', node.id);
+        navigate(`/lesson/${node.id}`);
     };
 
     return (
-        <div className="relative w-full min-h-screen overflow-y-auto bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950">
+        <div className="relative w-full min-h-screen overflow-y-auto bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 -m-8">
 
             {/* Subtle background pattern */}
             <div className="fixed inset-0 opacity-[0.03] pointer-events-none"

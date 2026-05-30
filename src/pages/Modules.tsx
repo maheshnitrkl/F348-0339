@@ -1,15 +1,11 @@
+import { useNavigate } from 'react-router-dom';
 import { GlassCard } from '../components/GlassCard';
 import { getAllModules } from '../modules/registry';
 import { Book } from 'lucide-react';
 
-interface ModulesProps {
-    onNavigate: (view: string, moduleId?: string) => void;
-}
-
-export function Modules({ onNavigate }: ModulesProps) {
+export function Modules() {
+    const navigate = useNavigate();
     const modules = getAllModules();
-
-    console.log(`📚 [Modules] Loaded ${modules.length} modules from registry`);
 
     // Group modules by category
     const groupedModules = modules.reduce((acc, module) => {
@@ -49,7 +45,7 @@ export function Modules({ onNavigate }: ModulesProps) {
                                 key={module.id}
                                 hoverEffect
                                 className="p-6 cursor-pointer group"
-                                onClick={() => onNavigate('lesson', module.id)}
+                                onClick={() => navigate(`/lesson/${module.id}`)}
                             >
                                 <div className="flex items-start gap-4 mb-4">
                                     <div className="p-3 rounded-lg bg-white/5 text-[var(--color-electric-cyan)]">

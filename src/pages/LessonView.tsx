@@ -1,16 +1,12 @@
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Code, Book, Maximize2 } from 'lucide-react';
 import { getModule } from '../modules/registry';
 
-interface LessonViewProps {
-    moduleId?: string;
-}
-
-export function LessonView({ moduleId }: LessonViewProps) {
+export function LessonView() {
+    const { moduleId } = useParams<{ moduleId: string }>();
     const [viewMode, setViewMode] = useState<'theory' | 'code' | 'visualization'>('theory');
-
-    // console.log(`🎓 [LessonView] Rendering with moduleId:`, moduleId);
 
     // Handle legacy ID and default
     const targetModuleId = moduleId === 'math-1' ? 'math-lin-alg' : (moduleId || 'math-lin-alg');

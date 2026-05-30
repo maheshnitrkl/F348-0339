@@ -1,21 +1,20 @@
-/* eslint-disable */
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Brain, BookOpen, GitGraph, Activity, Menu } from 'lucide-react';
+import { Brain, BookOpen, GitGraph, Activity, LayoutDashboard, Menu } from 'lucide-react';
 
 interface LayoutProps {
     children: React.ReactNode;
-    currentView?: string;
-    onNavigate?: (view: string) => void;
 }
 
-export function Layout({ children, currentView, onNavigate }: LayoutProps) {
+export function Layout({ children }: LayoutProps) {
     const [sidebarOpen, setSidebarOpen] = React.useState(true);
 
     const navItems = [
-        { id: 'roadmap', icon: Brain, label: "Neural Roadmap" },
-        { id: 'playground', icon: GitGraph, label: "Playground" },
-        { id: 'progress', icon: Activity, label: "Progress" },
+        { to: '/', icon: LayoutDashboard, label: "Dashboard" },
+        { to: '/roadmap', icon: Brain, label: "Neural Roadmap" },
+        { to: '/modules', icon: BookOpen, label: "Modules" },
+        { to: '/playground', icon: GitGraph, label: "Playground" },
     ];
 
     return (
@@ -24,7 +23,7 @@ export function Layout({ children, currentView, onNavigate }: LayoutProps) {
             <motion.aside
                 initial={false}
                 animate={{ width: sidebarOpen ? 260 : 80 }}
-                className="h-full border-r border-white/10 bg-[#121212]/50 backdrop-blur-lg z-20 flex flex-col"
+                className="h-full border-r border-white/10 bg-[#121212]/50 backdrop-blur-lg z-20 flex flex-col shrink-0"
             >
                 <div className="p-6 flex items-center justify-between">
                     <motion.div
@@ -38,33 +37,39 @@ export function Layout({ children, currentView, onNavigate }: LayoutProps) {
                             NeuralNexus
                         </span>
                     </motion.div>
-
-                    {/* Toggle Button (Only visible when small if we wanted, but let's keep simple for now) */}
                 </div>
 
                 <nav className="flex-1 px-4 py-6 space-y-2">
-                    {navItems.map((item) => {
-                        const isActive = currentView === item.id || (item.id === 'roadmap' && !currentView);
-                        return (
-                            <button
-                                key={item.id}
-                                onClick={() => onNavigate?.(item.id)}
-                                className={`flex items-center gap-4 w-full p-3 rounded-lg transition-all duration-300 group ${isActive ? 'bg-white/10 border border-white/5 text-[var(--color-electric-cyan)]' : 'hover:bg-white/5 text-gray-400 hover:text-white'}`}
-                            >
-                                <item.icon className={`w-6 h-6 ${isActive ? 'drop-shadow-[0_0_8px_rgba(0,243,255,0.5)]' : ''}`} />
-                                {sidebarOpen && (
-                                    <motion.span
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        transition={{ delay: 0.1 }}
-                                        className="font-medium"
-                                    >
-                                        {item.label}
-                                    </motion.span>
-                                )}
-                            </button>
-                        );
-                    })}
+                    {navItems.map((item) => (
+                        <NavLink
+                            key={item.to}
+                            to={item.to}
+                            end={item.to === '/'}
+                            className={({ isActive }) =>
+                                `flex items-center gap-4 w-full p-3 rounded-lg transition-all duration-300 group ${
+                                    isActive
+                                        ? 'bg-white/10 border border-white/5 text-[var(--color-electric-cyan)]'
+                                        : 'hover:bg-white/5 text-gray-400 hover:text-white border border-transparent'
+                                }`
+                            }
+                        >
+                            {({ isActive }) => (
+                                <>
+                                    <item.icon className={`w-6 h-6 shrink-0 ${isActive ? 'drop-shadow-[0_0_8px_rgba(0,243,255,0.5)]' : ''}`} />
+                                    {sidebarOpen && (
+                                        <motion.span
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            transition={{ delay: 0.1 }}
+                                            className="font-medium"
+                                        >
+                                            {item.label}
+                                        </motion.span>
+                                    )}
+                                </>
+                            )}
+                        </NavLink>
+                    ))}
                 </nav>
 
                 <div className="p-4 border-t border-white/10">
@@ -72,9 +77,9 @@ export function Layout({ children, currentView, onNavigate }: LayoutProps) {
                         className="flex items-center gap-4 w-full p-3 rounded-lg hover:bg-white/5 text-gray-400 hover:text-white transition-colors"
                         onClick={() => setSidebarOpen(!sidebarOpen)}
                     >
-                        <Menu className="w-6 h-6" />
+                        <Menu className="w-6 h-6 shrink-0" />
                         {sidebarOpen && (
-                            <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} >Collapse</motion.span>
+                            <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }}>Collapse</motion.span>
                         )}
                     </button>
                 </div>
@@ -86,7 +91,7 @@ export function Layout({ children, currentView, onNavigate }: LayoutProps) {
                 <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-[var(--color-electric-cyan)] rounded-full blur-[120px] opacity-10 pointer-events-none" />
                 <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-[var(--color-soft-violet)] rounded-full blur-[120px] opacity-10 pointer-events-none" />
 
-                <div className={`h-full w-full relative z-10 scrollbar-hide overflow-y-auto ${currentView === 'roadmap' ? 'p-0' : 'p-8'}`}>
+                <div className="h-full w-full relative z-10 scrollbar-hide overflow-y-auto p-8">
                     {children}
                 </div>
             </main>

@@ -11,7 +11,7 @@ import { MedicalImagingModule } from './medical-imaging';
 import { StatisticalLearningModule } from './advanced/statistical-learning';
 import { NeuralNetworksModule } from './foundation/neural-networks';
 
-// Registry of all available modules (Force Refresh)
+// Registry of all available modules
 const modules: Record<string, ConceptModule> = {
     [CalculusProbabilityModule.id]: CalculusProbabilityModule,
     [PhilosophyModule.id]: PhilosophyModule,
@@ -27,15 +27,7 @@ const modules: Record<string, ConceptModule> = {
 };
 
 export const getModule = (id: string): ConceptModule | undefined => {
-    console.log(`🔍 [Registry] Attempting to get module with ID: "${id}"`);
-    console.log(`📚 [Registry] Available module IDs:`, Object.keys(modules));
-    const module = modules[id];
-    if (module) {
-        console.log(`✅ [Registry] Found module:`, module.title);
-    } else {
-        console.error(`❌ [Registry] Module "${id}" not found!`);
-    }
-    return module;
+    return modules[id];
 };
 
 export const getAllModules = (): ConceptModule[] => {
