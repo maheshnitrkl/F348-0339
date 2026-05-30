@@ -29,6 +29,7 @@ import { Optimization } from './sections/06_Optimization';
 import { Initialization } from './sections/07_Initialization';
 import { Regularization } from './sections/08_Regularization';
 import { CNN } from './sections/09_CNN';
+import { RNNSeq } from './sections/10_RNNSeq';
 
 // ── Placeholder Factory for sequential development ──────────────────────────
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -137,7 +138,7 @@ const SECTIONS = [
         subtitle: 'Vanilla RNN, LSTM, GRU & Attention',
         icon: Repeat,
         color: '#6366f1', // indigo-500
-        component: PlaceholderFactory('Recurrent Neural Networks & Sequence Modeling', 10),
+        component: RNNSeq,
         tracks: ['28 BPTT & Gradients', '29 Gated Units (LSTM/GRU)', '30 Classic Attention'],
     },
     {
