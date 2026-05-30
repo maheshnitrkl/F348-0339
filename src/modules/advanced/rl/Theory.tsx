@@ -22,6 +22,7 @@ import {
 import { Foundations } from './sections/01_Foundations';
 import { DynamicProgramming } from './sections/02_DynamicProgramming';
 import { ModelFree } from './sections/03_ModelFree';
+import { FunctionApprox } from './sections/04_FunctionApprox';
 
 // Placeholders for sections 2 to 13 to be populated sequentially
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -79,7 +80,7 @@ const SECTIONS = [
         subtitle: 'Scaling up Tabular RL',
         icon: Sliders,
         color: '#ec4899', // pink-500
-        component: PlaceholderFactory('Function Approximation', 4),
+        component: FunctionApprox,
         tracks: ['10 Linear FA', '11 Semi-Gradient TD', '12 The Deadly Triad'],
     },
     {
