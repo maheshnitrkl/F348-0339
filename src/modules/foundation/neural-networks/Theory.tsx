@@ -27,6 +27,7 @@ import { LossFunctions } from './sections/04_LossFunctions';
 import { Backpropagation } from './sections/05_Backpropagation';
 import { Optimization } from './sections/06_Optimization';
 import { Initialization } from './sections/07_Initialization';
+import { Regularization } from './sections/08_Regularization';
 
 // ── Placeholder Factory for sequential development ──────────────────────────
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -117,7 +118,7 @@ const SECTIONS = [
         subtitle: 'L1/L2, Dropout, BatchNorm, RMSNorm',
         icon: Shield,
         color: '#10b981', // emerald-500
-        component: PlaceholderFactory('Regularization Techniques', 8),
+        component: Regularization,
         tracks: ['22 Bias-Variance Decomposition', '23 Regularizers & Dropout', '24 Normalization Layers'],
     },
     {
