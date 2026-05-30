@@ -27,6 +27,7 @@ import { DeepRL } from './sections/05_DeepRL';
 import { PolicyGradient } from './sections/06_PolicyGradient';
 import { AdvancedPolicy } from './sections/07_AdvancedPolicy';
 import { ContinuousControl } from './sections/08_ContinuousControl';
+import { ModelBased } from './sections/09_ModelBased';
 
 // Placeholders for sections 2 to 13 to be populated sequentially
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -129,7 +130,7 @@ const SECTIONS = [
         subtitle: 'Dyna, World Models & MCTS',
         icon: Compass,
         color: '#a855f7', // purple-500
-        component: PlaceholderFactory('Model-Based Reinforcement Learning', 9),
+        component: ModelBased,
         tracks: ['25 Dyna-Q Architecture', '26 Dreamer & Latent', '27 MCTS & MuZero'],
     },
     {
