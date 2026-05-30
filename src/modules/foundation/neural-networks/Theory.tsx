@@ -23,6 +23,7 @@ import {
 import { Perceptron } from './sections/01_Perceptron';
 import { MLP } from './sections/02_MLP';
 import { Activation } from './sections/03_Activation';
+import { LossFunctions } from './sections/04_LossFunctions';
 
 // ── Placeholder Factory for sequential development ──────────────────────────
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -77,7 +78,7 @@ const SECTIONS = [
         subtitle: 'Regression, Classification & InfoNCE',
         icon: Target,
         color: '#f43f5e', // rose-500
-        component: PlaceholderFactory('Loss Functions', 4),
+        component: LossFunctions,
         tracks: ['10 Risk Minimization', '11 Triplet & Focal Loss', '12 Contrastive Losses'],
     },
     {
