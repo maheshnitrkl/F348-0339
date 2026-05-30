@@ -22,6 +22,7 @@ import {
 // ── Section Imports ─────────────────────────────────────────────────────────
 import { Perceptron } from './sections/01_Perceptron';
 import { MLP } from './sections/02_MLP';
+import { Activation } from './sections/03_Activation';
 
 // ── Placeholder Factory for sequential development ──────────────────────────
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -67,7 +68,7 @@ const SECTIONS = [
         subtitle: 'Sigmoid, ReLU, GELU, SwiGLU',
         icon: Zap,
         color: '#22d3ee', // cyan-400
-        component: PlaceholderFactory('Activation Functions', 3),
+        component: Activation,
         tracks: ['07 Why Non-Linearity', '08 Standard Activations', '09 Modern Gated Activations'],
     },
     {
