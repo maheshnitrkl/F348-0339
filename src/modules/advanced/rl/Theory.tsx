@@ -20,6 +20,7 @@ import {
 
 // Section Imports
 import { Foundations } from './sections/01_Foundations';
+import { DynamicProgramming } from './sections/02_DynamicProgramming';
 
 // Placeholders for sections 2 to 13 to be populated sequentially
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -59,7 +60,7 @@ const SECTIONS = [
         subtitle: 'Policy & Value Iteration',
         icon: Database,
         color: '#3b82f6', // blue-500
-        component: PlaceholderFactory('Dynamic Programming', 2),
+        component: DynamicProgramming,
         tracks: ['04 Policy Iteration', '05 Value Iteration', '06 GPI Framework'],
     },
     {
