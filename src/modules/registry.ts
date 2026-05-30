@@ -10,6 +10,7 @@ import { CephalometryModule } from './application/cephalometry';
 import { MedicalImagingModule } from './medical-imaging';
 import { StatisticalLearningModule } from './advanced/statistical-learning';
 import { NeuralNetworksModule } from './foundation/neural-networks';
+import { RLModule } from './advanced/rl';
 
 // Registry of all available modules
 const modules: Record<string, ConceptModule> = {
@@ -24,6 +25,7 @@ const modules: Record<string, ConceptModule> = {
     [MedicalImagingModule.id]: MedicalImagingModule,
     [StatisticalLearningModule.id]: StatisticalLearningModule,
     [NeuralNetworksModule.id]: NeuralNetworksModule,
+    [RLModule.id]: RLModule,
 };
 
 export const getModule = (id: string): ConceptModule | undefined => {

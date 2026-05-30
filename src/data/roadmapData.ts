@@ -138,7 +138,7 @@ export const roadmapData: SkillNode[] = [
         track: 'advanced',
         order: 3,
         connections: [],
-        status: 'locked',
+        status: 'unlocked',
     },
 
     // --- Application Track ---
