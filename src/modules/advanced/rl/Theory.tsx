@@ -26,6 +26,7 @@ import { FunctionApprox } from './sections/04_FunctionApprox';
 import { DeepRL } from './sections/05_DeepRL';
 import { PolicyGradient } from './sections/06_PolicyGradient';
 import { AdvancedPolicy } from './sections/07_AdvancedPolicy';
+import { ContinuousControl } from './sections/08_ContinuousControl';
 
 // Placeholders for sections 2 to 13 to be populated sequentially
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -119,7 +120,7 @@ const SECTIONS = [
         subtitle: 'DDPG, TD3, & SAC',
         icon: Sliders,
         color: '#06b6d4', // cyan-500
-        component: PlaceholderFactory('Deterministic & Continuous Action Spaces', 8),
+        component: ContinuousControl,
         tracks: ['22 DPG Theorem', '23 Twin Critic (TD3)', '24 Soft Actor-Critic'],
     },
     {
