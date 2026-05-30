@@ -842,17 +842,17 @@ export const AdvancedPolicy: React.FC = () => {
                     <div className="space-y-4">
                         <div>
                             <p className="text-sm text-slate-500 mb-2 font-medium">Fisher Information Matrix</p>
-                            <MathEquation latex="F_\theta = \mathbb{E}_{\pi_\theta}\!\left[\nabla_\theta \log \pi_\theta(a|s)\;\nabla_\theta \log \pi_\theta(a|s)^\top\right]" />
+                            <MathEquation formula="F_\theta = \mathbb{E}_{\pi_\theta}\!\left[\nabla_\theta \log \pi_\theta(a|s)\;\nabla_\theta \log \pi_\theta(a|s)^\top\right]" />
                         </div>
 
                         <div>
                             <p className="text-sm text-slate-500 mb-2 font-medium">Natural Gradient (Amari, 1998)</p>
-                            <MathEquation latex="\widetilde{\nabla}_\theta J(\theta) = F_\theta^{-1}\,\nabla_\theta J(\theta)" />
+                            <MathEquation formula="\widetilde{\nabla}_\theta J(\theta) = F_\theta^{-1}\,\nabla_\theta J(\theta)" />
                         </div>
 
                         <div>
                             <p className="text-sm text-slate-500 mb-2 font-medium">Connection to KL Divergence</p>
-                            <MathEquation latex="D_{\mathrm{KL}}(\pi_\theta \| \pi_{\theta + \Delta\theta}) \approx \tfrac{1}{2}\,\Delta\theta^\top\,F_\theta\,\Delta\theta" />
+                            <MathEquation formula="D_{\mathrm{KL}}(\pi_\theta \| \pi_{\theta + \Delta\theta}) \approx \tfrac{1}{2}\,\Delta\theta^\top\,F_\theta\,\Delta\theta" />
                         </div>
                     </div>
 
@@ -887,7 +887,7 @@ export const AdvancedPolicy: React.FC = () => {
                         differs from the old policy:
                     </p>
 
-                    <MathEquation latex="D_{\mathrm{KL}}(\pi_{\theta_{\mathrm{old}}} \| \pi_\theta) = \mathbb{E}_{s \sim d^{\pi_{\mathrm{old}}}}\!\left[\mathbb{E}_{a \sim \pi_{\mathrm{old}}}\!\left[\log \frac{\pi_{\theta_{\mathrm{old}}}(a|s)}{\pi_\theta(a|s)}\right]\right]" />
+                    <MathEquation formula="D_{\mathrm{KL}}(\pi_{\theta_{\mathrm{old}}} \| \pi_\theta) = \mathbb{E}_{s \sim d^{\pi_{\mathrm{old}}}}\!\left[\mathbb{E}_{a \sim \pi_{\mathrm{old}}}\!\left[\log \frac{\pi_{\theta_{\mathrm{old}}}(a|s)}{\pi_\theta(a|s)}\right]\right]" />
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
                         <div className="p-3 rounded-lg bg-slate-800/60">
@@ -927,15 +927,15 @@ export const AdvancedPolicy: React.FC = () => {
 
                     <div className="p-5 rounded-xl bg-amber-500/5 border border-amber-500/20 space-y-4">
                         <p className="text-sm font-bold text-amber-400">TRPO Optimization Problem</p>
-                        <MathEquation latex="\max_\theta \;\; \hat{\mathbb{E}}_t\!\left[\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{\mathrm{old}}}(a_t|s_t)}\,\hat{A}_t\right]" />
-                        <MathEquation latex="\text{subject to} \;\; \hat{\mathbb{E}}_t\!\left[D_{\mathrm{KL}}\!\left(\pi_{\theta_{\mathrm{old}}}(\cdot|s_t)\,\|\,\pi_\theta(\cdot|s_t)\right)\right] \leq \delta" />
+                        <MathEquation formula="\max_\theta \;\; \hat{\mathbb{E}}_t\!\left[\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{\mathrm{old}}}(a_t|s_t)}\,\hat{A}_t\right]" />
+                        <MathEquation formula="\text{subject to} \;\; \hat{\mathbb{E}}_t\!\left[D_{\mathrm{KL}}\!\left(\pi_{\theta_{\mathrm{old}}}(\cdot|s_t)\,\|\,\pi_\theta(\cdot|s_t)\right)\right] \leq \delta" />
                     </div>
 
                     <p className="text-slate-300 leading-relaxed">
                         The surrogate objective uses the <strong className="text-white">importance sampling ratio</strong>:
                     </p>
 
-                    <MathEquation latex="r_t(\theta) = \frac{\pi_\theta(a_t \mid s_t)}{\pi_{\theta_{\mathrm{old}}}(a_t \mid s_t)}" />
+                    <MathEquation formula="r_t(\theta) = \frac{\pi_\theta(a_t \mid s_t)}{\pi_{\theta_{\mathrm{old}}}(a_t \mid s_t)}" />
 
                     <p className="text-slate-300 leading-relaxed">
                         Since the KL constraint makes this a second-order problem, TRPO uses a clever combination of:
@@ -964,7 +964,7 @@ export const AdvancedPolicy: React.FC = () => {
 
                     <div className="space-y-3">
                         <p className="text-sm text-slate-500 font-medium">Analytic Solution (Lagrangian)</p>
-                        <MathEquation latex="\theta_{\mathrm{new}} = \theta_{\mathrm{old}} + \sqrt{\frac{2\delta}{g^\top F^{-1} g}}\;F^{-1}g" />
+                        <MathEquation formula="\theta_{\mathrm{new}} = \theta_{\mathrm{old}} + \sqrt{\frac{2\delta}{g^\top F^{-1} g}}\;F^{-1}g" />
                     </div>
 
                     <AlgorithmBox
@@ -1011,7 +1011,7 @@ export const AdvancedPolicy: React.FC = () => {
 
                     <div className="p-5 rounded-xl bg-teal-500/5 border border-teal-500/20 space-y-4">
                         <p className="text-sm font-bold text-teal-400">PPO-Clip Objective</p>
-                        <MathEquation latex="L^{\mathrm{CLIP}}(\theta) = \hat{\mathbb{E}}_t\!\left[\min\!\left(r_t(\theta)\,\hat{A}_t,\;\;\mathrm{clip}\!\left(r_t(\theta),\,1{-}\varepsilon,\,1{+}\varepsilon\right)\hat{A}_t\right)\right]" />
+                        <MathEquation formula="L^{\mathrm{CLIP}}(\theta) = \hat{\mathbb{E}}_t\!\left[\min\!\left(r_t(\theta)\,\hat{A}_t,\;\;\mathrm{clip}\!\left(r_t(\theta),\,1{-}\varepsilon,\,1{+}\varepsilon\right)\hat{A}_t\right)\right]" />
                     </div>
 
                     <p className="text-slate-300 leading-relaxed">
@@ -1024,7 +1024,7 @@ export const AdvancedPolicy: React.FC = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
                             <div className="text-sm font-bold text-emerald-400 mb-2">When Â &gt; 0 (Good Action)</div>
-                            <MathEquation latex="L^{\mathrm{CLIP}} = \min\!\left(r\,\hat{A},\;(1{+}\varepsilon)\,\hat{A}\right)" />
+                            <MathEquation formula="L^{\mathrm{CLIP}} = \min\!\left(r\,\hat{A},\;(1{+}\varepsilon)\,\hat{A}\right)" />
                             <p className="text-xs text-slate-400 mt-2">
                                 The ratio r is <strong>capped at 1+ε</strong>. The policy cannot increase the 
                                 probability of a good action beyond the trust region.
@@ -1032,7 +1032,7 @@ export const AdvancedPolicy: React.FC = () => {
                         </div>
                         <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20">
                             <div className="text-sm font-bold text-red-400 mb-2">When Â &lt; 0 (Bad Action)</div>
-                            <MathEquation latex="L^{\mathrm{CLIP}} = \max\!\left(r\,\hat{A},\;(1{-}\varepsilon)\,\hat{A}\right)" />
+                            <MathEquation formula="L^{\mathrm{CLIP}} = \max\!\left(r\,\hat{A},\;(1{-}\varepsilon)\,\hat{A}\right)" />
                             <p className="text-xs text-slate-400 mt-2">
                                 The ratio r is <strong>floored at 1−ε</strong>. The policy cannot decrease the 
                                 probability of a bad action too aggressively.
@@ -1042,7 +1042,7 @@ export const AdvancedPolicy: React.FC = () => {
 
                     <div className="space-y-3">
                         <p className="text-sm text-slate-500 font-medium">Full PPO Loss (with Value & Entropy)</p>
-                        <MathEquation latex="L(\theta) = \hat{\mathbb{E}}_t\!\left[L_t^{\mathrm{CLIP}}(\theta) - c_1\,L_t^{\mathrm{VF}}(\theta) + c_2\,S[\pi_\theta](s_t)\right]" />
+                        <MathEquation formula="L(\theta) = \hat{\mathbb{E}}_t\!\left[L_t^{\mathrm{CLIP}}(\theta) - c_1\,L_t^{\mathrm{VF}}(\theta) + c_2\,S[\pi_\theta](s_t)\right]" />
                         <p className="text-sm text-slate-400">
                             Where L<sup>VF</sup> is the squared value prediction error and S[π] is the entropy bonus
                             for exploration. Typical: c₁ = 0.5, c₂ = 0.01, ε = 0.2.
@@ -1102,7 +1102,7 @@ export const AdvancedPolicy: React.FC = () => {
                         which adds a KL divergence term to the objective and dynamically adjusts its coefficient:
                     </p>
 
-                    <MathEquation latex="L^{\mathrm{KLPEN}}(\theta) = \hat{\mathbb{E}}_t\!\left[r_t(\theta)\,\hat{A}_t - \beta\,D_{\mathrm{KL}}\!\left(\pi_{\theta_{\mathrm{old}}} \| \pi_\theta\right)\right]" />
+                    <MathEquation formula="L^{\mathrm{KLPEN}}(\theta) = \hat{\mathbb{E}}_t\!\left[r_t(\theta)\,\hat{A}_t - \beta\,D_{\mathrm{KL}}\!\left(\pi_{\theta_{\mathrm{old}}} \| \pi_\theta\right)\right]" />
 
                     <AlgorithmBox
                         title="Adaptive β Update Rule"
@@ -1198,17 +1198,17 @@ export const AdvancedPolicy: React.FC = () => {
                     <div className="space-y-4">
                         <div>
                             <p className="text-sm text-slate-500 mb-2 font-medium">TD Residual (1-step advantage)</p>
-                            <MathEquation latex="\delta_t^V = r_t + \gamma V(s_{t+1}) - V(s_t)" />
+                            <MathEquation formula="\delta_t^V = r_t + \gamma V(s_{t+1}) - V(s_t)" />
                         </div>
 
                         <div>
                             <p className="text-sm text-slate-500 mb-2 font-medium">GAE(γ, λ)</p>
-                            <MathEquation latex="\hat{A}_t^{\mathrm{GAE}} = \sum_{l=0}^{\infty}(\gamma\lambda)^l\,\delta_{t+l}^V" />
+                            <MathEquation formula="\hat{A}_t^{\mathrm{GAE}} = \sum_{l=0}^{\infty}(\gamma\lambda)^l\,\delta_{t+l}^V" />
                         </div>
 
                         <div>
                             <p className="text-sm text-slate-500 mb-2 font-medium">Recursive Form (for Implementation)</p>
-                            <MathEquation latex="\hat{A}_t = \delta_t + \gamma\lambda\,\hat{A}_{t+1}" />
+                            <MathEquation formula="\hat{A}_t = \delta_t + \gamma\lambda\,\hat{A}_{t+1}" />
                         </div>
                     </div>
 
