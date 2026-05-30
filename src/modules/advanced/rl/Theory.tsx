@@ -28,6 +28,7 @@ import { PolicyGradient } from './sections/06_PolicyGradient';
 import { AdvancedPolicy } from './sections/07_AdvancedPolicy';
 import { ContinuousControl } from './sections/08_ContinuousControl';
 import { ModelBased } from './sections/09_ModelBased';
+import { MARL } from './sections/10_MARL';
 
 // Placeholders for sections 2 to 13 to be populated sequentially
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -139,7 +140,7 @@ const SECTIONS = [
         subtitle: 'Cooperative & Competitive',
         icon: Users,
         color: '#f43f5e', // rose-500
-        component: PlaceholderFactory('Multi-Agent Reinforcement Learning (MARL)', 10),
+        component: MARL,
         tracks: ['28 Stochastic Games', '29 QMIX Monotonicity', '30 MADDPGcentralized'],
     },
     {
