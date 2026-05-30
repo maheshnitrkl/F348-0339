@@ -24,6 +24,7 @@ import { DynamicProgramming } from './sections/02_DynamicProgramming';
 import { ModelFree } from './sections/03_ModelFree';
 import { FunctionApprox } from './sections/04_FunctionApprox';
 import { DeepRL } from './sections/05_DeepRL';
+import { PolicyGradient } from './sections/06_PolicyGradient';
 
 // Placeholders for sections 2 to 13 to be populated sequentially
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -99,7 +100,7 @@ const SECTIONS = [
         subtitle: 'REINFORCE & Actor-Critic',
         icon: GitCommit,
         color: '#ef4444', // red-500
-        component: PlaceholderFactory('Policy Gradient Methods', 6),
+        component: PolicyGradient,
         tracks: ['16 Policy Theorem', '17 Baselines & GAE', '18 Actor-Critic (A2C)'],
     },
     {
