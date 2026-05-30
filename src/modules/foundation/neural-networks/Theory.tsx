@@ -28,6 +28,7 @@ import { Backpropagation } from './sections/05_Backpropagation';
 import { Optimization } from './sections/06_Optimization';
 import { Initialization } from './sections/07_Initialization';
 import { Regularization } from './sections/08_Regularization';
+import { CNN } from './sections/09_CNN';
 
 // ── Placeholder Factory for sequential development ──────────────────────────
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -127,7 +128,7 @@ const SECTIONS = [
         subtitle: 'Translation Invariance & Spatial Grids',
         icon: Grid,
         color: '#06b6d4', // cyan-500
-        component: PlaceholderFactory('Convolutional Neural Networks (CNNs)', 9),
+        component: CNN,
         tracks: ['25 Convolution Operator', '26 Classic Architectures', '27 Residual Connections'],
     },
     {
