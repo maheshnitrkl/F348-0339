@@ -596,6 +596,7 @@ export const MCTSTreeVisualizer: React.FC = () => {
     const [rolloutReward, setRolloutReward] = useState<number | null>(null);
     const [iterationCount, setIterationCount] = useState<number>(0);
     const [log, setLog] = useState<string[]>(['Click "Next Step" to start MCTS search.']);
+    const [isRunning, setIsRunning] = useState<boolean>(false);
 
     const C = 1.41; // Exploration constant
 
@@ -1157,7 +1158,7 @@ export const ModelBased: React.FC = () => {
                     </div>
 
                     <KeyInsight title="Dyna-Q+ for Changing Environments" color="#eab308">
-                        If an environment changes, a learned model becomes stale. <strong>Dyna-Q+</strong> adds an exploration bonus to planning updates. If a transition has not been tried for $\tau$ steps, its planning reward is boosted: $R_p \leftarrow R_p + \kappa \sqrt{\tau}$, encouraging the agent to plan exploration.
+                        If an environment changes, a learned model becomes stale. <strong>Dyna-Q+</strong> adds an exploration bonus to planning updates. If a transition has not been tried for <MathEquation formula="\tau" /> steps, its planning reward is boosted: <MathEquation formula="R_p \leftarrow R_p + \kappa \sqrt{\tau}" />, encouraging the agent to plan exploration.
                     </KeyInsight>
                 </Card>
             </motion.section>
@@ -1186,7 +1187,7 @@ export const ModelBased: React.FC = () => {
                             <span className="text-xs font-mono text-purple-400 uppercase font-bold block">1. Vision Model (V)</span>
                             <span className="text-sm font-bold text-white block">Variational Autoencoder (VAE)</span>
                             <p className="text-xs text-slate-400 leading-relaxed">
-                                Compresses the high-dimensional observation frame $x_t$ (e.g., $64\times64\times3$ pixel image) into a low-dimensional latent code $z_t \in \mathbb{R}^{32}$.
+                                Compresses the high-dimensional observation frame <MathEquation formula="x_t" /> (e.g., <MathEquation formula="64\times64\times3" /> pixel image) into a low-dimensional latent code <MathEquation formula="z_t \in \mathbb{R}^{32}" />.
                             </p>
                             <div className="pt-2">
                                 <MathEquation formula="z_t \sim q_\phi(z_t | x_t)" block />
@@ -1338,7 +1339,7 @@ export const ModelBased: React.FC = () => {
                         <div className="border-l-2 border-purple-500 pl-4 space-y-1">
                             <span className="text-xs font-mono text-purple-400 uppercase font-bold">Step 2: AlphaZero</span>
                             <p className="text-sm text-slate-300 leading-relaxed">
-                                Discarded all human data. Learned from scratch solely via self-play RL using a single dual-headed network. Outputted both policy probabilities $\mathbf{p}$ and state value $v$. The policy network acts as a guide to prune MCTS branches, discarding rollouts entirely in favor of value predictions.
+                                Discarded all human data. Learned from scratch solely via self-play RL using a single dual-headed network. Outputted both policy probabilities <MathEquation formula="\mathbf{p}" /> and state value <MathEquation formula="v" />. The policy network acts as a guide to prune MCTS branches, discarding rollouts entirely in favor of value predictions.
                             </p>
                         </div>
 
