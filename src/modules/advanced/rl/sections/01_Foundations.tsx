@@ -509,24 +509,24 @@ export const Foundations: React.FC = () => {
                 </div>
 
                 <p className="text-slate-400">
-                    A **Policy** $\pi(a|s)$ defines the behavior of the agent—it is a probability distribution over actions given a state: $\pi(a|s) = P(A_t = a \mid S_t = s)$.
+                    A **Policy** <MathEquation formula="\pi(a|s)" /> defines the behavior of the agent—it is a probability distribution over actions given a state: <MathEquation formula="\pi(a|s) = P(A_t = a \mid S_t = s)" />.
                 </p>
 
                 <h4 className="text-white font-bold text-lg mb-2">Value Functions</h4>
                 <p className="text-slate-400">
-                    How good is it to be in a state $s$? Or how good is it to perform action $a$ in state $s$? We define two expectation functions to compute these values:
+                    How good is it to be in a state <MathEquation formula="s" />? Or how good is it to perform action <MathEquation formula="a" /> in state <MathEquation formula="s" />? We define two expectation functions to compute these values:
                 </p>
 
                 <div className="grid md:grid-cols-2 gap-6">
                     <div className="bg-slate-900/30 p-5 rounded-xl border border-slate-800 space-y-2">
-                        <h5 className="font-bold text-white">State-Value Function $V^\pi(s)$</h5>
-                        <p className="text-xs text-slate-400">Expected return starting from state $s$, and following policy $\pi$ thereafter:</p>
+                        <h5 className="font-bold text-white">State-Value Function <MathEquation formula="V^\pi(s)" /></h5>
+                        <p className="text-xs text-slate-400">Expected return starting from state <MathEquation formula="s" />, and following policy <MathEquation formula="\pi" /> thereafter:</p>
                         <MathEquation formula="V^\pi(s) = \mathbb{E}_\pi \left[ \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} \ \middle|\ S_t = s \right]" block />
                     </div>
 
                     <div className="bg-slate-900/30 p-5 rounded-xl border border-slate-800 space-y-2">
-                        <h5 className="font-bold text-white">Action-Value Function $Q^\pi(s,a)$</h5>
-                        <p className="text-xs text-slate-400">Expected return starting from state $s$, taking action $a$, and following policy $\pi$ thereafter:</p>
+                        <h5 className="font-bold text-white">Action-Value Function <MathEquation formula="Q^\pi(s,a)" /></h5>
+                        <p className="text-xs text-slate-400">Expected return starting from state <MathEquation formula="s" />, taking action <MathEquation formula="a" />, and following policy <MathEquation formula="\pi" /> thereafter:</p>
                         <MathEquation formula="Q^\pi(s,a) = \mathbb{E}_\pi \left[ \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} \ \middle|\ S_t = s, A_t = a \right]" block />
                     </div>
                 </div>
@@ -544,19 +544,19 @@ export const Foundations: React.FC = () => {
                     </div>
                     <div className="space-y-4">
                         <div>
-                            <span className="text-violet-400 font-bold">Step 1: Expand cumulative return $G_t$ into immediate reward plus discounted future return:</span>
+                            <span className="text-violet-400 font-bold">Step 1: Expand cumulative return <MathEquation formula="G_t" /> into immediate reward plus discounted future return:</span>
                             <MathEquation formula="V^\pi(s) = \mathbb{E}_\pi \left[ R_{t+1} + \gamma G_{t+1} \ \middle|\ S_t = s \right]" block />
                         </div>
                         <div>
-                            <span className="text-violet-400 font-bold">Step 2: Use the Law of Total Expectation to condition on actions $a$ and subsequent states $s'$:</span>
+                            <span className="text-violet-400 font-bold">Step 2: Use the Law of Total Expectation to condition on actions <MathEquation formula="a" /> and subsequent states <MathEquation formula="s'" />:</span>
                             <MathEquation formula="V^\pi(s) = \sum_{a} \pi(a|s) \mathbb{E}_\pi \left[ R_{t+1} + \gamma G_{t+1} \ \middle|\ S_t = s, A_t = a \right]" block />
                         </div>
                         <div>
-                            <span className="text-violet-400 font-bold">Step 3: Expand the expected transition to include probabilities of transition to next states $s'$ and rewards $r$:</span>
+                            <span className="text-violet-400 font-bold">Step 3: Expand the expected transition to include probabilities of transition to next states <MathEquation formula="s'" /> and rewards <MathEquation formula="r" />:</span>
                             <MathEquation formula="V^\pi(s) = \sum_{a} \pi(a|s) \sum_{s', r} p(s', r \mid s, a) \left[ r + \gamma \mathbb{E}_\pi \left[ G_{t+1} \ \middle|\ S_{t+1} = s' \right] \right]" block />
                         </div>
                         <div>
-                            <span className="text-violet-400 font-bold">{"Step 4: Recognize that $\\mathbb{E}_\\pi [G_{t+1} \\mid S_{t+1} = s']$ is by definition the value of the next state $V^\\pi(s')$:"}</span>
+                            <span className="text-violet-400 font-bold">Step 4: Recognize that <MathEquation formula="\mathbb{E}_\pi [G_{t+1} \mid S_{t+1} = s']" /> is by definition the value of the next state <MathEquation formula="V^\pi(s')" />:</span>
                             <MathEquation formula="V^\pi(s) = \sum_{a} \pi(a|s) \sum_{s', r} p(s', r \mid s, a) \left[ r + \gamma V^\pi(s') \right]" block />
                         </div>
                     </div>
@@ -565,7 +565,7 @@ export const Foundations: React.FC = () => {
                 <div className="bg-slate-900/30 p-5 rounded-xl border border-slate-800 space-y-4">
                     <h5 className="font-bold text-white">Bellman Optimality Equations</h5>
                     <p className="text-sm text-slate-400">
-                        An optimal policy $\pi^*$ maximizes the expected return. Under the optimal policy, the optimal value functions $V^*$ and $Q^*$ satisfy the **Bellman Optimality Equations**, which replace policy expectations with a $\max$ operator over actions:
+                        An optimal policy <MathEquation formula="\pi^*" /> maximizes the expected return. Under the optimal policy, the optimal value functions <MathEquation formula="V^*" /> and <MathEquation formula="Q^*" /> satisfy the **Bellman Optimality Equations**, which replace policy expectations with a <MathEquation formula="\max" /> operator over actions:
                     </p>
                     <MathEquation formula="V^*(s) = \max_{a} Q^*(s,a) = \max_a \sum_{s', r} p(s', r \mid s, a) \left[ r + \gamma V^*(s') \right]" block />
                     <MathEquation formula="Q^*(s,a) = \sum_{s', r} p(s', r \mid s, a) \left[ r + \gamma \max_{a'} Q^*(s', a') \right]" block />
@@ -579,41 +579,41 @@ export const Foundations: React.FC = () => {
                     Worked Numerical Example: Calculating V(s)
                 </h4>
                 <p className="text-sm text-slate-400">
-                    Let's trace a single-step calculation of $V(S_0)$ using the interactive MDP defined above. Let's assume a uniform policy where the agent is equally likely to Study or Relax at $S_0$:
+                    Let's trace a single-step calculation of <MathEquation formula="V(S_0)" /> using the interactive MDP defined above. Let's assume a uniform policy where the agent is equally likely to Study or Relax at <MathEquation formula="S_0" />:
                 </p>
                 <div className="bg-black/40 p-4 rounded-xl border border-slate-800 space-y-3 font-mono text-xs text-slate-300">
                     <div>
                         <strong>1. Environment Parameters:</strong>
                         <ul className="list-disc pl-5 mt-1 text-slate-400">
-                            <li>Discount factor: $\gamma = 0.9$</li>
-                            <li>{"Policy: $\\pi(\\text{Relax} \\mid S_0) = 0.5$, $\\pi(\\text{Study} \\mid S_0) = 0.5$"}</li>
-                            <li>{"Current values: $V(S_0) = 0.0$ (Idle), $V(S_1) = 5.0$ (Focused), $V(S_2) = 10.0$ (Graduate)"}</li>
+                            <li>Discount factor: <MathEquation formula="\gamma = 0.9" /></li>
+                            <li>Policy: <MathEquation formula="\pi(\text{Relax} \mid S_0) = 0.5" />, <MathEquation formula="\pi(\text{Study} \mid S_0) = 0.5" /></li>
+                            <li>Current values: <MathEquation formula="V(S_0) = 0.0" /> (Idle), <MathEquation formula="V(S_1) = 5.0" /> (Focused), <MathEquation formula="V(S_2) = 10.0" /> (Graduate)</li>
                         </ul>
                     </div>
                     <div>
                         <strong>2. Calculate expectation for action Relax:</strong>
                         <div className="pl-4 mt-1 text-slate-400">
-                            Relax transition is deterministic: transition to $S_0$ with reward $+1$.
+                            Relax transition is deterministic: transition to <MathEquation formula="S_0" /> with reward <MathEquation formula="+1" />.
                             <br />
-                            {"$Q(S_0, \\text{Relax}) = 1.0 + 0.9 \\times V(S_0) = 1.0 + 0.9 \\times 0 = 1.0$"}
+                            <MathEquation formula="Q(S_0, \text{Relax}) = 1.0 + 0.9 \times V(S_0) = 1.0 + 0.9 \times 0 = 1.0" />
                         </div>
                     </div>
                     <div>
                         <strong>3. Calculate expectation for action Study:</strong>
                         <div className="pl-4 mt-1 text-slate-400">
-                            Study transition: 80% to $S_1$ (reward $-1$), 20% to $S_0$ (reward $-1$).
+                            Study transition: 80% to <MathEquation formula="S_1" /> (reward <MathEquation formula="-1" />), 20% to <MathEquation formula="S_0" /> (reward <MathEquation formula="-1" />).
                             <br />
-                            {"$Q(S_0, \\text{Study}) = -1.0 + 0.9 \\times [0.8 \\times V(S_1) + 0.2 \\times V(S_0)]$"}
+                            <MathEquation formula="Q(S_0, \text{Study}) = -1.0 + 0.9 \times [0.8 \times V(S_1) + 0.2 \times V(S_0)]" />
                             <br />
-                            {"$Q(S_0, \\text{Study}) = -1.0 + 0.9 \\times [0.8 \\times 5.0 + 0.2 \\times 0] = -1.0 + 0.9 \\times 4.0 = -1.0 + 3.6 = 2.6$"}
+                            <MathEquation formula="Q(S_0, \text{Study}) = -1.0 + 0.9 \times [0.8 \times 5.0 + 0.2 \times 0] = -1.0 + 0.9 \times 4.0 = -1.0 + 3.6 = 2.6" />
                         </div>
                     </div>
                     <div>
                         <strong>4. Combine using policy weights:</strong>
                         <div className="pl-4 mt-1 text-slate-400 font-bold text-violet-400">
-                            {"$V(S_0) = \\pi(\\text{Relax}\\mid S_0) Q(S_0,\\text{Relax}) + \\pi(\\text{Study}\\mid S_0) Q(S_0,\\text{Study})$"}
+                            <MathEquation formula="V(S_0) = \pi(\text{Relax}\mid S_0) Q(S_0,\text{Relax}) + \pi(\text{Study}\mid S_0) Q(S_0,\text{Study})" />
                             <br />
-                            {"$V(S_0) = 0.5 \\times 1.0 + 0.5 \\times 2.6 = 0.5 + 1.3 = 1.8$"}
+                            <MathEquation formula="V(S_0) = 0.5 \times 1.0 + 0.5 \times 2.6 = 0.5 + 1.3 = 1.8" />
                         </div>
                     </div>
                 </div>
@@ -626,12 +626,12 @@ export const Foundations: React.FC = () => {
                     If an agent finds a policy that yields decent rewards, should it keep executing it (<strong>Exploiting</strong>)? Or should it try novel, untested actions (<strong>Exploring</strong>) to discover if even better rewards exist?
                 </p>
                 <p className="text-slate-400">
-                    This dilemma is central to RL. A simple yet powerful heuristic to solve it is the **$\epsilon$-greedy policy**:
+                    This dilemma is central to RL. A simple yet powerful heuristic to solve it is the **<MathEquation formula="\epsilon" />-greedy policy**:
                 </p>
                 <div className="bg-slate-900/30 p-5 rounded-xl border border-slate-800">
                     <MathEquation formula="\pi(a \mid s) = \begin{cases} 1 - \epsilon + \frac{\epsilon}{|A|} & \text{for } a = \text{argmax}_{a'} Q(s, a') \\ \frac{\epsilon}{|A|} & \text{for } a \neq \text{argmax}_{a'} Q(s, a') \end{cases}" block />
                     <p className="text-xs text-slate-500 mt-2 text-center">
-                        where $\epsilon \in [0, 1]$ represents exploration probability, and $|A|$ is the number of available actions.
+                        where <MathEquation formula="\epsilon \in [0, 1]" /> represents exploration probability, and <MathEquation formula="|A|" /> is the number of available actions.
                     </p>
                 </div>
             </section>
@@ -743,7 +743,7 @@ env.close()`}
                 </h4>
                 <ul className="list-disc pl-6 space-y-2 text-sm text-slate-400">
                     <li><strong>MDP Formulation:</strong> Every reinforcement learning problem is formalized as an MDP governed by the Markov property, where state transitions depend solely on the current state and action.</li>
-                    <li><strong>Value Functions:</strong> Value functions ($V$ and $Q$) represent the expected future discounted return and are used by agents to evaluate actions.</li>
+                    <li><strong>Value Functions:</strong> Value functions (<MathEquation formula="V" /> and <MathEquation formula="Q" />) represent the expected future discounted return and are used by agents to evaluate actions.</li>
                     <li><strong>Bellman Equation:</strong> The core recurrence relation stating that the value of the current state equals the immediate reward plus the discounted expected value of the next state.</li>
                     <li><strong>Exploration vs. Exploitation:</strong> Agents must balance exploring the environment to find new paths and exploiting their current knowledge to maximize rewards.</li>
                 </ul>

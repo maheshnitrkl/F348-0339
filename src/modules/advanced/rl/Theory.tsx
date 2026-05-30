@@ -21,6 +21,7 @@ import {
 // Section Imports
 import { Foundations } from './sections/01_Foundations';
 import { DynamicProgramming } from './sections/02_DynamicProgramming';
+import { ModelFree } from './sections/03_ModelFree';
 
 // Placeholders for sections 2 to 13 to be populated sequentially
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -69,7 +70,7 @@ const SECTIONS = [
         subtitle: 'Q-Learning & SARSA',
         icon: TrendingUp,
         color: '#10b981', // emerald-500
-        component: PlaceholderFactory('Model-Free Prediction & Control', 3),
+        component: ModelFree,
         tracks: ['07 MC Methods', '08 TD(0) & TD(λ)', '09 Q-Learning & SARSA'],
     },
     {

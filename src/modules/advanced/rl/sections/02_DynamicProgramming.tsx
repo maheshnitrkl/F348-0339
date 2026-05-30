@@ -146,7 +146,7 @@ export const DynamicProgramming: React.FC = () => {
             <section className="space-y-4">
                 <h3 className="text-2xl font-bold text-white">1. Conceptual Overview: The Planning Paradigm</h3>
                 <p className="text-slate-400">
-                    In computer science, **Dynamic Programming** simplifies a complex problem by breaking it down into recursive subproblems. In Reinforcement Learning, our "subproblems" are the values of future states. If we know the exact transition dynamics $P(s', r \mid s, a)$ of the environment, we can compute the value of any state by looking ahead to its neighbor states.
+                    In computer science, **Dynamic Programming** simplifies a complex problem by breaking it down into recursive subproblems. In Reinforcement Learning, our "subproblems" are the values of future states. If we know the exact transition dynamics <MathEquation formula="P(s', r \mid s, a)" /> of the environment, we can compute the value of any state by looking ahead to its neighbor states.
                 </p>
                 <p className="text-slate-400">
                     This lookahead calculation is called a **Bellman Backup**. Since DP updates the values of states based on the values of successor states, it relies heavily on **Bootstrapping**—updating estimates based on other estimates, without waiting for a final game result.
@@ -167,21 +167,21 @@ export const DynamicProgramming: React.FC = () => {
                 </div>
 
                 <p className="text-slate-400">
-                    **Policy Evaluation** is the process of computing the state-value function $V^\pi$ for an arbitrary policy $\pi$. We turn the Bellman Expectation Equation into an iterative update rule:
+                    **Policy Evaluation** is the process of computing the state-value function <MathEquation formula="V^\pi" /> for an arbitrary policy <MathEquation formula="\pi" />. We turn the Bellman Expectation Equation into an iterative update rule:
                 </p>
 
                 <div className="bg-slate-900/40 p-6 rounded-xl border border-slate-800">
                     <MathEquation formula="V_{k+1}(s) \leftarrow \sum_{a} \pi(a \mid s) \sum_{s', r} p(s', r \mid s, a) \left[ r + \gamma V_k(s') \right]" block />
                     <p className="text-xs text-slate-500 mt-2 text-center">
-                        For each state $s \in S$, we update its value estimate at iteration $k+1$ using the value estimates $V_k$ of its successor states.
+                        For each state <MathEquation formula="s \in S" />, we update its value estimate at iteration <MathEquation formula="k+1" /> using the value estimates <MathEquation formula="V_k" /> of its successor states.
                     </p>
                 </div>
 
                 <p className="text-slate-400">
-                    This algorithm converges to the true value function $V^\pi$ as $k \to \infty$. In practice, we terminate iterations when the maximum change in state values (often denoted as $\Delta$) drops below a tiny threshold $\theta$:
+                    This algorithm converges to the true value function <MathEquation formula="V^\pi" /> as <MathEquation formula="k \to \infty" />. In practice, we terminate iterations when the maximum change in state values (often denoted as <MathEquation formula="\Delta" />) drops below a tiny threshold <MathEquation formula="\theta" />:
                 </p>
-                <div className="text-center font-mono text-xs text-slate-500">
-                    {"Terminate if $\\max_{s \\in S} |V_{k+1}(s) - V_k(s)| < \\theta$"}
+                <div className="text-center font-mono text-xs text-slate-500 flex items-center justify-center gap-1">
+                    Terminate if <MathEquation formula="\max_{s \in S} |V_{k+1}(s) - V_k(s)| < \theta" />
                 </div>
             </section>
 
@@ -304,10 +304,10 @@ export const DynamicProgramming: React.FC = () => {
                 </div>
 
                 <p className="text-slate-400">
-                    Once we have evaluated a policy and computed its state values $V^\pi$, how do we make the policy better? This is governed by the **Policy Improvement Theorem**.
+                    Once we have evaluated a policy and computed its state values <MathEquation formula="V^\pi" />, how do we make the policy better? This is governed by the **Policy Improvement Theorem**.
                 </p>
                 <p className="text-slate-400">
-                    For any state $s$, we define a new greedy policy $\pi'$ that selects the action that maximizes the expected local backup:
+                    For any state <MathEquation formula="s" />, we define a new greedy policy <MathEquation formula="\pi'" /> that selects the action that maximizes the expected local backup:
                 </p>
 
                 <div className="bg-slate-900/40 p-6 rounded-xl border border-slate-800">
@@ -315,7 +315,7 @@ export const DynamicProgramming: React.FC = () => {
                 </div>
 
                 <p className="text-slate-400">
-                    By alternating between **Policy Evaluation** (estimating values for the current policy) and **Policy Improvement** (making the policy greedy with respect to those values), we form a loop that is guaranteed to converge to the optimal policy $\pi^*$. This process is called **Policy Iteration**.
+                    By alternating between **Policy Evaluation** (estimating values for the current policy) and **Policy Improvement** (making the policy greedy with respect to those values), we form a loop that is guaranteed to converge to the optimal policy <MathEquation formula="\pi^*" />. This process is called **Policy Iteration**.
                 </p>
 
                 {/* Generalized Policy Iteration */}
@@ -326,14 +326,14 @@ export const DynamicProgramming: React.FC = () => {
                 <div className="grid md:grid-cols-2 gap-6 items-center">
                     <div className="bg-slate-900/30 p-5 rounded-xl border border-slate-800 space-y-2">
                         <h5 className="font-bold text-violet-400">1. Evaluation (Estimation)</h5>
-                        <p className="text-xs text-slate-400 leading-relaxed">
-                            Making the value function consistent with the current policy. (Moving $V$ towards $V^\pi$).
+                        <p className="text-xs text-slate-400 leading-relaxed flex items-center gap-1">
+                            Making the value function consistent with the current policy. (Moving <MathEquation formula="V" /> towards <MathEquation formula="V^\pi" />).
                         </p>
                     </div>
                     <div className="bg-slate-900/30 p-5 rounded-xl border border-slate-800 space-y-2">
                         <h5 className="font-bold text-emerald-400">2. Improvement (Decisions)</h5>
-                        <p className="text-xs text-slate-400 leading-relaxed">
-                            Making the policy greedy with respect to the current value function. (Moving $\pi$ towards greediness).
+                        <p className="text-xs text-slate-400 leading-relaxed flex items-center gap-1">
+                            Making the policy greedy with respect to the current value function. (Moving <MathEquation formula="\pi" /> towards greediness).
                         </p>
                     </div>
                 </div>
@@ -466,46 +466,46 @@ export const DynamicProgramming: React.FC = () => {
                     <div>
                         <strong>1. Setup:</strong>
                         <ul className="list-disc pl-5 mt-1 text-slate-400">
-                            <li>States: $S_0, S_1, S_2$ (non-terminal) and $S_3$ (terminal, value 0).</li>
+                            <li>States: <MathEquation formula="S_0, S_1, S_2" /> (non-terminal) and <MathEquation formula="S_3" /> (terminal, value 0).</li>
                             <li>Actions: Down (D), Right (R). Move is deterministic unless bouncing off grid edges.</li>
-                            <li>Reward: $-1.0$ for all steps. Discount factor $\gamma = 1.0$.</li>
-                            <li>Initial Values: $V_0(S_0)=0, V_0(S_1)=0, V_0(S_2)=0, V_0(S_3)=0$.</li>
+                            <li>Reward: <MathEquation formula="-1.0" /> for all steps. Discount factor <MathEquation formula="\gamma = 1.0" />.</li>
+                            <li>Initial Values: <MathEquation formula="V_0(S_0)=0, V_0(S_1)=0, V_0(S_2)=0, V_0(S_3)=0" />.</li>
                         </ul>
                     </div>
                     <div>
-                        <strong>2. Iteration 1 ($k=1$):</strong>
+                        <strong>2. Iteration 1 (<MathEquation formula="k=1" />):</strong>
                         <div className="pl-4 mt-1 text-slate-400">
-                            For $S_0$:
+                            For <MathEquation formula="S_0" />:
                             <br />
-                            - Down goes to $S_2$: $Q_1(S_0, D) = -1.0 + 1.0 \times V_0(S_2) = -1.0 + 0 = -1.0$
+                            - Down goes to <MathEquation formula="S_2" />: <MathEquation formula="Q_1(S_0, D) = -1.0 + 1.0 \times V_0(S_2) = -1.0 + 0 = -1.0" />
                             <br />
-                            - Right goes to $S_1$: $Q_1(S_0, R) = -1.0 + 1.0 \times V_0(S_1) = -1.0 + 0 = -1.0$
+                            - Right goes to <MathEquation formula="S_1" />: <MathEquation formula="Q_1(S_0, R) = -1.0 + 1.0 \times V_0(S_1) = -1.0 + 0 = -1.0" />
                             <br />
-                            - $V_1(S_0) = \max(-1, -1) = -1.0$
+                            - <MathEquation formula="V_1(S_0) = \max(-1, -1) = -1.0" />
                             <br />
-                            {"Similarly, $V_1(S_1) = \\max(\\text{Down to } S_3 \\text{ [R:-1]}, \\text{Right bounce}) = \\max(-1.0 + V_0(S_3), -1.0 + V_0(S_1)) = \\max(-1.0 + 0, -1.0 + 0) = -1.0$."}
+                            Similarly, <MathEquation formula="V_1(S_1) = \max(\text{Down to } S_3 \text{ [R:-1]}, \text{Right bounce}) = \max(-1.0 + V_0(S_3), -1.0 + V_0(S_1)) = \max(-1.0 + 0, -1.0 + 0) = -1.0" />.
                             <br />
-                            $V_1(S_2) = -1.0$.
+                            <MathEquation formula="V_1(S_2) = -1.0" />.
                         </div>
                     </div>
                     <div>
-                        <strong>3. Iteration 2 ($k=2$):</strong>
+                        <strong>3. Iteration 2 (<MathEquation formula="k=2" />):</strong>
                         <div className="pl-4 mt-1 text-slate-400 font-bold text-violet-400">
-                            For $S_0$:
+                            For <MathEquation formula="S_0" />:
                             <br />
-                            - Down goes to $S_2$: $Q_2(S_0, D) = -1.0 + V_1(S_2) = -1.0 + (-1.0) = -2.0$
+                            - Down goes to <MathEquation formula="S_2" />: <MathEquation formula="Q_2(S_0, D) = -1.0 + V_1(S_2) = -1.0 + (-1.0) = -2.0" />
                             <br />
-                            - Right goes to $S_1$: $Q_2(S_0, R) = -1.0 + V_1(S_1) = -1.0 + (-1.0) = -2.0$
+                            - Right goes to <MathEquation formula="S_1" />: <MathEquation formula="Q_2(S_0, R) = -1.0 + V_1(S_1) = -1.0 + (-1.0) = -2.0" />
                             <br />
-                            - $V_2(S_0) = -2.0$.
+                            - <MathEquation formula="V_2(S_0) = -2.0" />.
                             <br />
-                            For $S_1$ (adjacent to Terminal $S_3$):
+                            For <MathEquation formula="S_1" /> (adjacent to Terminal <MathEquation formula="S_3" />):
                             <br />
-                            - Down goes to $S_3$: $Q_2(S_1, D) = -1.0 + V_1(S_3) = -1.0 + 0.0 = -1.0$
+                            - Down goes to <MathEquation formula="S_3" />: <MathEquation formula="Q_2(S_1, D) = -1.0 + V_1(S_3) = -1.0 + 0.0 = -1.0" />
                             <br />
-                            - Right bounce: $Q_2(S_1, R) = -1.0 + V_1(S_1) = -1.0 + (-1.0) = -2.0$
+                            - Right bounce: <MathEquation formula="Q_2(S_1, R) = -1.0 + V_1(S_1) = -1.0 + (-1.0) = -2.0" />
                             <br />
-                            - $V_2(S_1) = \max(-1, -2) = -1.0$. (Converged! Optimal policy at $S_1$ is Down).
+                            - <MathEquation formula="V_2(S_1) = \max(-1, -2) = -1.0" />. (Converged! Optimal policy at <MathEquation formula="S_1" /> is Down).
                         </div>
                     </div>
                 </div>
@@ -611,12 +611,12 @@ print(V_star.reshape((4, 4)))
                     <div className="grid grid-cols-3 text-center py-2 text-sm text-slate-300 border-b border-slate-900">
                         <div className="font-bold text-white">Policy Iteration</div>
                         <div className="text-violet-400">~3-5 iterations (with evaluations)</div>
-                        <div>$O(|S|^2 \cdot |A|)$</div>
+                        <div><MathEquation formula="O(|S|^2 \cdot |A|)" /></div>
                     </div>
                     <div className="grid grid-cols-3 text-center py-2 text-sm text-slate-300">
                         <div className="font-bold text-white">Value Iteration</div>
                         <div className="text-violet-400">~6-8 sweeps</div>
-                        <div>$O(|S| \cdot |A|)$</div>
+                        <div><MathEquation formula="O(|S| \cdot |A|)" /></div>
                     </div>
                 </div>
             </section>
