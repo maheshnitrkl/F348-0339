@@ -94,7 +94,7 @@ export const PerceptronViz: React.FC = () => {
                     <div className="space-y-4">
                         <div>
                             <div className="flex justify-between text-sm mb-1">
-                                <span className="text-slate-400">Weight 1 ($w_1$)</span>
+                                <span className="text-slate-400">Weight 1 (w₁)</span>
                                 <span className="text-violet-400 font-mono">{w1.toFixed(2)}</span>
                             </div>
                             <input
@@ -105,7 +105,7 @@ export const PerceptronViz: React.FC = () => {
                         </div>
                         <div>
                             <div className="flex justify-between text-sm mb-1">
-                                <span className="text-slate-400">Weight 2 ($w_2$)</span>
+                                <span className="text-slate-400">Weight 2 (w₂)</span>
                                 <span className="text-violet-400 font-mono">{w2.toFixed(2)}</span>
                             </div>
                             <input
@@ -116,7 +116,7 @@ export const PerceptronViz: React.FC = () => {
                         </div>
                         <div>
                             <div className="flex justify-between text-sm mb-1">
-                                <span className="text-slate-400">Bias ($b$)</span>
+                                <span className="text-slate-400">Bias (b)</span>
                                 <span className="text-violet-400 font-mono">{bias.toFixed(2)}</span>
                             </div>
                             <input

@@ -1,101 +1,190 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Brain, Zap, Layers, Dumbbell, LayoutGrid, Network } from 'lucide-react';
+import { 
+    Brain, 
+    Zap, 
+    Layers, 
+    Dumbbell, 
+    LayoutGrid, 
+    Network,
+    Repeat,
+    Rocket,
+    Target,
+    Sliders,
+    Shield,
+    Grid,
+    Cpu,
+    Sparkles,
+    Wand2,
+    GitFork
+} from 'lucide-react';
 
 // ── Section Imports ─────────────────────────────────────────────────────────
 import { Perceptron } from './sections/01_Perceptron';
-import { Activation } from './sections/02_Activation';
-import { Architecture } from './sections/03_Architecture';
-import { Training } from './sections/04_Training';
-import { ArchitectureZoo } from './sections/05_ArchitectureZoo';
-import { TransferLearning } from './sections/06_TransferLearning';
-import { StateOfTheArt } from './sections/07_StateOfTheArt';
-import { ObjectDetection } from './sections/08_ObjectDetection';
-import { Segmentation } from './sections/09_Segmentation';
-import { Repeat, Rocket, Target, Map } from 'lucide-react';
+
+// ── Placeholder Factory for sequential development ──────────────────────────
+const PlaceholderFactory = (title: string, chapter: number) => {
+    return () => (
+        <div className="bg-slate-900/30 border border-slate-800 rounded-2xl p-8 space-y-4">
+            <h3 className="text-2xl font-bold text-white">Chapter {chapter}: {title}</h3>
+            <div className="flex items-center gap-3 text-sky-400 bg-sky-500/10 border border-sky-500/25 px-4 py-3 rounded-xl text-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width={20} height={20} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="flex-shrink-0">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>This chapter is scheduled for sequential development in the Neural Networks roadmap.</span>
+            </div>
+            <p className="text-slate-400 leading-relaxed font-sans">
+                We are implementing the Neural Networks module chapters sequentially. This section will soon be populated with mathematical derivations, interactive widgets, hand-worked numerical steps, and PyTorch implementations.
+            </p>
+        </div>
+    );
+};
 
 // ── Section Config ───────────────────────────────────────────────────────────
 const SECTIONS = [
     {
         id: 'perceptron',
-        title: 'The Perceptron',
-        subtitle: 'Biological Inspiration',
+        title: 'Biological Inspiration & The Perceptron',
+        subtitle: 'Biological Inspiration & Rosenblatt Perceptron',
         icon: Brain,
-        color: '#8b5cf6',
+        color: '#8b5cf6', // violet-500
         component: Perceptron,
-        tracks: ['01 Biological Inspiration', '02 The Math', '03 XOR Problem'],
+        tracks: ['01 Biological Neuron', '02 McCulloch-Pitts', '03 Perceptron Convergence'],
+    },
+    {
+        id: 'ffn-mlp',
+        title: 'Feedforward Neural Networks (MLPs)',
+        subtitle: 'Multi-Layer Perceptron Architecture',
+        icon: Layers,
+        color: '#3b82f6', // blue-500
+        component: PlaceholderFactory('Feedforward Neural Networks (MLPs)', 2),
+        tracks: ['04 MLP Architecture', '05 Universal Approximation', '06 Depth vs. Width'],
     },
     {
         id: 'activation',
         title: 'Activation Functions',
-        subtitle: 'Non-Linearity',
+        subtitle: 'Sigmoid, ReLU, GELU, SwiGLU',
         icon: Zap,
-        color: '#22d3ee',
-        component: Activation,
-        tracks: ['04 Why Non-Linearity', '05 8 Functions', '06 Vanishing Gradients'],
+        color: '#22d3ee', // cyan-400
+        component: PlaceholderFactory('Activation Functions', 3),
+        tracks: ['07 Why Non-Linearity', '08 Standard Activations', '09 Modern Gated Activations'],
     },
     {
-        id: 'architecture',
-        title: 'Architecture (MLP)',
-        subtitle: 'Structure & Flow',
-        icon: Layers,
-        color: '#818cf8',
-        component: Architecture,
-        tracks: ['07 MLP Anatomy', '08 Forward Pass', '09 Universal Approx.'],
-    },
-    {
-        id: 'training',
-        title: 'Training & Loss',
-        subtitle: 'Optimization',
-        icon: Dumbbell,
-        color: '#fb923c',
-        component: Training,
-        tracks: ['10 Training Loop', '11 Loss Functions', '12 Learning Rate'],
-    },
-    {
-        id: 'zoo',
-        title: 'Architecture Zoo',
-        subtitle: 'CNN, RNN, Transformer…',
-        icon: LayoutGrid,
-        color: '#f59e0b',
-        component: ArchitectureZoo,
-        tracks: ['13 6 Architectures', 'Timeline', "What's Next"],
-    },
-    {
-        id: 'object-detection',
-        title: 'Object Detection',
-        subtitle: 'Bounding Boxes & YOLO',
+        id: 'loss-functions',
+        title: 'Loss Functions',
+        subtitle: 'Regression, Classification & InfoNCE',
         icon: Target,
-        color: '#10b981',
-        component: ObjectDetection,
-        tracks: ['14 R-CNN', '15 YOLO Grid', '16 Anchors & NMS'],
-    },
-    {
-        id: 'segmentation',
-        title: 'Image Segmentation',
-        subtitle: 'Pixel-Perfect Masks & U-Net',
-        icon: Map,
-        color: '#3b82f6',
-        component: Segmentation,
-        tracks: ['17 Semantic', '18 Instance', '19 U-Net'],
-    },
-    {
-        id: 'transfer-learning',
-        title: 'Transfer Learning',
-        subtitle: 'Feature Extraction & Fine-Tuning',
-        icon: Repeat,
-        color: '#ec4899', // pink-500
-        component: TransferLearning,
-        tracks: ['14 Why Transfer?', '15 The Architect', '16 Paradigms'],
-    },
-    {
-        id: 'state-of-the-art',
-        title: 'State of the Art',
-        subtitle: '3D Viz, Transformers, & LLMs',
-        icon: Rocket,
         color: '#f43f5e', // rose-500
-        component: StateOfTheArt,
-        tracks: ['17 3D Neural Nets', '18 Attention', '19 Modern Optimizers'],
+        component: PlaceholderFactory('Loss Functions', 4),
+        tracks: ['10 Risk Minimization', '11 Triplet & Focal Loss', '12 Contrastive Losses'],
+    },
+    {
+        id: 'backpropagation',
+        title: 'Backpropagation & Autodiff',
+        subtitle: 'Vector Chain Rule & Reverse-Mode',
+        icon: Network,
+        color: '#ec4899', // pink-500
+        component: PlaceholderFactory('Backpropagation & Automatic Differentiation', 5),
+        tracks: ['13 Vector Chain Rule', '14 Backprop Derivation', '15 Vanishing Gradients'],
+    },
+    {
+        id: 'optimization',
+        title: 'Optimization Algorithms',
+        subtitle: 'AdamW, Lion, & Curvature Optimizers',
+        icon: Dumbbell,
+        color: '#fb923c', // orange-400
+        component: PlaceholderFactory('Optimization Algorithms', 6),
+        tracks: ['16 SGD & Momentum', '17 Adaptive Optimizers', '18 LR Schedules'],
+    },
+    {
+        id: 'initialization',
+        title: 'Weight Initialization',
+        subtitle: 'Xavier, Kaiming, & Maximal Parameterization',
+        icon: Sliders,
+        color: '#a855f7', // purple-500
+        component: PlaceholderFactory('Weight Initialization', 7),
+        tracks: ['19 Symmetry Breaking', '20 Glorot & He Derivations', '21 Maximal Update (uP)'],
+    },
+    {
+        id: 'regularization',
+        title: 'Regularization Techniques',
+        subtitle: 'L1/L2, Dropout, BatchNorm, RMSNorm',
+        icon: Shield,
+        color: '#10b981', // emerald-500
+        component: PlaceholderFactory('Regularization Techniques', 8),
+        tracks: ['22 Bias-Variance Decomposition', '23 Regularizers & Dropout', '24 Normalization Layers'],
+    },
+    {
+        id: 'cnn',
+        title: 'Convolutional Neural Networks',
+        subtitle: 'Translation Invariance & Spatial Grids',
+        icon: Grid,
+        color: '#06b6d4', // cyan-500
+        component: PlaceholderFactory('Convolutional Neural Networks (CNNs)', 9),
+        tracks: ['25 Convolution Operator', '26 Classic Architectures', '27 Residual Connections'],
+    },
+    {
+        id: 'rnn-seq',
+        title: 'Recurrent Networks & Sequences',
+        subtitle: 'Vanilla RNN, LSTM, GRU & Attention',
+        icon: Repeat,
+        color: '#6366f1', // indigo-500
+        component: PlaceholderFactory('Recurrent Neural Networks & Sequence Modeling', 10),
+        tracks: ['28 BPTT & Gradients', '29 Gated Units (LSTM/GRU)', '30 Classic Attention'],
+    },
+    {
+        id: 'transformer',
+        title: 'The Transformer Architecture',
+        subtitle: 'Scaled Dot-Product & Positional Encoding',
+        icon: Cpu,
+        color: '#845ef7', // deep purple
+        component: PlaceholderFactory('The Transformer Architecture', 11),
+        tracks: ['31 Self-Attention Core', '32 Positional Gating (RoPE/ALiBi)', '33 Pre-LN Blocks'],
+    },
+    {
+        id: 'llm-scaling',
+        title: 'Large Language Models',
+        subtitle: 'Scaling Laws, MoE, LoRA & Quantization',
+        icon: Sparkles,
+        color: '#38bdf8', // sky-400
+        component: PlaceholderFactory('Large Language Models & Scaling', 12),
+        tracks: ['34 Chinchilla Scaling', '35 Mixture of Experts', '36 PEFT (LoRA/QLoRA)'],
+    },
+    {
+        id: 'vision-architectures',
+        title: 'Computer Vision Architectures',
+        subtitle: 'Vision Transformers, Swin, CLIP & SAM',
+        icon: LayoutGrid,
+        color: '#a78bfa', // soft violet
+        component: PlaceholderFactory('Computer Vision Architectures', 13),
+        tracks: ['37 Vision Transformer (ViT)', '38 Contrastive Pretraining (CLIP)', '39 Segment Anything'],
+    },
+    {
+        id: 'generative',
+        title: 'Generative Models',
+        subtitle: 'VAEs, GANs, Diffusion & Flow Matching',
+        icon: Wand2,
+        color: '#f472b6', // pink-400
+        component: PlaceholderFactory('Generative Models', 14),
+        tracks: ['40 VAEs & Minimax GANs', '41 Denoising Diffusion (DDPM)', '42 Continuous Flow Matching'],
+    },
+    {
+        id: 'gnn',
+        title: 'Graph Neural Networks',
+        subtitle: 'Spectral GCN, GraphSAGE, GAT & GIN',
+        icon: GitFork,
+        color: '#20c997', // teal-400
+        component: PlaceholderFactory('Graph Neural Networks (GNNs)', 15),
+        tracks: ['43 Message Passing Framework', '44 GCN & GAT Layers', '45 Over-smoothing Limits'],
+    },
+    {
+        id: 'sota-frontier',
+        title: 'SOTA & Frontier (2024–2025)',
+        subtitle: 'KAN, Mamba Selective SSM & Reasoning',
+        icon: Rocket,
+        color: '#e64980', // deep pink
+        component: PlaceholderFactory('State-of-the-Art & Frontier Topics (2024–2025)', 16),
+        tracks: ['46 Kolmogorov-Arnold KAN', '47 Selective Scan Mamba', '48 Reasoning Compute Scaling'],
     },
 ];
 
@@ -139,7 +228,7 @@ export const Theory: React.FC = () => {
                 </div>
 
                 {/* Navigation */}
-                <nav className="flex-1 overflow-y-auto p-2 space-y-1">
+                <nav className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-hide">
                     {SECTIONS.map((section, idx) => {
                         const Icon = section.icon;
                         const isActive = activeSection === idx;
@@ -147,7 +236,7 @@ export const Theory: React.FC = () => {
                             <button
                                 key={section.id}
                                 onClick={() => setActiveSection(idx)}
-                                className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all text-left ${isActive ? 'text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`}
+                                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-left ${isActive ? 'text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`}
                                 style={isActive ? { backgroundColor: section.color + '20', border: `1px solid ${section.color}40` } : { border: '1px solid transparent' }}
                                 title={sidebarCollapsed ? section.title : undefined}
                             >
@@ -217,7 +306,7 @@ export const Theory: React.FC = () => {
                         </button>
                         {SECTIONS.map((s, i) => (
                             <button key={i} onClick={() => setActiveSection(i)}
-                                className="w-2 h-2 rounded-full transition-all"
+                                className="w-1.5 h-1.5 rounded-full transition-all"
                                 style={{ backgroundColor: i === activeSection ? s.color : '#334155' }}
                             />
                         ))}
