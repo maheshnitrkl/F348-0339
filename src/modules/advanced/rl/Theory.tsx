@@ -29,6 +29,7 @@ import { AdvancedPolicy } from './sections/07_AdvancedPolicy';
 import { ContinuousControl } from './sections/08_ContinuousControl';
 import { ModelBased } from './sections/09_ModelBased';
 import { MARL } from './sections/10_MARL';
+import { OfflineRL } from './sections/11_OfflineRL';
 
 // Placeholders for sections 2 to 13 to be populated sequentially
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -149,7 +150,7 @@ const SECTIONS = [
         subtitle: 'CQL & Decision Transformer',
         icon: HardDrive,
         color: '#6366f1', // indigo-500
-        component: PlaceholderFactory('Offline & Batch Reinforcement Learning', 11),
+        component: OfflineRL,
         tracks: ['31 Extrapolation Error', '32 Conservative Q', '33 Sequence Models'],
     },
     {
