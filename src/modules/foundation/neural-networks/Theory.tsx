@@ -21,6 +21,7 @@ import {
 
 // ── Section Imports ─────────────────────────────────────────────────────────
 import { Perceptron } from './sections/01_Perceptron';
+import { MLP } from './sections/02_MLP';
 
 // ── Placeholder Factory for sequential development ──────────────────────────
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -57,7 +58,7 @@ const SECTIONS = [
         subtitle: 'Multi-Layer Perceptron Architecture',
         icon: Layers,
         color: '#3b82f6', // blue-500
-        component: PlaceholderFactory('Feedforward Neural Networks (MLPs)', 2),
+        component: MLP,
         tracks: ['04 MLP Architecture', '05 Universal Approximation', '06 Depth vs. Width'],
     },
     {
