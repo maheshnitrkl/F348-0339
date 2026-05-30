@@ -25,6 +25,7 @@ import { ModelFree } from './sections/03_ModelFree';
 import { FunctionApprox } from './sections/04_FunctionApprox';
 import { DeepRL } from './sections/05_DeepRL';
 import { PolicyGradient } from './sections/06_PolicyGradient';
+import { AdvancedPolicy } from './sections/07_AdvancedPolicy';
 
 // Placeholders for sections 2 to 13 to be populated sequentially
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -109,7 +110,7 @@ const SECTIONS = [
         subtitle: 'TRPO & PPO',
         icon: Shield,
         color: '#14b8a6', // teal-500
-        component: PlaceholderFactory('Advanced Policy Optimization', 7),
+        component: AdvancedPolicy,
         tracks: ['19 Trust Regions', '20 PPO-Clip Objective', '21 Natural Gradients'],
     },
     {
