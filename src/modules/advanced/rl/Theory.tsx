@@ -30,6 +30,7 @@ import { ContinuousControl } from './sections/08_ContinuousControl';
 import { ModelBased } from './sections/09_ModelBased';
 import { MARL } from './sections/10_MARL';
 import { OfflineRL } from './sections/11_OfflineRL';
+import { Alignment } from './sections/12_Alignment';
 
 // Placeholders for sections 2 to 13 to be populated sequentially
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -159,7 +160,7 @@ const SECTIONS = [
         subtitle: 'Reward Models, PPO, & DPO',
         icon: Heart,
         color: '#ec4899', // pink-500
-        component: PlaceholderFactory('RL from Human Feedback (RLHF) & Alignment', 12),
+        component: Alignment,
         tracks: ['34 Preference Loss', '35 Reward Hacking', '36 Direct Opt. (DPO)'],
     },
     {
