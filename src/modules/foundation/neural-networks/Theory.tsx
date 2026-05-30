@@ -26,6 +26,7 @@ import { Activation } from './sections/03_Activation';
 import { LossFunctions } from './sections/04_LossFunctions';
 import { Backpropagation } from './sections/05_Backpropagation';
 import { Optimization } from './sections/06_Optimization';
+import { Initialization } from './sections/07_Initialization';
 
 // ── Placeholder Factory for sequential development ──────────────────────────
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -107,7 +108,7 @@ const SECTIONS = [
         subtitle: 'Xavier, Kaiming, & Maximal Parameterization',
         icon: Sliders,
         color: '#a855f7', // purple-500
-        component: PlaceholderFactory('Weight Initialization', 7),
+        component: Initialization,
         tracks: ['19 Symmetry Breaking', '20 Glorot & He Derivations', '21 Maximal Update (uP)'],
     },
     {
