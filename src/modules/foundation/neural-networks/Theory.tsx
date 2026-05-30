@@ -25,6 +25,7 @@ import { MLP } from './sections/02_MLP';
 import { Activation } from './sections/03_Activation';
 import { LossFunctions } from './sections/04_LossFunctions';
 import { Backpropagation } from './sections/05_Backpropagation';
+import { Optimization } from './sections/06_Optimization';
 
 // ── Placeholder Factory for sequential development ──────────────────────────
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -97,7 +98,7 @@ const SECTIONS = [
         subtitle: 'AdamW, Lion, & Curvature Optimizers',
         icon: Dumbbell,
         color: '#fb923c', // orange-400
-        component: PlaceholderFactory('Optimization Algorithms', 6),
+        component: Optimization,
         tracks: ['16 SGD & Momentum', '17 Adaptive Optimizers', '18 LR Schedules'],
     },
     {
