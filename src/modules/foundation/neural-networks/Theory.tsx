@@ -30,6 +30,7 @@ import { Initialization } from './sections/07_Initialization';
 import { Regularization } from './sections/08_Regularization';
 import { CNN } from './sections/09_CNN';
 import { RNNSeq } from './sections/10_RNNSeq';
+import { Transformer } from './sections/11_Transformer';
 
 // ── Placeholder Factory for sequential development ──────────────────────────
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -147,7 +148,7 @@ const SECTIONS = [
         subtitle: 'Scaled Dot-Product & Positional Encoding',
         icon: Cpu,
         color: '#845ef7', // deep purple
-        component: PlaceholderFactory('The Transformer Architecture', 11),
+        component: Transformer,
         tracks: ['31 Self-Attention Core', '32 Positional Gating (RoPE/ALiBi)', '33 Pre-LN Blocks'],
     },
     {
