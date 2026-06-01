@@ -14,7 +14,7 @@ import {
     Layers,
     LineChart
 } from 'lucide-react';
-import { MathEquation } from '../components/MathEquation';
+import { MathEquation } from '../../../../components/MathEquation';
 
 export const FunctionApprox: React.FC = () => {
     // --- 1. Feature Representation State ---

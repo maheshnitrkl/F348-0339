@@ -13,7 +13,7 @@ import {
     TrendingUp,
     Sliders
 } from 'lucide-react';
-import { MathEquation } from '../components/MathEquation';
+import { MathEquation } from '../../../../components/MathEquation';
 
 export const PolicyGradient: React.FC = () => {
     // --- Gridworld Parameters ---

@@ -15,7 +15,7 @@ import {
     Zap,
     HelpCircle
 } from 'lucide-react';
-import { MathEquation } from '../components/MathEquation';
+import { MathEquation } from '../../../../components/MathEquation';
 
 export const ModelFree: React.FC = () => {
     // --- Cliff Walking Environment Configuration ---

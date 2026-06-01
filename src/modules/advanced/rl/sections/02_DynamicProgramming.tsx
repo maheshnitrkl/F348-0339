@@ -12,7 +12,7 @@ import {
     Info,
     HelpCircle
 } from 'lucide-react';
-import { MathEquation } from '../components/MathEquation';
+import { MathEquation } from '../../../../components/MathEquation';
 
 export const DynamicProgramming: React.FC = () => {
     // --- Gridworld Convergence Simulator States ---

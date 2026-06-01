@@ -15,7 +15,7 @@ import {
     Server,
     ListRestart
 } from 'lucide-react';
-import { MathEquation } from '../components/MathEquation';
+import { MathEquation } from '../../../../components/MathEquation';
 
 export const DeepRL: React.FC = () => {
     // --- CartPole Physics Simulator State ---

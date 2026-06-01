@@ -13,7 +13,7 @@ import {
     CheckCircle,
     Info
 } from 'lucide-react';
-import { MathEquation } from '../components/MathEquation';
+import { MathEquation } from '../../../../components/MathEquation';
 
 export const Foundations: React.FC = () => {
     // --- State for Agent-Env Loop Visualization ---
