@@ -31,6 +31,7 @@ import { Regularization } from './sections/08_Regularization';
 import { CNN } from './sections/09_CNN';
 import { RNNSeq } from './sections/10_RNNSeq';
 import { Transformer } from './sections/11_Transformer';
+import { LLMScaling } from './sections/12_LLMScaling';
 
 // ── Placeholder Factory for sequential development ──────────────────────────
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -157,7 +158,7 @@ const SECTIONS = [
         subtitle: 'Scaling Laws, MoE, LoRA & Quantization',
         icon: Sparkles,
         color: '#38bdf8', // sky-400
-        component: PlaceholderFactory('Large Language Models & Scaling', 12),
+        component: LLMScaling,
         tracks: ['34 Chinchilla Scaling', '35 Mixture of Experts', '36 PEFT (LoRA/QLoRA)'],
     },
     {
