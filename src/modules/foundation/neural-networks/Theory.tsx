@@ -35,6 +35,7 @@ import { LLMScaling } from './sections/12_LLMScaling';
 import { VisionArchitectures } from './sections/13_VisionArchitectures';
 import { Generative } from './sections/14_Generative';
 import { GNN } from './sections/15_GNN';
+import { SOTAFrontier } from './sections/16_SOTAFrontier';
 
 // ── Placeholder Factory for sequential development ──────────────────────────
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -197,7 +198,7 @@ const SECTIONS = [
         subtitle: 'KAN, Mamba Selective SSM & Reasoning',
         icon: Rocket,
         color: '#e64980', // deep pink
-        component: PlaceholderFactory('State-of-the-Art & Frontier Topics (2024–2025)', 16),
+        component: SOTAFrontier,
         tracks: ['46 Kolmogorov-Arnold KAN', '47 Selective Scan Mamba', '48 Reasoning Compute Scaling'],
     },
 ];
