@@ -32,6 +32,7 @@ import { CNN } from './sections/09_CNN';
 import { RNNSeq } from './sections/10_RNNSeq';
 import { Transformer } from './sections/11_Transformer';
 import { LLMScaling } from './sections/12_LLMScaling';
+import { VisionArchitectures } from './sections/13_VisionArchitectures';
 
 // ── Placeholder Factory for sequential development ──────────────────────────
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -167,7 +168,7 @@ const SECTIONS = [
         subtitle: 'Vision Transformers, Swin, CLIP & SAM',
         icon: LayoutGrid,
         color: '#a78bfa', // soft violet
-        component: PlaceholderFactory('Computer Vision Architectures', 13),
+        component: VisionArchitectures,
         tracks: ['37 Vision Transformer (ViT)', '38 Contrastive Pretraining (CLIP)', '39 Segment Anything'],
     },
     {
