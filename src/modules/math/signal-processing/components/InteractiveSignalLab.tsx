@@ -4,7 +4,7 @@ import { DFT } from '../utils/DFT';
 import { WaveformViz } from './WaveformViz';
 import { SpectrumViz } from './SpectrumViz';
 import { SpectrogramViz } from './SpectrogramViz';
-import { MathEquation } from './common/MathEquation';
+import { MathEquation } from '../../../../components/MathEquation';
 import { ComplexPlaneViz } from './common/ComplexPlaneViz';
 import { WindowFunctions, type WindowFunctionType } from '../utils/WindowFunctions';
 import { SimpleFilter, type FilterType } from '../utils/Filters';

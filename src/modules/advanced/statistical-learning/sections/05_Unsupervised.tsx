@@ -1,6 +1,6 @@
 import React from 'react';
 import { KMeansViz } from '../components/KMeansViz';
-import { MathEquation } from '../../../math/signal-processing/components/common/MathEquation';
+import { MathEquation } from '../../../../components/MathEquation';
 
 export const Unsupervised: React.FC = () => {
     return (

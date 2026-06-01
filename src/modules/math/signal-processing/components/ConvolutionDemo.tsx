@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import React, { useState, useEffect, useRef } from 'react';
-import { MathEquation } from './common/MathEquation';
+import { MathEquation } from '../../../../components/MathEquation';
 
 // Signals defined outside component to prevent re-creation on every render
 const X_SIGNAL = [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0];

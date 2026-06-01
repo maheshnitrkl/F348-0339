@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import React, { useRef, useEffect, useState } from 'react';
-import { MathEquation } from './common/MathEquation';
+import { MathEquation } from '../../../../components/MathEquation';
 
 export const AliasingVisualizer: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);

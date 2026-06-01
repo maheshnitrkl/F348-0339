@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { MathEquation } from './common/MathEquation';
+import { MathEquation } from '../../../../components/MathEquation';
 
 export const WaveletDemo: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);

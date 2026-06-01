@@ -1,7 +1,7 @@
 import React from 'react';
 import { DistributionExplorer } from '../components/DistributionExplorer';
 import { LikelihoodViz } from '../components/LikelihoodViz';
-import { MathEquation } from '../components/MathEquation';
+import { MathEquation } from '../../../../components/MathEquation';
 
 export const Foundations: React.FC = () => {
     return (

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Network, Target, GitCommit, Activity, ChevronRight, ChevronLeft } from 'lucide-react';
-import { MathEquation } from './MathEquation';
+import { MathEquation } from '../../../../components/MathEquation';
 
 type StepInfo = {
     id: string;

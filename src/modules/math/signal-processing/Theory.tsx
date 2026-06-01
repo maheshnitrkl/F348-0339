@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React from 'react';
-import { MathEquation } from './components/common/MathEquation';
+import { MathEquation } from '../../../components/MathEquation';
 import { AliasingVisualizer } from './components/AliasingVisualizer';
 import { UNetDiagram } from './components/UNetDiagram';
 import { SPRoadmap } from './components/SPRoadmap';

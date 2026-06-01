@@ -3,7 +3,7 @@ import { SignalGenerator } from '../utils/SignalGenerator';
 import { WaveformViz } from './WaveformViz';
 import { SpectrumViz } from './SpectrumViz';
 import { DFT } from '../utils/DFT';
-import { MathEquation } from './common/MathEquation';
+import { MathEquation } from '../../../../components/MathEquation';
 import { ComplexPlaneViz } from './common/ComplexPlaneViz';
 
 export const BiomedicalLab: React.FC = () => {

@@ -23,24 +23,12 @@ import {
     ChevronRight,
     BookOpen
 } from 'lucide-react';
-import { MathEquation } from '../components/MathEquation';
+import { MathEquation } from '../../../../components/MathEquation';
+import { SectionTitle, Card } from '../../../../components/SectionElements';
 
 /* ═══════════════════════════════════════════════════════════════════════
    HELPER: Reusable styled sub-components
    ═══════════════════════════════════════════════════════════════════════ */
-
-const SectionTitle: React.FC<{ children: React.ReactNode; icon?: React.ReactNode; color?: string }> = ({ children, icon, color = '#a855f7' }) => (
-    <div className="flex items-center gap-3 mb-6">
-        {icon && <div className="p-2 rounded-xl" style={{ backgroundColor: color + '20', border: `1px solid ${color}40` }}>{icon}</div>}
-        <h2 className="text-2xl md:text-3xl font-bold text-white">{children}</h2>
-    </div>
-);
-
-const Card: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
-    <div className={`bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 md:p-8 ${className}`}>
-        {children}
-    </div>
-);
 
 const KeyInsight: React.FC<{ title: string; children: React.ReactNode; color?: string }> = ({ title, children, color = '#a855f7' }) => (
     <div className="flex gap-3 p-4 rounded-xl border" style={{ backgroundColor: color + '08', borderColor: color + '30' }}>

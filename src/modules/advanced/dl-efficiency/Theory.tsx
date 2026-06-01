@@ -1,5 +1,5 @@
 import React from 'react';
-import { MathEquation } from './components/MathEquation';
+import { MathEquation } from '../../../components/MathEquation';
 import { OptimizerRace3D } from './components/OptimizerRace3D';
 import { LRSchedulerGraph } from './components/LRSchedulerGraph';
 import { LossVisualizer } from './components/LossVisualizer';

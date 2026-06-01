@@ -1,7 +1,7 @@
 import React from 'react';
 import { BiasVarianceViz } from '../components/BiasVarianceViz';
 import { RegularizationGeometryViz } from '../components/RegularizationGeometryViz';
-import { MathEquation } from '../../../math/signal-processing/components/common/MathEquation';
+import { MathEquation } from '../../../../components/MathEquation';
 
 export const Regularization: React.FC = () => {
     return (

@@ -1,7 +1,7 @@
 import React from 'react';
 import { DecisionTreeViz } from '../components/DecisionTreeViz';
 import { RandomForestViz } from '../components/RandomForestViz';
-import { MathEquation } from '../components/MathEquation';
+import { MathEquation } from '../../../../components/MathEquation';
 
 export const TreeMethods: React.FC = () => {
     return (

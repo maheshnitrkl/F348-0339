@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MathEquation } from '../../../advanced/statistical-learning/components/MathEquation';
+import { MathEquation } from '../../../../components/MathEquation';
 
 export const PerceptronViz: React.FC = () => {
     const [w1, setW1] = useState(0.5);

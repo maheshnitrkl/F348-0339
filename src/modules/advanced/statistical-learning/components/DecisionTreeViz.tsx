@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { RefreshCw, Layers } from 'lucide-react';
-import { MathEquation } from './MathEquation';
+import { MathEquation } from '../../../../components/MathEquation';
 
 interface Point {
     x: number;
