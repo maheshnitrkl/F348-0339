@@ -33,6 +33,7 @@ import { RNNSeq } from './sections/10_RNNSeq';
 import { Transformer } from './sections/11_Transformer';
 import { LLMScaling } from './sections/12_LLMScaling';
 import { VisionArchitectures } from './sections/13_VisionArchitectures';
+import { Generative } from './sections/14_Generative';
 
 // ── Placeholder Factory for sequential development ──────────────────────────
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -177,7 +178,7 @@ const SECTIONS = [
         subtitle: 'VAEs, GANs, Diffusion & Flow Matching',
         icon: Wand2,
         color: '#f472b6', // pink-400
-        component: PlaceholderFactory('Generative Models', 14),
+        component: Generative,
         tracks: ['40 VAEs & Minimax GANs', '41 Denoising Diffusion (DDPM)', '42 Continuous Flow Matching'],
     },
     {
