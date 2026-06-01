@@ -34,6 +34,7 @@ import { Transformer } from './sections/11_Transformer';
 import { LLMScaling } from './sections/12_LLMScaling';
 import { VisionArchitectures } from './sections/13_VisionArchitectures';
 import { Generative } from './sections/14_Generative';
+import { GNN } from './sections/15_GNN';
 
 // ── Placeholder Factory for sequential development ──────────────────────────
 const PlaceholderFactory = (title: string, chapter: number) => {
@@ -187,7 +188,7 @@ const SECTIONS = [
         subtitle: 'Spectral GCN, GraphSAGE, GAT & GIN',
         icon: GitFork,
         color: '#20c997', // teal-400
-        component: PlaceholderFactory('Graph Neural Networks (GNNs)', 15),
+        component: GNN,
         tracks: ['43 Message Passing Framework', '44 GCN & GAT Layers', '45 Over-smoothing Limits'],
     },
     {
