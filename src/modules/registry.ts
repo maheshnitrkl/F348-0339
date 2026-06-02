@@ -11,6 +11,17 @@ import { MedicalImagingModule } from './medical-imaging';
 import { StatisticalLearningModule } from './advanced/statistical-learning';
 import { NeuralNetworksModule } from './foundation/neural-networks';
 import { RLModule } from './advanced/rl';
+import { Transformer } from './foundation/neural-networks/sections/11_Transformer';
+
+export const TransformersModule: ConceptModule = {
+    id: 'adv-3',
+    title: 'Transformers',
+    description: 'Self-attention, positional encoding, and the architecture revolution.',
+    components: {
+        Theory: Transformer,
+    },
+    layout: 'full',
+};
 
 // Registry of all available modules
 const modules: Record<string, ConceptModule> = {
@@ -26,6 +37,7 @@ const modules: Record<string, ConceptModule> = {
     [StatisticalLearningModule.id]: StatisticalLearningModule,
     [NeuralNetworksModule.id]: NeuralNetworksModule,
     [RLModule.id]: RLModule,
+    'adv-3': TransformersModule,
 };
 
 export const getModule = (id: string): ConceptModule | undefined => {
