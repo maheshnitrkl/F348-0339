@@ -4,7 +4,7 @@ import { Eye, Cpu, RotateCw, Play, SkipForward, RotateCcw, GitMerge, Layers } fr
 import { MathEquation } from '../../../components/MathEquation';
 
 export const Visualization: React.FC = () => {
-    const [subTab, setSubTab] = useState<'attention' | 'kvcache' | 'rope' | 'flashattn' | 'moe'>('attention');
+    const [subTab, setSubTab] = useState<'attention' | 'kvcache' | 'rope' | 'flashattn' | 'moe' | 'pagedattn' | 'specdec' | 'lora'>('attention');
 
     return (
         <div className="space-y-6 text-slate-300 font-sans pb-16">
@@ -28,7 +28,7 @@ export const Visualization: React.FC = () => {
                             : 'text-slate-400 hover:text-white'
                     }`}
                 >
-                    KV Cache Simulator
+                    KV Cache
                 </button>
                 <button
                     onClick={() => setSubTab('rope')}
@@ -38,7 +38,7 @@ export const Visualization: React.FC = () => {
                             : 'text-slate-400 hover:text-white'
                     }`}
                 >
-                    RoPE Geometry
+                    RoPE
                 </button>
                 <button
                     onClick={() => setSubTab('flashattn')}
@@ -48,7 +48,7 @@ export const Visualization: React.FC = () => {
                             : 'text-slate-400 hover:text-white'
                     }`}
                 >
-                    FlashAttention (SRAM)
+                    FlashAttention
                 </button>
                 <button
                     onClick={() => setSubTab('moe')}
@@ -58,7 +58,37 @@ export const Visualization: React.FC = () => {
                             : 'text-slate-400 hover:text-white'
                     }`}
                 >
-                    Mixture of Experts
+                    MoE
+                </button>
+                <button
+                    onClick={() => setSubTab('pagedattn')}
+                    className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+                        subTab === 'pagedattn'
+                            ? 'bg-orange-500/20 text-orange-400 border border-orange-500/30'
+                            : 'text-slate-400 hover:text-white'
+                    }`}
+                >
+                    PagedAttention
+                </button>
+                <button
+                    onClick={() => setSubTab('specdec')}
+                    className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+                        subTab === 'specdec'
+                            ? 'bg-orange-500/20 text-orange-400 border border-orange-500/30'
+                            : 'text-slate-400 hover:text-white'
+                    }`}
+                >
+                    Speculative Decoding
+                </button>
+                <button
+                    onClick={() => setSubTab('lora')}
+                    className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+                        subTab === 'lora'
+                            ? 'bg-orange-500/20 text-orange-400 border border-orange-500/30'
+                            : 'text-slate-400 hover:text-white'
+                    }`}
+                >
+                    LoRA Matrix
                 </button>
             </div>
 
@@ -76,6 +106,9 @@ export const Visualization: React.FC = () => {
                     {subTab === 'rope' && <RoPESimulator />}
                     {subTab === 'flashattn' && <FlashAttentionSimulator />}
                     {subTab === 'moe' && <MoESimulator />}
+                    {subTab === 'pagedattn' && <PagedAttentionSimulator />}
+                    {subTab === 'specdec' && <SpeculativeDecodingSimulator />}
+                    {subTab === 'lora' && <LoRASimulator />}
                 </motion.div>
             </AnimatePresence>
         </div>
@@ -1086,6 +1119,199 @@ const MoESimulator: React.FC = () => {
             <div className="bg-slate-950 border border-slate-800 p-4 rounded-xl">
                 <span className="text-[10px] text-slate-500 font-mono font-bold uppercase block mb-1">MoE Sparse Gating Formulation</span>
                 <MathEquation formula="y = \sum_{i \in \text{Top2}} G(x)_i \cdot E_i(x) \quad \text{where} \quad G(x) = \operatorname{softmax}(\operatorname{Top2}(x \cdot W_g, -\infty))" block />
+            </div>
+        </div>
+    );
+};
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SIMULATOR 6: PagedAttention (vLLM)
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const PagedAttentionSimulator: React.FC = () => {
+    return (
+        <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 space-y-6">
+            <div>
+                <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                    <Layers className="text-orange-400" size={18} />
+                    PagedAttention Virtual Memory Simulator
+                </h3>
+                <p className="text-sm text-slate-400 leading-relaxed">
+                    By dividing the KV cache into fixed-size physical blocks, vLLM eliminates memory fragmentation and allows dynamic sharing of prefixes.
+                </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-slate-950 border border-slate-800 p-5 rounded-xl space-y-4">
+                    <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest block">Logical Token Sequences</span>
+                    <div className="space-y-3 font-mono text-xs">
+                        <div className="p-3 bg-slate-900 rounded border border-slate-800 flex flex-wrap gap-1">
+                            <span className="w-full text-blue-400 font-bold mb-1">Request A (Length: 7)</span>
+                            {['THE', 'QUICK', 'BROWN', 'FOX', 'JUMPS', 'OVER', 'THE'].map((tk, i) => (
+                                <span key={`ra-${i}`} className="px-1.5 py-0.5 bg-blue-500/20 text-blue-300 rounded text-[9px] border border-blue-500/30">blk_{Math.floor(i/3)}</span>
+                            ))}
+                        </div>
+                        <div className="p-3 bg-slate-900 rounded border border-slate-800 flex flex-wrap gap-1">
+                            <span className="w-full text-emerald-400 font-bold mb-1">Request B (Length: 5)</span>
+                            {['HELLO', 'WORLD', 'HOW', 'ARE', 'YOU'].map((tk, i) => (
+                                <span key={`rb-${i}`} className="px-1.5 py-0.5 bg-emerald-500/20 text-emerald-300 rounded text-[9px] border border-emerald-500/30">blk_{Math.floor(i/3) + 3}</span>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-slate-950 border border-slate-800 p-5 rounded-xl space-y-4">
+                    <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest block">Physical Memory Pages (Block Size = 3)</span>
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="bg-slate-900/50 p-2 rounded border border-blue-500/30 flex gap-1">
+                            <div className="w-1/3 h-6 bg-blue-500/20 rounded"></div>
+                            <div className="w-1/3 h-6 bg-blue-500/20 rounded"></div>
+                            <div className="w-1/3 h-6 bg-blue-500/20 rounded"></div>
+                        </div>
+                        <div className="bg-slate-900/50 p-2 rounded border border-blue-500/30 flex gap-1">
+                            <div className="w-1/3 h-6 bg-blue-500/20 rounded"></div>
+                            <div className="w-1/3 h-6 bg-blue-500/20 rounded"></div>
+                            <div className="w-1/3 h-6 bg-blue-500/20 rounded"></div>
+                        </div>
+                        <div className="bg-slate-900/50 p-2 rounded border border-blue-500/30 flex gap-1">
+                            <div className="w-1/3 h-6 bg-blue-500/20 rounded"></div>
+                            <div className="w-1/3 h-6 bg-slate-800 rounded"></div>
+                            <div className="w-1/3 h-6 bg-slate-800 rounded"></div>
+                        </div>
+                        <div className="bg-slate-900/50 p-2 rounded border border-emerald-500/30 flex gap-1">
+                            <div className="w-1/3 h-6 bg-emerald-500/20 rounded"></div>
+                            <div className="w-1/3 h-6 bg-emerald-500/20 rounded"></div>
+                            <div className="w-1/3 h-6 bg-emerald-500/20 rounded"></div>
+                        </div>
+                        <div className="bg-slate-900/50 p-2 rounded border border-emerald-500/30 flex gap-1">
+                            <div className="w-1/3 h-6 bg-emerald-500/20 rounded"></div>
+                            <div className="w-1/3 h-6 bg-emerald-500/20 rounded"></div>
+                            <div className="w-1/3 h-6 bg-slate-800 rounded"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SIMULATOR 7: Speculative Decoding
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const SpeculativeDecodingSimulator: React.FC = () => {
+    return (
+        <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 space-y-6">
+            <div>
+                <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                    <SkipForward className="text-orange-400" size={18} />
+                    Speculative Decoding Verification
+                </h3>
+                <p className="text-sm text-slate-400 leading-relaxed">
+                    A small Draft Model proposes tokens. The Target Model evaluates all tokens in a single parallel pass, accepting them up to the first disagreement.
+                </p>
+            </div>
+            <div className="bg-slate-950 border border-slate-800 p-5 rounded-xl space-y-6 text-center">
+                <div className="flex justify-center items-center gap-4">
+                    <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl flex flex-col items-center">
+                        <span className="text-[10px] font-mono text-slate-500 uppercase block mb-2">Draft Proposal (Fast)</span>
+                        <div className="flex gap-2 font-mono text-xs text-slate-300">
+                            <span className="px-2 py-1 bg-slate-800 rounded border border-slate-700">The</span>
+                            <span className="px-2 py-1 bg-slate-800 rounded border border-slate-700">cat</span>
+                            <span className="px-2 py-1 bg-slate-800 rounded border border-slate-700">sat</span>
+                            <span className="px-2 py-1 bg-slate-800 rounded border border-slate-700">on</span>
+                        </div>
+                    </div>
+                    <div className="text-orange-500 font-bold">→</div>
+                    <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl flex flex-col items-center">
+                        <span className="text-[10px] font-mono text-slate-500 uppercase block mb-2">Target Verification (Parallel)</span>
+                        <div className="flex gap-2 font-mono text-xs text-white">
+                            <span className="px-2 py-1 bg-emerald-500/20 border border-emerald-500/50 rounded text-emerald-400">The</span>
+                            <span className="px-2 py-1 bg-emerald-500/20 border border-emerald-500/50 rounded text-emerald-400">cat</span>
+                            <span className="px-2 py-1 bg-red-500/20 border border-red-500/50 rounded line-through text-red-400">sat</span>
+                            <span className="px-2 py-1 bg-slate-800/50 border border-slate-700 rounded opacity-50 text-slate-500">on</span>
+                        </div>
+                    </div>
+                </div>
+                <div className="bg-slate-900/50 border border-slate-800 p-3 rounded-lg text-xs font-mono text-slate-400 max-w-lg mx-auto">
+                    Target model rejected "sat" (it would have generated "jumped"). Tokens "The" and "cat" are accepted for free in one single step!
+                </div>
+            </div>
+        </div>
+    );
+};
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SIMULATOR 8: LoRA Rank Matrix
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const LoRASimulator: React.FC = () => {
+    const [rank, setRank] = useState<number>(8);
+    const dModel = 4096;
+    
+    const fullParams = dModel * dModel;
+    const loraParams = 2 * dModel * rank;
+    const savings = ((fullParams - loraParams) / fullParams) * 100;
+
+    return (
+        <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 space-y-6">
+            <div>
+                <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                    <Cpu className="text-orange-400" size={18} />
+                    LoRA: Low-Rank Adaptation
+                </h3>
+                <p className="text-sm text-slate-400 leading-relaxed">
+                    Adjust the Rank ($r$) slider to see how low-rank matrices $A$ and $B$ approximate the massive weight updates $\Delta W$, slashing trainable parameters.
+                </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div className="space-y-6">
+                    <div className="space-y-2">
+                        <label className="text-slate-450 flex justify-between text-xs font-bold uppercase">
+                            <span>Matrix Rank (r)</span>
+                            <span className="text-orange-400">r = {rank}</span>
+                        </label>
+                        <input
+                            type="range" min="1" max="128" step="1" value={rank}
+                            onChange={e => setRank(parseInt(e.target.value))}
+                            className="w-full accent-orange-500 h-1 bg-slate-800 rounded cursor-pointer"
+                        />
+                    </div>
+                    
+                    <div className="bg-slate-950 border border-slate-850 p-4 rounded-xl space-y-3 font-mono text-xs">
+                        <div className="flex justify-between">
+                            <span className="text-slate-500">Base Weight W_0 (Frozen):</span>
+                            <span className="text-white font-bold">{fullParams.toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="text-slate-500">LoRA A + B (Trainable):</span>
+                            <span className="text-orange-400 font-bold">{loraParams.toLocaleString()}</span>
+                        </div>
+                        <div className="border-t border-slate-900 pt-3 text-emerald-400 font-bold text-center">
+                            Trainable params reduced by {savings.toFixed(2)}%!
+                        </div>
+                    </div>
+                </div>
+                
+                <div className="flex justify-center items-center gap-4 text-center font-mono text-[10px]">
+                    <div>
+                        <div className="w-32 h-32 bg-slate-800 rounded-lg flex items-center justify-center border-2 border-slate-600 opacity-50">
+                            W_0<br/>{dModel}×{dModel}
+                        </div>
+                        <div className="mt-2 text-slate-500 font-bold">Frozen Base</div>
+                    </div>
+                    <div className="text-2xl text-slate-500">+</div>
+                    <div className="flex flex-col gap-2 items-center">
+                        <div className="w-32 bg-orange-500/20 border border-orange-500/50 rounded flex items-center justify-center text-orange-400 transition-all" style={{ height: `${Math.max(20, rank * 1.5)}px` }}>
+                            B ({dModel}×{rank})
+                        </div>
+                        <div className="w-32 bg-orange-500/20 border border-orange-500/50 rounded flex items-center justify-center text-orange-400 transition-all" style={{ height: `${Math.max(20, rank * 1.5)}px` }}>
+                            A ({rank}×{dModel})
+                        </div>
+                        <div className="text-orange-400 font-bold">Trainable LoRA</div>
+                    </div>
+                </div>
             </div>
         </div>
     );

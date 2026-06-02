@@ -389,7 +389,7 @@ const MockRuntime: React.FC = () => {
    ═══════════════════════════════════════════════════════════════════════ */
 
 const PyTorchReference: React.FC = () => {
-    const [codeTab, setCodeTab] = useState<'mha' | 'rope' | 'rmsnorm' | 'swiglu' | 'moe' | 'decoder'>('mha');
+    const [codeTab, setCodeTab] = useState<'mha' | 'rope' | 'rmsnorm' | 'swiglu' | 'moe' | 'decoder' | 'lora' | 'dpo'>('mha');
 
     const snippets = {
         mha: `import torch
@@ -651,7 +651,59 @@ class LLaMADecoderBlock(nn.Module):
         
         # 2. Pre-LN Feed Forward Highway
         x = x + self.feed_forward(self.ffn_norm(x))
-        return x`
+        return x`,
+
+        lora: `import torch
+import torch.nn as nn
+import math
+
+class LoRALinear(nn.Module):
+    """
+    Low-Rank Adaptation (LoRA) for linear layers.
+    Freezes the pretrained weight and injects trainable rank decomposition matrices.
+    """
+    def __init__(self, in_features: int, out_features: int, rank: int = 8, alpha: float = 16.0):
+        super().__init__()
+        self.linear = nn.Linear(in_features, out_features, bias=False)
+        self.linear.weight.requires_grad = False
+        
+        self.lora_A = nn.Parameter(torch.zeros(rank, in_features))
+        self.lora_B = nn.Parameter(torch.zeros(out_features, rank))
+        self.scaling = alpha / rank
+        
+        nn.init.kaiming_uniform_(self.lora_A, a=math.sqrt(5))
+        nn.init.zeros_(self.lora_B)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        base_out = self.linear(x)
+        lora_out = (x @ self.lora_A.t()) @ self.lora_B.t()
+        return base_out + (lora_out * self.scaling)`,
+
+        dpo: `import torch
+import torch.nn.functional as F
+
+def dpo_loss(
+    pi_theta_win: torch.Tensor,
+    pi_theta_lose: torch.Tensor,
+    pi_ref_win: torch.Tensor,
+    pi_ref_lose: torch.Tensor,
+    beta: float = 0.1
+) -> torch.Tensor:
+    """
+    Direct Preference Optimization (DPO) Loss.
+    Optimizes the language model directly on preference pairs.
+    Assumes inputs are already log-probabilities summed over the sequence.
+    """
+    # 1. Compute implicit reward ratios
+    pi_theta_ratio = pi_theta_win - pi_theta_lose
+    pi_ref_ratio = pi_ref_win - pi_ref_lose
+    
+    # 2. Compute the scaled difference (logits for the sigmoid)
+    logits = beta * (pi_theta_ratio - pi_ref_ratio)
+    
+    # 3. Binary cross entropy over the preference
+    loss = -F.logsigmoid(logits).mean()
+    return loss`
     };
 
     return (
@@ -710,6 +762,22 @@ class LLaMADecoderBlock(nn.Module):
                         }`}
                     >
                         LLAMA DECODER BLOCK
+                    </button>
+                    <button
+                        onClick={() => setCodeTab('lora')}
+                        className={`px-2.5 py-1 rounded transition-all ${
+                            codeTab === 'lora' ? 'bg-violet-500/20 text-violet-400' : 'text-slate-500 hover:text-slate-300'
+                        }`}
+                    >
+                        LORA LINEAR
+                    </button>
+                    <button
+                        onClick={() => setCodeTab('dpo')}
+                        className={`px-2.5 py-1 rounded transition-all ${
+                            codeTab === 'dpo' ? 'bg-violet-500/20 text-violet-400' : 'text-slate-500 hover:text-slate-300'
+                        }`}
+                    >
+                        DPO LOSS
                     </button>
                 </div>
             </div>

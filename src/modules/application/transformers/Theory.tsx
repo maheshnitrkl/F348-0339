@@ -244,6 +244,89 @@ export const Theory: React.FC = () => {
                                 </div>
                             </div>
                         </div>
+
+                        {/* PagedAttention */}
+                        <div className="bg-slate-950/40 p-5 rounded-xl border border-slate-800 space-y-4">
+                            <h4 className="text-white font-bold">4. PagedAttention (vLLM)</h4>
+                            <p className="text-sm text-slate-400">
+                                In standard decoding, KV cache memory is allocated contiguously. Because sequence lengths are unpredictable, this leads to severe memory fragmentation. **PagedAttention** borrows OS-level virtual memory paging: it divides the KV cache into non-contiguous blocks. This enables continuous batching and nearly zero waste.
+                            </p>
+                        </div>
+
+                        {/* Speculative Decoding */}
+                        <div className="bg-slate-950/40 p-5 rounded-xl border border-slate-800 space-y-4">
+                            <h4 className="text-white font-bold">5. Speculative Decoding</h4>
+                            <p className="text-sm text-slate-400">
+                                Generation is memory-bandwidth bound, meaning the large model under-utilizes GPU compute cores while waiting for weights to load. **Speculative Decoding** uses a tiny, fast "draft" model to propose multiple tokens at once, and the large model evaluates all proposed tokens in a single parallel forward pass, accepting them via a verification tree.
+                            </p>
+                        </div>
+                    </div>
+                </Card>
+            </motion.section>
+
+            {/* Section 5: Context Extension & Fine-Tuning */}
+            <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="space-y-6"
+            >
+                <SectionTitle icon={<Layers size={20} className="text-violet-400" />} color="#8b5cf6">
+                    Context Extension & PEFT
+                </SectionTitle>
+
+                <Card className="space-y-6">
+                    <p>
+                        Extending model capabilities post-training requires careful manipulation of parameters and positional embeddings to avoid catastrophic forgetting:
+                    </p>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="bg-slate-950/40 p-5 rounded-xl border border-slate-800/80 space-y-3">
+                            <h4 className="text-white font-bold text-base">RoPE Context Scaling (YaRN)</h4>
+                            <p className="text-xs text-slate-400">
+                                If a model trained on 4k context sees 8k tokens, unseen high-frequency RoPE rotations cause failures. Instead of naive interpolation, modern scaling (like YaRN) mathematically alters the rotation frequencies of lower dimensions to "squeeze" larger contexts into the known dimensional space.
+                            </p>
+                        </div>
+
+                        <div className="bg-slate-950/40 p-5 rounded-xl border border-slate-800/80 space-y-3">
+                            <h4 className="text-white font-bold text-base">LoRA (Low-Rank Adaptation)</h4>
+                            <p className="text-xs text-slate-400">
+                                Freezes the massive pre-trained weights <MathEquation formula="W_0" /> and injects trainable rank decomposition matrices <MathEquation formula="A" /> and <MathEquation formula="B" />. The forward pass becomes <MathEquation formula="h = W_0 x + \Delta W x = W_0 x + B A x" />. This reduces trainable parameters by 10,000x while maintaining near-full-parameter performance.
+                            </p>
+                        </div>
+                    </div>
+                </Card>
+            </motion.section>
+
+            {/* Section 6: Alignment & Beyond Attention */}
+            <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35 }}
+                className="space-y-6"
+            >
+                <SectionTitle icon={<BookOpen size={20} className="text-violet-400" />} color="#8b5cf6">
+                    Alignment & Alternative Architectures
+                </SectionTitle>
+
+                <Card className="space-y-6">
+                    <div className="space-y-6">
+                        <div className="bg-slate-950/40 p-5 rounded-xl border border-slate-800 space-y-4">
+                            <h4 className="text-white font-bold">Direct Preference Optimization (DPO)</h4>
+                            <p className="text-sm text-slate-400">
+                                RLHF relies on a complex pipeline involving a Reward Model and PPO optimization, which is unstable and memory-intensive. **DPO** bypasses the reward model entirely by formulating the language model itself as the reward model, directly optimizing on human preference pairs:
+                            </p>
+                            <div className="bg-slate-950 p-4 rounded-lg border border-slate-900 overflow-x-auto">
+                                <MathEquation formula="L_{\text{DPO}} = -\mathbb{E}_{(x, y_w, y_l)} \left[ \log \sigma \left( \beta \log \frac{\pi_\theta(y_w | x)}{\pi_{\text{ref}}(y_w | x)} - \beta \log \frac{\pi_\theta(y_l | x)}{\pi_{\text{ref}}(y_l | x)} \right) \right]" block />
+                            </div>
+                        </div>
+
+                        <div className="bg-slate-950/40 p-5 rounded-xl border border-slate-800 space-y-4">
+                            <h4 className="text-white font-bold">State Space Models (SSMs) & Mamba</h4>
+                            <p className="text-sm text-slate-400">
+                                Attention scales quadratically <MathEquation formula="O(N^2)" />. **State Space Models (like Mamba)** return to recurrent architectures but with hardware-aware parallel scans and selective state updates. They achieve linear <MathEquation formula="O(N)" /> scaling, unbounded context lengths, and 5x faster inference, forming the basis for new hybrid models like Jamba.
+                            </p>
+                        </div>
                     </div>
                 </Card>
             </motion.section>
