@@ -20,7 +20,6 @@ export const TransformersModule: ConceptModule = {
     components: {
         Theory: Transformer,
     },
-    layout: 'full',
 };
 
 // Registry of all available modules

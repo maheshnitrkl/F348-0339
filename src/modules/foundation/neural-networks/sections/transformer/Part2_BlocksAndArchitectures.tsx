@@ -64,7 +64,7 @@ const PrePostLnWidget: React.FC = () => {
 
                     <div className="space-y-1">
                         <label className="text-slate-400 flex justify-between">
-                            <span>{"Incoming Gradient ($\\partial \\mathcal{L} / \\partial h$):"}</span>
+                            <span>Incoming Gradient (<MathEquation formula="\\partial \\mathcal{L} / \\partial h" />):</span>
                             <span className="font-mono text-indigo-400 font-bold">{backpropSignal.toFixed(2)}</span>
                         </label>
                         <input 
@@ -78,7 +78,7 @@ const PrePostLnWidget: React.FC = () => {
                     <div className="bg-slate-900/50 p-2.5 rounded border border-slate-900 font-mono text-[9px] leading-relaxed text-slate-400">
                         <div>**Calculated Gradient at Early Layer**:</div>
                         <div className="text-white font-bold text-xs mt-1">
-                            {"$\\nabla_{\\text{early}} = "}{finalGradient.toFixed(3)}
+                            <MathEquation formula="\\nabla_{\\text{early}} = " />{finalGradient.toFixed(3)}
                         </div>
                     </div>
                 </div>
@@ -280,16 +280,16 @@ export const Part2_BlocksAndArchitectures: React.FC = () => {
                     <p className="text-slate-350 text-sm">
                         Original Transformers placed LayerNorm on the output of residual blocks (**Post-LN**). Modern architectures place LayerNorm on input branches (**Pre-LN**).
                         Let us examine block formulations:
-                        <MathEquation formula="\begin{aligned} \text{Post-LN (Original)}: \\ \mathbf{h} &= \operatorname{LN}(\mathbf{x} + \operatorname{MHA}(\mathbf{x})) \\ \mathbf{y} &= \operatorname{LN}(\mathbf{h} + \operatorname{FFN}(\mathbf{h})) \\\\ \text{Pre-LN (Modern)}: \\ \mathbf{h} &= \mathbf{x} + \operatorname{MHA}(\operatorname{LN}(\mathbf{x})) \\ \mathbf{y} &= \mathbf{h} + \operatorname{FFN}(\operatorname{LN}(\mathbf{h})) \end{aligned}" block />
+                        <MathEquation formula="\\begin{aligned} \\text{Post-LN (Original)}: \\\\ \\mathbf{h} &= \\operatorname{LN}(\\mathbf{x} + \\operatorname{MHA}(\\mathbf{x})) \\\\ \\mathbf{y} &= \\operatorname{LN}(\\mathbf{h} + \\operatorname{FFN}(\\mathbf{h})) \\\\\\\\ \\text{Pre-LN (Modern)}: \\\\ \\mathbf{h} &= \\mathbf{x} + \\operatorname{MHA}(\\operatorname{LN}(\\mathbf{x})) \\\\ \\mathbf{y} &= \\mathbf{h} + \\operatorname{FFN}(\\operatorname{LN}(\\mathbf{h})) \\end{aligned}" block />
                     </p>
 
                     <h5 className="text-white font-semibold text-xs mt-2">Gradient Stability Proof</h5>
                     <p className="text-slate-350 text-xs">
                         During backpropagation, early layer gradients in Pre-LN blocks receive addition signals directly through identity paths:
-                        <MathEquation formula="\frac{\partial \mathbf{y}}{\partial \mathbf{x}} = \mathbf{I} + \frac{\partial \operatorname{FFN}(\operatorname{LN}(\mathbf{h}))}{\partial \mathbf{x}}" block />
-                        {"The identity matrix $\\mathbf{I}$ guarantees that gradients flow back without decaying. In Post-LN, layers are wrapped by LayerNorm functions recursively:"}
-                        <MathEquation formula="\mathbf{x}_L = \operatorname{LN}(\mathbf{x}_{L-1} + \mathcal{F}(\mathbf{x}_{L-1}))" />
-                        Differentiating this forces multiplication by normalizers' scaling matrices, diminishing signals exponentially as depth $L$ grows.
+                        <MathEquation formula="\\frac{\\partial \\mathbf{y}}{\\partial \\mathbf{x}} = \\mathbf{I} + \\frac{\\partial \\operatorname{FFN}(\\operatorname{LN}(\\mathbf{h}))}{\\partial \\mathbf{x}}" block />
+                        The identity matrix <MathEquation formula="\\mathbf{I}" /> guarantees that gradients flow back without decaying. In Post-LN, layers are wrapped by LayerNorm functions recursively:
+                        <MathEquation formula="\\mathbf{x}_L = \\operatorname{LN}(\\mathbf{x}_{L-1} + \\mathcal{F}(\\mathbf{x}_{L-1}))" />
+                        Differentiating this forces multiplication by normalizers' scaling matrices, diminishing signals exponentially as depth <MathEquation formula="L" /> grows.
                     </p>
                 </Card>
 
@@ -299,25 +299,25 @@ export const Part2_BlocksAndArchitectures: React.FC = () => {
                     <h4 className="text-white font-bold text-md">5.2 Normalization & Gated SwiGLU FFN</h4>
                     <p className="text-slate-350 text-sm">
                         **RMSNorm** (Root Mean Square Normalization) simplifies standard LayerNorm by removing mean subtraction, leaving scaling computations:
-                        <MathEquation formula="\operatorname{RMSNorm}(\mathbf{x}) = \frac{\mathbf{x}}{\sqrt{\frac{1}{d} \sum_{i=1}^d x_i^2 + \epsilon}} \odot \boldsymbol{\gamma}" block />
+                        <MathEquation formula="\\operatorname{RMSNorm}(\\mathbf{x}) = \\frac{\\mathbf{x}}{\\sqrt{\\frac{1}{d} \\sum_{i=1}^d x_i^2 + \\epsilon}} \\odot \\boldsymbol{\\gamma}" block />
                         This reduces FLOP overhead while matching normalization accuracy.
                     </p>
                     <p className="text-slate-350 text-sm">
                         Modern Feed-Forward networks use **SwiGLU** gating instead of simple ReLU:
-                        <MathEquation formula="\operatorname{FFN}_{\text{SwiGLU}}(\mathbf{x}) = \left(\operatorname{Swish}(\mathbf{x}\mathbf{W}_1) \odot \mathbf{x}\mathbf{V}\right)\mathbf{W}_2" block />
-                        {"where $\\operatorname{Swish}(a) = a \\cdot \\sigma(a)$."}
+                        <MathEquation formula="\\operatorname{FFN}_{\\text{SwiGLU}}(\\mathbf{x}) = \\left(\\operatorname{Swish}(\\mathbf{x}\\mathbf{W}_1) \\odot \\mathbf{x}\\mathbf{V}\\right)\\mathbf{W}_2" block />
+                        where <MathEquation formula="\\operatorname{Swish}(a) = a \\cdot \\sigma(a)" />.
                     </p>
 
                     <h5 className="text-white font-semibold text-xs mt-2">FFN as Key-Value Memory Networks</h5>
                     <p className="text-slate-350 text-xs">
                         Geva et al. (2021) demonstrated that an FFN layer is equivalent to an associative key-value memory database.
-                        {"In $\\mathbf{y} = \\mathbf{W}_2 \\operatorname{ReLU}(\\mathbf{W}_1 \\mathbf{x} + \\mathbf{b}_1)$:"}
+                        In <MathEquation formula="\\mathbf{y} = \\mathbf{W}_2 \\operatorname{ReLU}(\\mathbf{W}_1 \\mathbf{x} + \\mathbf{b}_1)" />:
                         <br/>
-                        {"- Each row of projection matrix $\\mathbf{W}_1$ functions as a **key** vector representing an input pattern."}
+                        - Each row of projection matrix <MathEquation formula="\\mathbf{W}_1" /> functions as a **key** vector representing an input pattern.
                         <br/>
-                        {"- Each column of projection matrix $\\mathbf{W}_2$ functions as a **value** vector representing a output concept."}
+                        - Each column of projection matrix <MathEquation formula="\\mathbf{W}_2" /> functions as a **value** vector representing a output concept.
                         <br/>
-                        {"- When the input $\\mathbf{x}$ aligns with key $i$, its activation is high, writing the associated value vector directly into the residual stream."}
+                        - When the input <MathEquation formula="\\mathbf{x}" /> aligns with key <MathEquation formula="i" />, its activation is high, writing the associated value vector directly into the residual stream.
                     </p>
                 </Card>
             </section>
@@ -351,13 +351,13 @@ export const Part2_BlocksAndArchitectures: React.FC = () => {
                 <Card className="space-y-4">
                     <h4 className="text-white font-bold text-md">7.1 Subword Tokenization Algorithms</h4>
                     <p className="text-slate-350 text-sm">
-                        To process text, we segment words into subword tokens. This resolves Out-Of-Vocabulary (OOV) errors and balances vocabulary size $|V|$.
+                        To process text, we segment words into subword tokens. This resolves Out-Of-Vocabulary (OOV) errors and balances vocabulary size <MathEquation formula="|V|" />.
                     </p>
                     <p className="text-slate-350 text-sm">
                         **Byte Pair Encoding (BPE)**: Initializes vocab with raw characters, then iteratively merges the most frequent adjacent byte/character pair.
                         <br/>
                         **Unigram LM**: Starts with a massive vocabulary and iteratively prunes low-probability tokens using an Expectation-Maximization (EM) loss objective:
-                        <MathEquation formula="\mathcal{L} = -\sum_{x \in \mathcal{D}} \log P(x)" block />
+                        <MathEquation formula="\\mathcal{L} = -\\sum_{x \\in \\mathcal{D}} \\log P(x)" block />
                     </p>
                 </Card>
 
@@ -366,9 +366,9 @@ export const Part2_BlocksAndArchitectures: React.FC = () => {
                 <Card className="space-y-4">
                     <h4 className="text-white font-bold text-md">7.2 Embedding Weight Tying</h4>
                     <p className="text-slate-350 text-sm">
-                        {"In many language models, the token embedding matrix $\\mathbf{W}_E \\in \\mathbb{R}^{|V| \\times d_{\\text{model}}}$ and output unembedding matrix $\\mathbf{W}_U \\in \\mathbb{R}^{|V| \\times d_{\\text{model}}}$ share parameters:"}
-                        <MathEquation formula="\mathbf{W}_U = \mathbf{W}_E" block />
-                        {"This reduces parameter overhead by $|V| \\times d_{\\text{model}}$, preventing output projections from overfitting on rare tokens."}
+                        In many language models, the token embedding matrix <MathEquation formula="\\mathbf{W}_E \\in \\mathbb{R}^{|V| \\times d_{\\text{model}}}" /> and output unembedding matrix <MathEquation formula="\\mathbf{W}_U \\in \\mathbb{R}^{|V| \\times d_{\\text{model}}}" /> share parameters:
+                        <MathEquation formula="\\mathbf{W}_U = \\mathbf{W}_E" block />
+                        This reduces parameter overhead by <MathEquation formula="|V| \\times d_{\\text{model}}" />, preventing output projections from overfitting on rare tokens.
                     </p>
                 </Card>
             </section>

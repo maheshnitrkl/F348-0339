@@ -182,7 +182,7 @@ const SoftmaxVarianceWidget: React.FC = () => {
                 <div className="space-y-4 text-xs font-sans">
                     <div className="space-y-1">
                         <label className="text-slate-400 flex justify-between">
-                            <span>Key Dimension ($d_k$):</span>
+                            <span>Key Dimension (<MathEquation formula="d_k" />):</span>
                             <span className="font-mono text-emerald-400 font-bold">{d_k}</span>
                         </label>
                         <input 
@@ -253,7 +253,7 @@ const SoftmaxVarianceWidget: React.FC = () => {
                 </div>
             </div>
             <p className="text-[10px] text-slate-500 font-sans leading-relaxed">
-                Notice that without scaling (Unscaled), the inputs to the softmax have high variance ($\sigma^2 = d_k$), causing one token to monopolize the distribution (100% saturation). This kills the gradients for all other elements. Scaling by $1/\sqrt{d_k}$ compresses the variance to 1.0, preserving multiple soft activations and enabling continuous gradient flow.
+                Notice that without scaling (Unscaled), the inputs to the softmax have high variance (<MathEquation formula="\\sigma^2 = d_k" />), causing one token to monopolize the distribution (100% saturation). This kills the gradients for all other elements. Scaling by <MathEquation formula="1/\\sqrt{d_k}" /> compresses the variance to 1.0, preserving multiple soft activations and enabling continuous gradient flow.
             </p>
         </Card>
     );
@@ -398,7 +398,7 @@ const RoPERotationCircle: React.FC = () => {
                 <div className="space-y-4 text-xs font-sans">
                     <div className="space-y-1">
                         <label className="text-slate-400 flex justify-between">
-                            <span>Sequence Position ($m$):</span>
+                            <span>Sequence Position (<MathEquation formula="m" />):</span>
                             <span className="font-mono text-indigo-400 font-bold">{pos}</span>
                         </label>
                         <input 
@@ -411,7 +411,7 @@ const RoPERotationCircle: React.FC = () => {
 
                     <div className="space-y-1">
                         <label className="text-slate-400 flex justify-between">
-                            <span>Base Frequency Angle ($\theta$):</span>
+                            <span>Base Frequency Angle (<MathEquation formula="\\theta" />):</span>
                             <span className="font-mono text-indigo-400 font-bold">{theta}°</span>
                         </label>
                         <input 
@@ -495,9 +495,9 @@ export const Part1_CoreAttention: React.FC = () => {
                                 <AlertTriangle size={14} /> RNN Limitations
                             </span>
                             <ul className="list-disc pl-4 text-xs text-slate-400 space-y-1">
-                                <li>{"**Sequential Bottleneck**: Hidden state $h_t = f(h_{t-1}, x_t)$ forces step-by-step evaluation, blocking parallel training."}</li>
+                                <li>**Sequential Bottleneck**: Hidden state <MathEquation formula="h_t = f(h_{t-1}, x_t)" /> forces step-by-step evaluation, blocking parallel training.</li>
                                 <li>**Vanishing Gradients**: Long dependencies fade as gradients multiply through long temporal chains.</li>
-                                <li>**Hidden Bottleneck**: Compressing a variable-length sequence into a single fixed vector $h_t$ creates an information bottleneck.</li>
+                                <li>**Hidden Bottleneck**: Compressing a variable-length sequence into a single fixed vector <MathEquation formula="h_t" /> creates an information bottleneck.</li>
                             </ul>
                         </div>
 
@@ -507,7 +507,7 @@ export const Part1_CoreAttention: React.FC = () => {
                             </span>
                             <ul className="list-disc pl-4 text-xs text-slate-400 space-y-1">
                                 <li>**Local Receptive Field**: Convolution kernels only capture local dependencies in early layers.</li>
-                                <li>**Logarithmic Paths**: Connecting distant tokens requires stacking multiple layers, scaling as $O(\log_k n)$ with a k-ary receptive tree.</li>
+                                <li>**Logarithmic Paths**: Connecting distant tokens requires stacking multiple layers, scaling as <MathEquation formula="O(\\log_k n)" /> with a k-ary receptive tree.</li>
                             </ul>
                         </div>
                     </div>
@@ -532,21 +532,21 @@ export const Part1_CoreAttention: React.FC = () => {
                             <tbody className="divide-y divide-slate-800/40 text-slate-400">
                                 <tr>
                                     <td className="py-3 px-4 font-semibold text-white">Self-Attention</td>
-                                    <td className="py-3 px-4 font-mono">$O(n^2 \cdot d)$</td>
-                                    <td className="py-3 px-4 font-mono">$O(1)$</td>
-                                    <td className="py-3 px-4 font-mono">$O(1)$</td>
+                                    <td className="py-3 px-4 font-mono"><MathEquation formula="O(n^2 \\cdot d)" /></td>
+                                    <td className="py-3 px-4 font-mono"><MathEquation formula="O(1)" /></td>
+                                    <td className="py-3 px-4 font-mono"><MathEquation formula="O(1)" /></td>
                                 </tr>
                                 <tr>
                                     <td className="py-3 px-4 font-semibold text-white">Recurrent</td>
-                                    <td className="py-3 px-4 font-mono">$O(n \cdot d^2)$</td>
-                                    <td className="py-3 px-4 font-mono">$O(n)$</td>
-                                    <td className="py-3 px-4 font-mono">$O(n)$</td>
+                                    <td className="py-3 px-4 font-mono"><MathEquation formula="O(n \\cdot d^2)" /></td>
+                                    <td className="py-3 px-4 font-mono"><MathEquation formula="O(n)" /></td>
+                                    <td className="py-3 px-4 font-mono"><MathEquation formula="O(n)" /></td>
                                 </tr>
                                 <tr>
                                     <td className="py-3 px-4 font-semibold text-white">Convolutional</td>
-                                    <td className="py-3 px-4 font-mono">$O(k \cdot n \cdot d^2)$</td>
-                                    <td className="py-3 px-4 font-mono">$O(1)$</td>
-                                    <td className="py-3 px-4 font-mono">$O(\log_k n)$</td>
+                                    <td className="py-3 px-4 font-mono"><MathEquation formula="O(k \\cdot n \\cdot d^2)" /></td>
+                                    <td className="py-3 px-4 font-mono"><MathEquation formula="O(1)" /></td>
+                                    <td className="py-3 px-4 font-mono"><MathEquation formula="O(\\log_k n)" /></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -554,18 +554,18 @@ export const Part1_CoreAttention: React.FC = () => {
 
                     <h5 className="text-white font-semibold text-sm mt-4">Proof of Permutation Equivariance</h5>
                     <p className="text-slate-350 text-xs">
-                        Without positional information, a self-attention layer is permutation equivariant. If we permute the input sequence by a permutation matrix $P$, the output is permuted by the exact same matrix $P$.
+                        Without positional information, a self-attention layer is permutation equivariant. If we permute the input sequence by a permutation matrix <MathEquation formula="P" />, the output is permuted by the exact same matrix <MathEquation formula="P" />.
                     </p>
                     <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-xs text-slate-300">
-                        {"Let $A(Q,K,V) = \\text{softmax}(QK^T / \\sqrt{d_k})V$."}
+                        Let <MathEquation formula="A(Q,K,V) = \\text{softmax}(QK^T / \\sqrt{d_k})V" />.
                         <br/>
-                        For any permutation matrix $P$, we have:
+                        For any permutation matrix <MathEquation formula="P" />, we have:
                         <br/>
-                        {"$A(PQ, PK, PV) = \\text{softmax}((PQ)(PK)^T / \\sqrt{d_k})(PV)$"}
+                        <MathEquation formula="A(PQ, PK, PV) = \\text{softmax}((PQ)(PK)^T / \\sqrt{d_k})(PV)" />
                         <br/>
-                        Since $P^T P = I$ for a permutation matrix:
+                        Since <MathEquation formula="P^T P = I" /> for a permutation matrix:
                         <br/>
-                        {"$A(PQ, PK, PV) = \\text{softmax}(P Q K^T P^T / \\sqrt{d_k}) P V = P \\text{softmax}(Q K^T / \\sqrt{d_k}) V = P \\cdot A(Q,K,V)$."}
+                        <MathEquation formula="A(PQ, PK, PV) = \\text{softmax}(P Q K^T P^T / \\sqrt{d_k}) P V = P \\text{softmax}(Q K^T / \\sqrt{d_k}) V = P \\cdot A(Q,K,V)" />.
                     </div>
                 </Card>
             </section>
@@ -580,9 +580,9 @@ export const Part1_CoreAttention: React.FC = () => {
                     <h4 className="text-white font-bold text-md">2.1 Intuition: Soft Dictionary Lookup</h4>
                     <p className="text-slate-350 text-sm">
                         In computer science, a dictionary lookup is **hard**: we seek an exact key match to pull a value.
-                        <MathEquation formula="\text{Lookup}(q, \mathbf{K}, \mathbf{V}) = \mathbf{V}[\operatorname{argmax}_i(q == k_i)]" block />
+                        <MathEquation formula="\\text{Lookup}(q, \\mathbf{K}, \\mathbf{V}) = \\mathbf{V}[\\operatorname{argmax}_i(q == k_i)]" block />
                         Self-attention computes a **soft** dictionary lookup. It measures similarity scores across all keys and scales them into a probability distribution via softmax, returning a weighted average of all values.
-                        <MathEquation formula="\text{SoftLookup}(q, \mathbf{K}, \mathbf{V}) = \sum_i \operatorname{softmax}\left(\frac{q \cdot k_i}{\tau}\right) v_i" block />
+                        <MathEquation formula="\\text{SoftLookup}(q, \\mathbf{K}, \\mathbf{V}) = \\sum_i \\operatorname{softmax}\\left(\\frac{q \\cdot k_i}{\\tau}\\right) v_i" block />
                     </p>
                 </Card>
 
@@ -593,7 +593,7 @@ export const Part1_CoreAttention: React.FC = () => {
                     
                     <div className="bg-slate-950 p-4 rounded-xl border border-slate-850">
                         <h5 className="text-white font-bold text-sm mb-2">Scaled Dot-Product Attention</h5>
-                        <MathEquation formula="\operatorname{Attention}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) = \operatorname{softmax}\left(\frac{\mathbf{Q}\mathbf{K}^T}{\sqrt{d_k}}\right)\mathbf{V}" block />
+                        <MathEquation formula="\\operatorname{Attention}(\\mathbf{Q}, \\mathbf{K}, \\mathbf{V}) = \\operatorname{softmax}\\left(\\frac{\\mathbf{Q}\\mathbf{K}^T}{\\sqrt{d_k}}\\right)\\mathbf{V}" block />
                         
                         <div className="mt-4 overflow-x-auto text-[11px]">
                             <table className="w-full text-left border-collapse">
@@ -606,22 +606,22 @@ export const Part1_CoreAttention: React.FC = () => {
                                 </thead>
                                 <tbody className="text-slate-300 font-mono">
                                     <tr>
-                                        <td>{"$\\mathbf{Q}$"}</td>
-                                        <td>{"$\\mathbb{R}^{n \\times d_k}$"}</td>
-                                        <td>Queries matrix ($n$ sequence tokens)</td>
+                                        <td><MathEquation formula="\\mathbf{Q}" /></td>
+                                        <td><MathEquation formula="\\mathbb{R}^{n \\times d_k}" /></td>
+                                        <td>Queries matrix (<MathEquation formula="n" /> sequence tokens)</td>
                                     </tr>
                                     <tr>
-                                        <td>{"$\\mathbf{K}$"}</td>
-                                        <td>{"$\\mathbb{R}^{m \\times d_k}$"}</td>
-                                        <td>Keys matrix ($m$ context tokens)</td>
+                                        <td><MathEquation formula="\\mathbf{K}" /></td>
+                                        <td><MathEquation formula="\\mathbb{R}^{m \\times d_k}" /></td>
+                                        <td>Keys matrix (<MathEquation formula="m" /> context tokens)</td>
                                     </tr>
                                     <tr>
-                                        <td>{"$\\mathbf{V}$"}</td>
-                                        <td>{"$\\mathbb{R}^{m \\times d_v}$"}</td>
+                                        <td><MathEquation formula="\\mathbf{V}" /></td>
+                                        <td><MathEquation formula="\\mathbb{R}^{m \\times d_v}" /></td>
                                         <td>Values matrix containing representations</td>
                                     </tr>
                                     <tr>
-                                        <td>{"$d_k$"}</td>
+                                        <td><MathEquation formula="d_k" /></td>
                                         <td>Scalar</td>
                                         <td>Dimensionality of queries and keys</td>
                                     </tr>
@@ -632,20 +632,20 @@ export const Part1_CoreAttention: React.FC = () => {
 
                     <h5 className="text-white font-semibold text-sm mt-4">Variance Saturation Proof</h5>
                     <p className="text-slate-350 text-xs">
-                        {"Let query component $q_a \\sim \\mathcal{N}(0, 1)$ and key component $k_a \\sim \\mathcal{N}(0, 1)$ be independent random variables."}
+                        Let query component <MathEquation formula="q_a \\sim \\mathcal{N}(0, 1)" /> and key component <MathEquation formula="k_a \\sim \\mathcal{N}(0, 1)" /> be independent random variables.
                         The dot product is:
-                        <MathEquation formula="q \cdot k = \sum_{a=1}^{d_k} q_a k_a" block />
+                        <MathEquation formula="q \\cdot k = \\sum_{a=1}^{d_k} q_a k_a" block />
                         Since they are independent:
-                        <MathEquation formula="\mathbb{E}[q \cdot k] = \sum_{a=1}^{d_k} \mathbb{E}[q_a] \mathbb{E}[k_a] = 0" block />
+                        <MathEquation formula="\\mathbb{E}[q \\cdot k] = \\sum_{a=1}^{d_k} \\mathbb{E}[q_a] \\mathbb{E}[k_a] = 0" block />
                         The variance of the product of two independent zero-mean unit-variance variables is:
-                        <MathEquation formula="\operatorname{Var}(q_a k_a) = \mathbb{E}[q_a^2 k_a^2] - \mathbb{E}[q_a k_a]^2 = \mathbb{E}[q_a^2]\mathbb{E}[k_a^2] - 0 = (1)(1) = 1" block />
-                        Summing over $d_k$ independent dimensions yields:
-                        <MathEquation formula="\operatorname{Var}(q \cdot k) = \sum_{a=1}^{d_k} \operatorname{Var}(q_a k_a) = d_k" block />
-                        Thus, the variance grows linearly with dimension size $d_k$. If $d_k$ is large, the inputs to softmax will contain massive differences.
+                        <MathEquation formula="\\operatorname{Var}(q_a k_a) = \\mathbb{E}[q_a^2 k_a^2] - \\mathbb{E}[q_a k_a]^2 = \\mathbb{E}[q_a^2]\\mathbb{E}[k_a^2] - 0 = (1)(1) = 1" block />
+                        Summing over <MathEquation formula="d_k" /> independent dimensions yields:
+                        <MathEquation formula="\\operatorname{Var}(q \\cdot k) = \\sum_{a=1}^{d_k} \\operatorname{Var}(q_a k_a) = d_k" block />
+                        Thus, the variance grows linearly with dimension size <MathEquation formula="d_k" />. If <MathEquation formula="d_k" /> is large, the inputs to softmax will contain massive differences.
                         Softmax gradients collapse under high magnitude inputs, as:
-                        <MathEquation formula="\frac{\partial \operatorname{softmax}(z)_i}{\partial z_j} = \operatorname{softmax}(z)_i(\delta_{ij} - \operatorname{softmax}(z)_j)" block />
-                        {"If one score dominates, its softmax probability approaches 1 and others approach 0, zeroing out the gradient product. Scaling by $1/\\sqrt{d_k}$ yields a unit variance:"}
-                        <MathEquation formula="\operatorname{Var}\left(\frac{q \cdot k}{\sqrt{d_k}}\right) = \frac{1}{d_k} \operatorname{Var}(q \cdot k) = 1" block />
+                        <MathEquation formula="\\frac{\\partial \\operatorname{softmax}(z)_i}{\\partial z_j} = \\operatorname{softmax}(z)_i(\\delta_{ij} - \\operatorname{softmax}(z)_j)" block />
+                        If one score dominates, its softmax probability approaches 1 and others approach 0, zeroing out the gradient product. Scaling by <MathEquation formula="1/\\sqrt{d_k}" /> yields a unit variance:
+                        <MathEquation formula="\\operatorname{Var}\\left(\\frac{q \\cdot k}{\\sqrt{d_k}}\\right) = \\frac{1}{d_k} \\operatorname{Var}(q \\cdot k) = 1" block />
                         This stabilizes optimization.
                     </p>
                 </Card>
@@ -654,47 +654,47 @@ export const Part1_CoreAttention: React.FC = () => {
                     <h4 className="text-white font-bold text-md">2.3 Masking & Connection to Kernel Regression</h4>
                     <p className="text-slate-350 text-sm">
                         To preserve causality in decoder blocks, a causal look-ahead mask is added to the scaled dot-product:
-                        <MathEquation formula="\operatorname{Attention}(\mathbf{Q}, \mathbf{K}, \mathbf{V}, \mathbf{M}) = \operatorname{softmax}\left(\frac{\mathbf{Q}\mathbf{K}^T + \mathbf{M}}{\sqrt{d_k}}\right)\mathbf{V}" block />
-                        {"where $\\mathbf{M}_{ij} = 0$ if $j \\le i$, and $-\\infty$ if $j > i$."}
+                        <MathEquation formula="\\operatorname{Attention}(\\mathbf{Q}, \\mathbf{K}, \\mathbf{V}, \\mathbf{M}) = \\operatorname{softmax}\\left(\\frac{\\mathbf{Q}\\mathbf{K}^T + \\mathbf{M}}{\\sqrt{d_k}}\\right)\\mathbf{V}" block />
+                        where <MathEquation formula="\\mathbf{M}_{ij} = 0" /> if <MathEquation formula="j \\le i" />, and <MathEquation formula="-\\infty" /> if <MathEquation formula="j > i" />.
                     </p>
                     <p className="text-slate-350 text-sm">
                         Self-attention is also equivalent to **Nadaraya-Watson Kernel Regression**. The attention weights behave as a normalized similarity kernel:
-                        <MathEquation formula="f(q) = \frac{\sum_j \kappa(q, k_j) v_j}{\sum_j \kappa(q, k_j)}" block />
-                        {"where the exponential kernel is $\\kappa(q, k) = \\exp(q \\cdot k / \\sqrt{d_k})$."}
+                        <MathEquation formula="f(q) = \\frac{\\sum_j \\kappa(q, k_j) v_j}{\\sum_j \\kappa(q, k_j)}" block />
+                        where the exponential kernel is <MathEquation formula="\\kappa(q, k) = \\exp(q \\cdot k / \\sqrt{d_k})" />.
                     </p>
 
                     <h5 className="text-white font-semibold text-sm mt-4">Worked Numerical Example: Concrete Attention Trace</h5>
                     <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3 font-mono text-xs text-slate-300">
                         <div>
-                            {"**Inputs**: $n=2$, $d_k=2$."}
+                            **Inputs**: <MathEquation formula="n=2" />, <MathEquation formula="d_k=2" />.
                             <br/>
-                            {"$\\mathbf{Q} = \\begin{pmatrix} 1.0 & 2.0 \\\\ 0.0 & 1.0 \\end{pmatrix}, \\quad \\mathbf{K} = \\begin{pmatrix} 2.0 & 0.0 \\\\ 1.0 & 1.0 \\end{pmatrix}, \\quad \\mathbf{V} = \\begin{pmatrix} 10.0 \\\\ 20.0 \\end{pmatrix}$"}
+                            <MathEquation formula="\\mathbf{Q} = \\begin{pmatrix} 1.0 & 2.0 \\\\ 0.0 & 1.0 \\end{pmatrix}, \\quad \\mathbf{K} = \\begin{pmatrix} 2.0 & 0.0 \\\\ 1.0 & 1.0 \\end{pmatrix}, \\quad \\mathbf{V} = \\begin{pmatrix} 10.0 \\\\ 20.0 \\end{pmatrix}" />
                         </div>
                         <div>
-                            {"**1. Dot product $\\mathbf{Q}\\mathbf{K}^T$**:"}
+                            **1. Dot product <MathEquation formula="\\mathbf{Q}\\mathbf{K}^T" />**:
                             <br/>
-                            {"$\\mathbf{Q}\\mathbf{K}^T = \\begin{pmatrix} (1 \\cdot 2) + (2 \\cdot 0) & (1 \\cdot 1) + (2 \\cdot 1) \\\\ (0 \\cdot 2) + (1 \\cdot 0) & (0 \\cdot 1) + (1 \\cdot 1) \\end{pmatrix} = \\begin{pmatrix} 2.0 & 3.0 \\\\ 0.0 & 1.0 \\end{pmatrix}$"}
+                            <MathEquation formula="\\mathbf{Q}\\mathbf{K}^T = \\begin{pmatrix} (1 \\cdot 2) + (2 \\cdot 0) & (1 \\cdot 1) + (2 \\cdot 1) \\\\ (0 \\cdot 2) + (1 \\cdot 0) & (0 \\cdot 1) + (1 \\cdot 1) \\end{pmatrix} = \\begin{pmatrix} 2.0 & 3.0 \\\\ 0.0 & 1.0 \\end{pmatrix}" />
                         </div>
                         <div>
-                            {"**2. Scale by $\\sqrt{d_k} = \\sqrt{2} \\approx 1.414$**:"}
+                            **2. Scale by <MathEquation formula="\\sqrt{d_k} = \\sqrt{2} \\approx 1.414" />**:
                             <br/>
-                            {"$\\mathbf{S} = \\begin{pmatrix} 2.0 / 1.414 & 3.0 / 1.414 \\\\ 0.0 / 1.414 & 1.0 / 1.414 \\end{pmatrix} \\approx \\begin{pmatrix} 1.414 & 2.121 \\\\ 0.0 & 0.707 \\end{pmatrix}$"}
+                            <MathEquation formula="\\mathbf{S} = \\begin{pmatrix} 2.0 / 1.414 & 3.0 / 1.414 \\\\ 0.0 / 1.414 & 1.0 / 1.414 \\end{pmatrix} \\approx \\begin{pmatrix} 1.414 & 2.121 \\\\ 0.0 & 0.707 \\end{pmatrix}" />
                         </div>
                         <div>
                             **3. Row Softmax**:
                             <br/>
-                            {"Row 0: $e^{1.414} \\approx 4.112$, $e^{2.121} \\approx 8.339$. Sum = 12.451."}
+                            Row 0: <MathEquation formula="e^{1.414} \\approx 4.112" />, <MathEquation formula="e^{2.121} \\approx 8.339" />. Sum = 12.451.
                             <br/>
-                            {"Probs: $[4.112 / 12.451, 8.339 / 12.451] \\approx [0.33, 0.67]$."}
+                            Probs: <MathEquation formula="[4.112 / 12.451, 8.339 / 12.451] \\approx [0.33, 0.67]" />.
                             <br/>
-                            {"Row 1: $e^{0} = 1.0$, $e^{0.707} \\approx 2.028$. Sum = 3.028."}
+                            Row 1: <MathEquation formula="e^{0} = 1.0" />, <MathEquation formula="e^{0.707} \\approx 2.028" />. Sum = 3.028.
                             <br/>
-                            {"Probs: $[1.0 / 3.028, 2.028 / 3.028] \\approx [0.33, 0.67]$."}
+                            Probs: <MathEquation formula="[1.0 / 3.028, 2.028 / 3.028] \\approx [0.33, 0.67]" />.
                         </div>
                         <div>
-                            {"**4. Weighted output $\\mathbf{Z} = \\mathbf{A}\\mathbf{V}$**:"}
+                            **4. Weighted output <MathEquation formula="\\mathbf{Z} = \\mathbf{A}\\mathbf{V}" />**:
                             <br/>
-                            {"$\\mathbf{Z} = \\begin{pmatrix} 0.33 & 0.67 \\\\ 0.33 & 0.67 \\end{pmatrix} \\begin{pmatrix} 10.0 \\\\ 20.0 \\end{pmatrix} = \\begin{pmatrix} (0.33 \\cdot 10) + (0.67 \\cdot 20) \\\\ (0.33 \\cdot 10) + (0.67 \\cdot 20) \\end{pmatrix} = \\begin{pmatrix} 16.7 \\\\ 16.7 \\end{pmatrix}$"}
+                            <MathEquation formula="\\mathbf{Z} = \\begin{pmatrix} 0.33 & 0.67 \\\\ 0.33 & 0.67 \\end{pmatrix} \\begin{pmatrix} 10.0 \\\\ 20.0 \\end{pmatrix} = \\begin{pmatrix} (0.33 \\cdot 10) + (0.67 \\cdot 20) \\\\ (0.33 \\cdot 10) + (0.67 \\cdot 20) \\end{pmatrix} = \\begin{pmatrix} 16.7 \\\\ 16.7 \\end{pmatrix}" />
                         </div>
                     </div>
                 </Card>
@@ -725,9 +725,9 @@ export const Part1_CoreAttention: React.FC = () => {
                 <Card className="space-y-4">
                     <h4 className="text-white font-bold text-md">3.2 Mathematical Subspace Formulations</h4>
                     <div className="bg-slate-950 p-4 rounded-xl border border-slate-850">
-                        <MathEquation formula="\operatorname{MultiHead}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) = \operatorname{Concat}(\text{head}_1, \dots, \text{head}_h)\mathbf{W}^O" block />
+                        <MathEquation formula="\\operatorname{MultiHead}(\\mathbf{Q}, \\mathbf{K}, \\mathbf{V}) = \\operatorname{Concat}(\\text{head}_1, \\dots, \\text{head}_h)\\mathbf{W}^O" block />
                         <div className="text-center text-xs text-slate-500 my-1">where each individual head is:</div>
-                        <MathEquation formula="\text{head}_i = \operatorname{Attention}(\mathbf{Q}\mathbf{W}_i^Q, \mathbf{K}\mathbf{W}_i^K, \mathbf{V}\mathbf{W}_i^V)" block />
+                        <MathEquation formula="\\text{head}_i = \\operatorname{Attention}(\\mathbf{Q}\\mathbf{W}_i^Q, \\mathbf{K}\\mathbf{W}_i^K, \\mathbf{V}\\mathbf{W}_i^V)" block />
                         
                         <div className="mt-4 overflow-x-auto text-[10px]">
                             <table className="w-full text-left border-collapse">
@@ -740,23 +740,23 @@ export const Part1_CoreAttention: React.FC = () => {
                                 </thead>
                                 <tbody className="text-slate-300 font-mono">
                                     <tr>
-                                        <td>{"$\\mathbf{W}_i^Q$"}</td>
-                                        <td>{"$\\mathbb{R}^{d_{\\text{model}} \\times d_k}$"}</td>
-                                        <td>Query projection matrix for head $i$</td>
+                                        <td><MathEquation formula="\\mathbf{W}_i^Q" /></td>
+                                        <td><MathEquation formula="\\mathbb{R}^{d_{\\text{model}} \\times d_k}" /></td>
+                                        <td>Query projection matrix for head <MathEquation formula="i" /></td>
                                     </tr>
                                     <tr>
-                                        <td>{"$\\mathbf{W}_i^K$"}</td>
-                                        <td>{"$\\mathbb{R}^{d_{\\text{model}} \\times d_k}$"}</td>
-                                        <td>Key projection matrix for head $i$</td>
+                                        <td><MathEquation formula="\\mathbf{W}_i^K" /></td>
+                                        <td><MathEquation formula="\\mathbb{R}^{d_{\\text{model}} \\times d_k}" /></td>
+                                        <td>Key projection matrix for head <MathEquation formula="i" /></td>
                                     </tr>
                                     <tr>
-                                        <td>{"$\\mathbf{W}_i^V$"}</td>
-                                        <td>{"$\\mathbb{R}^{d_{\\text{model}} \\times d_v}$"}</td>
-                                        <td>Value projection matrix for head $i$</td>
+                                        <td><MathEquation formula="\\mathbf{W}_i^V" /></td>
+                                        <td><MathEquation formula="\\mathbb{R}^{d_{\\text{model}} \\times d_v}" /></td>
+                                        <td>Value projection matrix for head <MathEquation formula="i" /></td>
                                     </tr>
                                     <tr>
-                                        <td>{"$\\mathbf{W}^O$"}</td>
-                                        <td>{"$\\mathbb{R}^{h \\cdot d_v \\times d_{\\text{model}}}$"}</td>
+                                        <td><MathEquation formula="\\mathbf{W}^O" /></td>
+                                        <td><MathEquation formula="\\mathbb{R}^{h \\cdot d_v \\times d_{\\text{model}}}" /></td>
                                         <td>Output projection matrix aggregating all heads</td>
                                     </tr>
                                 </tbody>
@@ -803,15 +803,15 @@ export const Part1_CoreAttention: React.FC = () => {
                     <h4 className="text-white font-bold text-md">4.2 Sinusoidal Positional Encoding (Absolute)</h4>
                     <p className="text-slate-350 text-sm">
                         Vaswani et al. (2017) utilized static sinusoidal functions:
-                        <MathEquation formula="\begin{aligned} PE_{(pos, 2i)} &= \sin\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right) \\ PE_{(pos, 2i+1)} &= \cos\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right) \end{aligned}" block />
+                        <MathEquation formula="\\begin{aligned} PE_{(pos, 2i)} &= \\sin\\left(\\frac{pos}{10000^{2i/d_{\\text{model}}}}\\right) \\\\ PE_{(pos, 2i+1)} &= \\cos\\left(\\frac{pos}{10000^{2i/d_{\\text{model}}}}\\right) \\end{aligned}" block />
                     </p>
                     <h5 className="text-white font-semibold text-xs mt-2">Why Sinusoids? The Translation Projection Proof</h5>
                     <p className="text-slate-350 text-xs">
-                        {"This formula allows the model to learn to attend by relative positions easily. For any fixed offset $k$, the positional encoding $PE_{(pos+k)}$ can be represented as a linear projection of $PE_{(pos)}$:"}
-                        <MathEquation formula="PE_{(pos+k)} = \mathbf{M}_k PE_{(pos)}" block />
-                        {"where $\\mathbf{M}_k$ is a block-diagonal rotation matrix:"}
-                        <MathEquation formula="\begin{pmatrix} \sin(a+b) \\ \cos(a+b) \end{pmatrix} = \begin{pmatrix} \cos(b) & \sin(b) \\ -\sin(b) & \cos(b) \end{pmatrix} \begin{pmatrix} \sin(a) \\ \cos(a) \end{pmatrix}" block />
-                        This means the dot product of two positional encodings depends only on their relative distance $k$.
+                        This formula allows the model to learn to attend by relative positions easily. For any fixed offset <MathEquation formula="k" />, the positional encoding <MathEquation formula="PE_{(pos+k)}" /> can be represented as a linear projection of <MathEquation formula="PE_{(pos)}" />:
+                        <MathEquation formula="PE_{(pos+k)} = \\mathbf{M}_k PE_{(pos)}" block />
+                        where <MathEquation formula="\\mathbf{M}_k" /> is a block-diagonal rotation matrix:
+                        <MathEquation formula="\\begin{pmatrix} \\sin(a+b) \\\\ \\cos(a+b) \\end{pmatrix} = \\begin{pmatrix} \\cos(b) & \\sin(b) \\\\ -\\sin(b) & \\cos(b) \\end{pmatrix} \\begin{pmatrix} \\sin(a) \\\\ \\cos(a) \\end{pmatrix}" block />
+                        This means the dot product of two positional encodings depends only on their relative distance <MathEquation formula="k" />.
                     </p>
                 </Card>
 
@@ -819,9 +819,9 @@ export const Part1_CoreAttention: React.FC = () => {
                     <h4 className="text-white font-bold text-md">4.3 Rotary Position Embeddings (RoPE)</h4>
                     <p className="text-slate-350 text-sm">
                         RoPE (Su et al., 2021) is the standard positional method for modern models (LLaMA, Mistral, Qwen). Instead of *adding* positional encodings to token embeddings, RoPE applies a rotation to queries and keys in 2D planes:
-                        <MathEquation formula="\mathbf{R}_{\theta, m} \mathbf{q}_m = \begin{pmatrix} \cos m\theta & -\sin m\theta \\ \sin m\theta & \cos m\theta \end{pmatrix} \begin{pmatrix} q_0 \\ q_1 \end{pmatrix}" block />
-                        Applying this rotation to $Q$ and $K$ means that their dot product is invariant to absolute translation and encodes relative distance directly:
-                        <MathEquation formula="\langle \mathbf{R}_m \mathbf{q}, \mathbf{R}_n \mathbf{k} \rangle = \mathbf{q}^T \mathbf{R}_{n-m} \mathbf{k}" block />
+                        <MathEquation formula="\\mathbf{R}_{\\theta, m} \\mathbf{q}_m = \\begin{pmatrix} \\cos m\\theta & -\\sin m\\theta \\\\ \\sin m\\theta & \\cos m\\theta \\end{pmatrix} \\begin{pmatrix} q_0 \\\\ q_1 \\end{pmatrix}" block />
+                        Applying this rotation to <MathEquation formula="Q" /> and <MathEquation formula="K" /> means that their dot product is invariant to absolute translation and encodes relative distance directly:
+                        <MathEquation formula="\\langle \\mathbf{R}_m \\mathbf{q}, \\mathbf{R}_n \\mathbf{k} \\rangle = \\mathbf{q}^T \\mathbf{R}_{n-m} \\mathbf{k}" block />
                     </p>
                 </Card>
             </section>

@@ -80,9 +80,9 @@ const SsmVisualizerWidget: React.FC = () => {
                         </div>
                     ) : (
                         <div className="text-center space-y-2">
-                            <MathEquation formula="y = \bar{\mathbf{K}} * u" block />
+                            <MathEquation formula="y = \\bar{\\mathbf{K}} * u" block />
                             <p className="text-[9px] text-slate-500 font-sans leading-relaxed">
-                                {"Continuous systems can be unrolled during training into a single parallel convolution: $\\bar{K} = (C\\bar{B}, C\\bar{A}\\bar{B}, \\dots)$, evaluated in $O(N \\log N)$ time using Fast Fourier Transforms (FFT)."}
+                                Continuous systems can be unrolled during training into a single parallel convolution: <MathEquation formula="\\bar{K} = (C\\bar{B}, C\\bar{A}\\bar{B}, \\dots)" />, evaluated in <MathEquation formula="O(N \\log N)" /> time using Fast Fourier Transforms (FFT).
                             </p>
                         </div>
                     )}
@@ -110,7 +110,7 @@ const VitPatchWidget: React.FC = () => {
                 <div className="space-y-3 text-xs font-sans">
                     <div className="space-y-1">
                         <label className="text-slate-400 flex justify-between">
-                            <span>Image Partition Patches ($N$):</span>
+                            <span>Image Partition Patches (<MathEquation formula="N" />):</span>
                             <span className="font-mono text-emerald-400 font-bold">{numPatches}</span>
                         </label>
                         <input 
@@ -187,7 +187,7 @@ const GrpoAdvantageWidget: React.FC = () => {
                 </div>
 
                 <div className="bg-slate-950 p-4 rounded-xl border border-slate-850 h-44 flex flex-col justify-center space-y-2 font-mono text-[9px] text-slate-400">
-                    <span className="text-white font-bold">Relative Advantages ($A_i$):</span>
+                    <span className="text-white font-bold">Relative Advantages (<MathEquation formula="A_i" />):</span>
                     {advantages.map((adv, idx) => (
                         <div key={`adv-out-${idx}`} className="flex justify-between">
                             <span>Output {idx+1}:</span>
@@ -223,14 +223,14 @@ const LoraRankWidget: React.FC = () => {
         <Card className="space-y-6">
             <h4 className="text-white font-bold flex items-center gap-2 text-sm">
                 <Sliders size={16} className="text-emerald-400" />
-                LoRA Rank Decomposition parameter Compression Calculator
+                LoRA Rank Decomposition Parameter Compression Calculator
             </h4>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                 <div className="space-y-4 text-xs font-sans">
                     <div className="space-y-1">
                         <label className="text-slate-400 flex justify-between">
-                            <span>LoRA Target Rank ($r$):</span>
+                            <span>LoRA Target Rank (<MathEquation formula="r" />):</span>
                             <span className="font-mono text-emerald-400 font-bold">r = {rank}</span>
                         </label>
                         <input 
@@ -257,7 +257,7 @@ const LoraRankWidget: React.FC = () => {
                     <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider text-[9px]">Compression Ratio</span>
                     <span className="text-2xl font-bold text-emerald-400 font-mono">{ratio.toFixed(0)}x Fewer</span>
                     <p className="text-[9px] text-slate-500 text-center font-sans">
-                        Instead of updating the full $d \times d$ weight matrix, LoRA trains two low-rank matrices $A$ and $B$ size $d \times r$, saving parameter storage.
+                        Instead of updating the full <MathEquation formula="d \\times d" /> weight matrix, LoRA trains two low-rank matrices <MathEquation formula="A" /> and <MathEquation formula="B" /> size <MathEquation formula="d \\times r" />, saving parameter storage.
                     </p>
                 </div>
             </div>
@@ -292,7 +292,7 @@ const LogitLensWidget: React.FC = () => {
                 <div className="space-y-4 text-xs font-sans">
                     <div className="space-y-1">
                         <label className="text-slate-400 flex justify-between">
-                            <span>Layer projection step ($l$):</span>
+                            <span>Layer projection step (<MathEquation formula="l" />):</span>
                             <span className="font-mono text-indigo-400 font-bold">Layer {layer} / 4</span>
                         </label>
                         <input 
@@ -404,12 +404,12 @@ export const Part5_FrontierAndInterpretability: React.FC = () => {
                 <Card className="space-y-4">
                     <h4 className="text-white font-bold text-md">15.1 Continuous-Time Systems & ZOH Discretization</h4>
                     <p className="text-slate-350 text-sm">
-                        State Space Models map a 1D input sequence $u(t)$ to a 1D output sequence $y(t)$ through an $N$-dimensional hidden state $x(t)$:
-                        <MathEquation formula="\begin{aligned} x'(t) &= \mathbf{A}x(t) + \mathbf{B}u(t) \\ y(t) &= \mathbf{C}x(t) + \mathbf{D}u(t) \end{aligned}" block />
-                        To process discrete tokens, the continuous parameters are discretized using the Zero-Order Hold (ZOH) method with step size $\Delta$:
-                        <MathEquation formula="\bar{\mathbf{A}} = \exp(\Delta \mathbf{A}), \quad \bar{\mathbf{B}} = (\Delta \mathbf{A})^{-1}(\exp(\Delta \mathbf{A}) - \mathbf{I}) \cdot \Delta \mathbf{B}" block />
+                        State Space Models map a 1D input sequence <MathEquation formula="u(t)" /> to a 1D output sequence <MathEquation formula="y(t)" /> through an <MathEquation formula="N" />-dimensional hidden state <MathEquation formula="x(t)" />:
+                        <MathEquation formula="\\begin{aligned} x'(t) &= \\mathbf{A}x(t) + \\mathbf{B}u(t) \\\\ y(t) &= \\mathbf{C}x(t) + \\mathbf{D}u(t) \\end{aligned}" block />
+                        To process discrete tokens, the continuous parameters are discretized using the Zero-Order Hold (ZOH) method with step size <MathEquation formula="\\Delta" />:
+                        <MathEquation formula="\\bar{\\mathbf{A}} = \\exp(\\Delta \\mathbf{A}), \\quad \\bar{\\mathbf{B}} = (\\Delta \\mathbf{A})^{-1}(\\exp(\\Delta \\mathbf{A}) - \\mathbf{I}) \\cdot \\Delta \\mathbf{B}" block />
                         This unrolls into a recurrent step for fast inference:
-                        <MathEquation formula="h_t = \bar{\mathbf{A}} h_{t-1} + \bar{\mathbf{B}} u_t, \quad y_t = \mathbf{C}h_t" block />
+                        <MathEquation formula="h_t = \\bar{\\mathbf{A}} h_{t-1} + \\bar{\\mathbf{B}} u_t, \\quad y_t = \\mathbf{C}h_t" block />
                     </p>
                 </Card>
 
@@ -425,12 +425,12 @@ export const Part5_FrontierAndInterpretability: React.FC = () => {
                 <Card className="space-y-4">
                     <h4 className="text-white font-bold text-md">16.1 Vision Transformers (ViT) & CLIP Contrastive Alignment</h4>
                     <p className="text-slate-350 text-sm">
-                        Vision Transformers (ViT) process images by dividing them into $N$ local patches of size $P \times P \times C$. These patches are flattened and projected into token embeddings:
-                        <MathEquation formula="\mathbf{z}_0 = [\mathbf{x}_{\text{class}}; \mathbf{x}_p \mathbf{E}] + \mathbf{E}_{\text{pos}}" block />
+                        Vision Transformers (ViT) process images by dividing them into <MathEquation formula="N" /> local patches of size <MathEquation formula="P \\times P \\times C" />. These patches are flattened and projected into token embeddings:
+                        <MathEquation formula="\\mathbf{z}_0 = [\\mathbf{x}_{\\text{class}}; \\mathbf{x}_p \\mathbf{E}] + \\mathbf{E}_{\\text{pos}}" block />
                     </p>
                     <p className="text-slate-350 text-sm">
-                        CLIP (Contrastive Language-Image Pretraining) aligns vision and text embeddings into a shared semantic subspace using a dual-encoder contrastive loss objective over a batch of $N$ pairs:
-                        <MathEquation formula="\mathcal{L}_{\text{CLIP}} = -\frac{1}{N} \sum_i \log \frac{e^{f(I_i)^T g(T_i) / \tau}}{\sum_j e^{f(I_i)^T g(T_j) / \tau}}" block />
+                        CLIP (Contrastive Language-Image Pretraining) aligns vision and text embeddings into a shared semantic subspace using a dual-encoder contrastive loss objective over a batch of <MathEquation formula="N" /> pairs:
+                        <MathEquation formula="\\mathcal{L}_{\\text{CLIP}} = -\\frac{1}{N} \\sum_i \\log \\frac{e^{f(I_i)^T g(T_i) / \\tau}}{\\sum_j e^{f(I_i)^T g(T_j) / \\tau}}" block />
                     </p>
                 </Card>
 
@@ -446,11 +446,11 @@ export const Part5_FrontierAndInterpretability: React.FC = () => {
                 <Card className="space-y-4">
                     <h4 className="text-white font-bold text-md">17.1 Group Relative Policy Optimization (GRPO)</h4>
                     <p className="text-slate-350 text-sm">
-                        GRPO (used in reasoning models like DeepSeek-R1) replaces standard actor-critic RL methods (PPO) by sampling a group of $G$ outputs per prompt.
+                        GRPO (used in reasoning models like DeepSeek-R1) replaces standard actor-critic RL methods (PPO) by sampling a group of <MathEquation formula="G" /> outputs per prompt.
                         This eliminates the value-model critic, calculating advantages directly relative to the group mean and standard deviation:
-                        <MathEquation formula="A_i = \frac{r_i - \operatorname{mean}(\mathbf{r})}{\operatorname{std}(\mathbf{r})}" block />
+                        <MathEquation formula="A_i = \\frac{r_i - \\operatorname{mean}(\\mathbf{r})}{\\operatorname{std}(\\mathbf{r})}" block />
                         The optimization loss is:
-                        <MathEquation formula="\mathcal{L}_{\text{GRPO}} = \frac{1}{G} \sum_i \min\left( \frac{\pi_\theta(o_i|q)}{\pi_{\theta_{\text{old}}}(o_i|q)} A_i, \operatorname{clip}\left(\frac{\pi_\theta(o_i|q)}{\pi_{\theta_{\text{old}}}(o_i|q)}, 1-\epsilon, 1+\epsilon\right) A_i \right) - \beta D_{\text{KL}}(\pi_\theta \mid\mid \pi_{\text{ref}})" block />
+                        <MathEquation formula="\\mathcal{L}_{\\text{GRPO}} = \\frac{1}{G} \\sum_i \\min\\left( \\frac{\\pi_\\theta(o_i|q)}{\\pi_{\\theta_{\\text{old}}}(o_i|q)} A_i, \\operatorname{clip}\\left(\\frac{\\pi_\\theta(o_i|q)}{\\pi_{\\theta_{\\text{old}}}(o_i|q)}, 1-\\epsilon, 1+\\epsilon\\right) A_i \\right) - \\beta D_{\\text{KL}}(\\pi_\\theta \\mid\\mid \\pi_{\\text{ref}})" block />
                     </p>
                 </Card>
 
@@ -466,9 +466,9 @@ export const Part5_FrontierAndInterpretability: React.FC = () => {
                 <Card className="space-y-4">
                     <h4 className="text-white font-bold text-md">18.1 Low-Rank Adaptation (LoRA)</h4>
                     <p className="text-slate-350 text-sm">
-                        LoRA (Low-Rank Adaptation) updates model weights by adding a low-rank decomposed matrix product, leaving base weights $W_0$ frozen:
-                        <MathEquation formula="W = W_0 + \Delta W = W_0 + \mathbf{B}\mathbf{A}" block />
-                        {"where $\\mathbf{B} \\in \\mathbb{R}^{d \\times r}, \\mathbf{A} \\in \\mathbb{R}^{r \\times k}$, with rank $r \\ll \\min(d, k)$."}
+                        LoRA (Low-Rank Adaptation) updates model weights by adding a low-rank decomposed matrix product, leaving base weights <MathEquation formula="W_0" /> frozen:
+                        <MathEquation formula="W = W_0 + \\Delta W = W_0 + \\mathbf{B}\\mathbf{A}" block />
+                        where <MathEquation formula="\\mathbf{B} \\in \\mathbb{R}^{d \\times r}, \\mathbf{A} \\in \\mathbb{R}^{r \\times k}" />, with rank <MathEquation formula="r \\ll \\min(d, k)" />.
                     </p>
                 </Card>
 
@@ -477,8 +477,8 @@ export const Part5_FrontierAndInterpretability: React.FC = () => {
                 <Card className="space-y-4">
                     <h4 className="text-white font-bold text-md">18.2 Direct Preference Optimization (DPO)</h4>
                     <p className="text-slate-350 text-sm">
-                        DPO simplifies alignment by deriving a closed-form substitution that optimizes policies directly on preference pairs ($y_w, y_l$) without training a separate reward model:
-                        <MathEquation formula="\mathcal{L}_{\text{DPO}}(\pi_\theta) = -\mathbb{E}_{(x, y_w, y_l)} \left[ \log \sigma \left( \beta \log \frac{\pi_\theta(y_w|x)}{\pi_{\text{ref}}(y_w|x)} - \beta \log \frac{\pi_\theta(y_l|x)}{\pi_{\text{ref}}(y_l|x)} \right) \right]" block />
+                        DPO simplifies alignment by deriving a closed-form substitution that optimizes policies directly on preference pairs (<MathEquation formula="y_w, y_l" />) without training a separate reward model:
+                        <MathEquation formula="\\mathcal{L}_{\\text{DPO}}(\\pi_\\theta) = -\\mathbb{E}_{(x, y_w, y_l)} \\left[ \\log \\sigma \\left( \\beta \\log \\frac{\\pi_\\theta(y_w|x)}{\\pi_{\\text{ref}}(y_w|x)} - \\beta \\log \\frac{\\pi_\\theta(y_l|x)}{\\pi_{\\text{ref}}(y_l|x)} \\right) \\right]" block />
                     </p>
                 </Card>
             </section>
@@ -494,7 +494,7 @@ export const Part5_FrontierAndInterpretability: React.FC = () => {
                     <p className="text-slate-350 text-sm">
                         Mechanistic interpretability treats the Transformer's residual stream as a shared communication channel.
                         Each layer reads patterns from the stream, processes them, and writes output features additively back into the stream:
-                        <MathEquation formula="\mathbf{x}^{(l)} = \mathbf{x}^{(l-1)} + \operatorname{Attn}^{(l)}(\mathbf{x}^{(l-1)}) + \operatorname{FFN}^{(l)}(\mathbf{x}^{(l-1)})" block />
+                        <MathEquation formula="\\mathbf{x}^{(l)} = \\mathbf{x}^{(l-1)} + \\operatorname{Attn}^{(l)}(\\mathbf{x}^{(l-1)}) + \\operatorname{FFN}^{(l)}(\\mathbf{x}^{(l-1)})" block />
                     </p>
                 </Card>
 

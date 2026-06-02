@@ -42,7 +42,7 @@ const ChinchillaCalculatorWidget: React.FC = () => {
                 <div className="space-y-4 text-xs font-sans">
                     <div className="space-y-1">
                         <label className="text-slate-400 flex justify-between">
-                            <span>Training Compute Budget ($C$):</span>
+                            <span>Training Compute Budget (<MathEquation formula="C" />):</span>
                             <span className="font-mono text-indigo-400 font-bold">{computeFlops} ExaFLOPs</span>
                         </label>
                         <input 
@@ -55,11 +55,11 @@ const ChinchillaCalculatorWidget: React.FC = () => {
 
                     <div className="bg-slate-900/50 p-2.5 rounded border border-slate-900 font-mono text-[9px] leading-relaxed text-slate-400 space-y-1">
                         <div className="flex justify-between">
-                            <span>Optimal Parameters ($N$):</span>
+                            <span>Optimal Parameters (<MathEquation formula="N" />):</span>
                             <span className="text-white font-bold">{(optimalN / 1e9).toFixed(1)} Billion</span>
                         </div>
                         <div className="flex justify-between">
-                            <span>Optimal Tokens ($D$):</span>
+                            <span>Optimal Tokens (<MathEquation formula="D" />):</span>
                             <span className="text-white font-bold">{(optimalD / 1e12).toFixed(2)} Trillion</span>
                         </div>
                     </div>
@@ -67,9 +67,9 @@ const ChinchillaCalculatorWidget: React.FC = () => {
 
                 <div className="bg-slate-950 p-4 rounded-xl border border-slate-850 h-32 flex flex-col justify-center items-center space-y-2">
                     <span className="text-xs text-slate-400 font-bold uppercase tracking-wider text-[9px]">Chinchilla Scaling Formula</span>
-                    <MathEquation formula="C \approx 6 \cdot N \cdot D" block />
+                    <MathEquation formula="C \\approx 6 \\cdot N \\cdot D" block />
                     <p className="text-[10px] text-slate-500 text-center font-sans">
-                        For compute-optimal scaling, model size $N$ and dataset tokens $D$ should be scaled equally. 20 tokens per parameter is the optimal ratio.
+                        For compute-optimal scaling, model size <MathEquation formula="N" /> and dataset tokens <MathEquation formula="D" /> should be scaled equally. 20 tokens per parameter is the optimal ratio.
                     </p>
                 </div>
             </div>
@@ -175,7 +175,7 @@ const KvCacheCalculatorWidget: React.FC = () => {
                 <div className="space-y-4 text-xs font-sans">
                     <div className="space-y-1">
                         <label className="text-slate-400 flex justify-between">
-                            <span>Number of Layers ($L$):</span>
+                            <span>Number of Layers (<MathEquation formula="L" />):</span>
                             <span className="font-mono text-violet-400 font-bold">{layers}</span>
                         </label>
                         <input 
@@ -188,7 +188,7 @@ const KvCacheCalculatorWidget: React.FC = () => {
 
                     <div className="space-y-1">
                         <label className="text-slate-400 flex justify-between">
-                            <span>{"KV Head Count ($H_{kv}$):"}</span>
+                            <span>KV Head Count (<MathEquation formula="H_{kv}" />):</span>
                             <span className="font-mono text-violet-400 font-bold">{heads}</span>
                         </label>
                         <input 
@@ -201,7 +201,7 @@ const KvCacheCalculatorWidget: React.FC = () => {
 
                     <div className="space-y-1">
                         <label className="text-slate-400 flex justify-between">
-                            <span>Sequence Length Context ($T$):</span>
+                            <span>Sequence Length Context (<MathEquation formula="T" />):</span>
                             <span className="font-mono text-violet-400 font-bold">{seqLen} tokens</span>
                         </label>
                         <input 
@@ -216,7 +216,7 @@ const KvCacheCalculatorWidget: React.FC = () => {
                 <div className="bg-slate-950 p-4 rounded-xl border border-slate-850 h-40 flex flex-col justify-center items-center space-y-2">
                     <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider text-[9px]">KV Cache Memory Footprint</span>
                     <span className="text-2xl font-bold text-violet-400 font-mono">{(megabytes / 1024).toFixed(2)} GB</span>
-                    <MathEquation formula="\text{Size} = 2 \cdot L \cdot T \cdot H_{kv} \cdot d_k \cdot 2 \text{ bytes}" block />
+                    <MathEquation formula="\\text{Size} = 2 \\cdot L \\cdot T \\cdot H_{kv} \\cdot d_k \\cdot 2 \\text{ bytes}" block />
                 </div>
             </div>
         </Card>
@@ -241,7 +241,7 @@ export const Part3_TrainingAndEfficiency: React.FC = () => {
                     <h4 className="text-white font-bold text-md">8.1 Optimization Setup & Learning Rate Schedules</h4>
                     <p className="text-slate-350 text-sm">
                         Standard LLM training utilizes the **AdamW** optimizer (which decouples weight decay from adaptive gradient calculations) combined with a **linear warmup and cosine decay** learning rate schedule.
-                        <MathEquation formula="\eta_t = \begin{cases} \eta_{\max} \cdot \frac{t}{t_w} & t \le t_w \\ \eta_{\min} + \frac{1}{2}(\eta_{\max} - \eta_{\min})\left(1 + \cos\left(\frac{\pi(t - t_w)}{T - t_w}\right)\right) & t > t_w \end{cases}" block />
+                        <MathEquation formula="\\eta_t = \\begin{cases} \\eta_{\\max} \\cdot \\frac{t}{t_w} & t \\le t_w \\\\ \\eta_{\\min} + \\frac{1}{2}(\\eta_{\\max} - \\eta_{\\min})\\left(1 + \\cos\\left(\\frac{\\pi(t - t_w)}{T - t_w}\\right)\\right) & t > t_w \\end{cases}" block />
                         Warmup prevents early optimizer instability, and cosine decay gradually settles learning towards convergence.
                     </p>
                 </Card>
@@ -251,11 +251,11 @@ export const Part3_TrainingAndEfficiency: React.FC = () => {
                 <Card className="space-y-4">
                     <h4 className="text-white font-bold text-md">8.2 Mixed Precision & Scaling Laws</h4>
                     <p className="text-slate-355 text-sm">
-                        {"**Mixed Precision (FP16/BF16)**: Matrix multiplies are performed in low-precision 16-bit to double throughput and halve memory, keeping master weights in FP32. Loss scaling ($L_{\\text{scaled}} = L \\cdot s$) is required for FP16 to prevent underflow."}
+                        **Mixed Precision (FP16/BF16)**: Matrix multiplies are performed in low-precision 16-bit to double throughput and halve memory, keeping master weights in FP32. Loss scaling (<MathEquation formula="L_{\\text{scaled}} = L \\cdot s" />) is required for FP16 to prevent underflow.
                     </p>
                     <p className="text-slate-355 text-sm">
-                        **Chinchilla Scaling Laws** (Hoffmann et al., 2022): Given a compute budget $C$ (in FLOPs), the optimal model parameters $N$ and dataset tokens $D$ should scale in equal proportion:
-                        <MathEquation formula="C \approx 6 \cdot N \cdot D" block />
+                        **Chinchilla Scaling Laws** (Hoffmann et al., 2022): Given a compute budget <MathEquation formula="C" /> (in FLOPs), the optimal model parameters <MathEquation formula="N" /> and dataset tokens <MathEquation formula="D" /> should scale in equal proportion:
+                        <MathEquation formula="C \\approx 6 \\cdot N \\cdot D" block />
                         suggesting most LLMs historically were over-parameterized and trained on too few tokens.
                     </p>
                 </Card>
@@ -270,9 +270,9 @@ export const Part3_TrainingAndEfficiency: React.FC = () => {
                 <Card className="space-y-4">
                     <h4 className="text-white font-bold text-md">9.1 The Quadratic Bottleneck & Linear Attention</h4>
                     <p className="text-slate-350 text-sm">
-                        Standard self-attention forces materializing an $n \times n$ similarity matrix, leading to $O(n^2)$ memory and time complexity. Linear attention bypasses this using kernel feature maps:
-                        <MathEquation formula="\operatorname{Attention}(\mathbf{Q}, \mathbf{K}, \mathbf{V})_i = \frac{\phi(q_i)^T \sum_j \phi(k_j)v_j^T}{\phi(q_i)^T \sum_j \phi(k_j)}" block />
-                        {"Computing $\\mathbf{S} = \\sum_j \\phi(k_j)v_j^T$ first permits $O(n)$ complexity."}
+                        Standard self-attention forces materializing an <MathEquation formula="n \\times n" /> similarity matrix, leading to <MathEquation formula="O(n^2)" /> memory and time complexity. Linear attention bypasses this using kernel feature maps:
+                        <MathEquation formula="\\operatorname{Attention}(\\mathbf{Q}, \\mathbf{K}, \\mathbf{V})_i = \\frac{\\phi(q_i)^T \\sum_j \\phi(k_j)v_j^T}{\\phi(q_i)^T \\sum_j \\phi(k_j)}" block />
+                        Computing <MathEquation formula="\\mathbf{S} = \\sum_j \\phi(k_j)v_j^T" /> first permits <MathEquation formula="O(n)" /> complexity.
                     </p>
                 </Card>
 
@@ -281,9 +281,9 @@ export const Part3_TrainingAndEfficiency: React.FC = () => {
                 <Card className="space-y-4">
                     <h4 className="text-white font-bold text-md">9.2 FlashAttention IO-Aware Kernel</h4>
                     <p className="text-slate-350 text-sm">
-                        FlashAttention (Dao et al.) preserves exact attention computations but optimizes hardware usage. Instead of writing the full $n \times n$ attention matrix back to slow High-Bandwidth Memory (HBM), it tiles the matrices into blocks loaded into SRAM.
+                        FlashAttention (Dao et al.) preserves exact attention computations but optimizes hardware usage. Instead of writing the full <MathEquation formula="n \\times n" /> attention matrix back to slow High-Bandwidth Memory (HBM), it tiles the matrices into blocks loaded into SRAM.
                         It calculates softmax normalization dynamically block-by-block using **online softmax**:
-                        <MathEquation formula="\begin{aligned} m^{(j)} &= \max(m^{(j-1)}, \max(S_{\text{tile}})) \\ l^{(j)} &= e^{m^{(j-1)} - m^{(j)}} l^{(j-1)} + \sum e^{S_{\text{tile}} - m^{(j)}} \end{aligned}" block />
+                        <MathEquation formula="\\begin{aligned} m^{(j)} &= \\max(m^{(j-1)}, \\max(S_{\\text{tile}})) \\\\ l^{(j)} &= e^{m^{(j-1)} - m^{(j)}} l^{(j-1)} + \\sum e^{S_{\\text{tile}} - m^{(j)}} \\end{aligned}" block />
                         This reduces GPU memory traffic, speeding up attention calculations by 2-4x.
                     </p>
                 </Card>
@@ -299,7 +299,7 @@ export const Part3_TrainingAndEfficiency: React.FC = () => {
                     <h4 className="text-white font-bold text-md">10.1 Autoregressive Memory Overhead</h4>
                     <p className="text-slate-350 text-sm">
                         Generating text token-by-token means each new step recalculates keys and values for all preceding tokens. Caching these representations (**KV Cache**) speeds up generation by reducing FLOPs, but consumes massive memory:
-                        <MathEquation formula="\text{Size} = 2 \cdot L \cdot T \cdot H_{kv} \cdot d_k \cdot 2 \text{ bytes (for FP16)}" block />
+                        <MathEquation formula="\\text{Size} = 2 \\cdot L \\cdot T \\cdot H_{kv} \\cdot d_k \\cdot 2 \\text{ bytes (for FP16)}" block />
                     </p>
                 </Card>
 
@@ -311,7 +311,7 @@ export const Part3_TrainingAndEfficiency: React.FC = () => {
                         **PagedAttention** (vLLM): Borrows virtual memory ideas from operating systems. It stores the KV cache in non-contiguous memory blocks (pages) rather than pre-allocating static sequences, eliminating memory fragmentation and maximizing batch throughput.
                     </p>
                     <p className="text-slate-350 text-sm">
-                        **Speculative Decoding**: Speeds up generation using a small draft model to generate $k$ tokens quickly. The larger target model verifies them in parallel in a single forward pass, keeping output distribution exact.
+                        **Speculative Decoding**: Speeds up generation using a small draft model to generate <MathEquation formula="k" /> tokens quickly. The larger target model verifies them in parallel in a single forward pass, keeping output distribution exact.
                     </p>
                 </Card>
             </section>

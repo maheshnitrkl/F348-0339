@@ -137,7 +137,7 @@ const GptGenerationWidget: React.FC = () => {
 
                     <div className="bg-slate-900/50 p-2.5 rounded border border-slate-900 font-mono text-[9px] leading-relaxed text-slate-400">
                         <div>**Causal probability model**:</div>
-                        <MathEquation formula="P(w_t \mid w_{<t})" />
+                        <MathEquation formula="P(w_t \\mid w_{<t})" />
                     </div>
                 </div>
 
@@ -309,7 +309,7 @@ export const Part4_ModelFamilies: React.FC = () => {
                     <p className="text-slate-350 text-sm">
                         BERT (Bidirectional Encoder Representations from Transformers) learns context-aware token embeddings using a bidirectional training objective.
                         The **Masked Language Modeling (MLM)** objective masks 15% of tokens in the input text, forcing the network to predict the redacted tokens based on both left and right context:
-                        <MathEquation formula="\mathcal{L}_{\text{MLM}} = -\sum_{t \in \text{mask}} \log P(x_t \mid \mathbf{x}_{\setminus\text{mask}})" block />
+                        <MathEquation formula="\\mathcal{L}_{\\text{MLM}} = -\\sum_{t \\in \\text{mask}} \\log P(x_t \\mid \\mathbf{x}_{\\setminus\\text{mask}})" block />
                     </p>
                 </Card>
 
@@ -320,8 +320,8 @@ export const Part4_ModelFamilies: React.FC = () => {
                     <p className="text-slate-350 text-sm">
                         DeBERTa improves BERT representation by separating token attention into content and position vectors.
                         In standard self-attention, content and position vectors are added, combining their properties. DeBERTa calculates attention matrices directly using disentangled cross-products:
-                        <MathEquation formula="A_{i,j} = \mathbf{q}_i^T \mathbf{k}_j + \mathbf{q}_i^T \mathbf{r}_{i-j} + \mathbf{r}_{j-i}^T \mathbf{k}_j" block />
-                        {"where $\\mathbf{r}_{i-j}$ represents the relative position vector."}
+                        <MathEquation formula="A_{i,j} = \\mathbf{q}_i^T \\mathbf{k}_j + \\mathbf{q}_i^T \\mathbf{r}_{i-j} + \\mathbf{r}_{j-i}^T \\mathbf{k}_j" block />
+                        where <MathEquation formula="\\mathbf{r}_{i-j}" /> represents the relative position vector.
                     </p>
                 </Card>
             </section>
@@ -337,7 +337,7 @@ export const Part4_ModelFamilies: React.FC = () => {
                     <p className="text-slate-350 text-sm">
                         GPT (Generative Pretrained Transformer) uses causal self-attention masks to generate text autoregressively.
                         The **Causal Language Modeling (CLM)** objective trains the network to predict the next token given all previous context tokens:
-                        <MathEquation formula="\mathcal{L}_{\text{CLM}} = -\sum_{t=1}^T \log P(x_t \mid x_{<t})" block />
+                        <MathEquation formula="\\mathcal{L}_{\\text{CLM}} = -\\sum_{t=1}^T \\log P(x_t \\mid x_{<t})" block />
                     </p>
                 </Card>
 
@@ -366,7 +366,7 @@ export const Part4_ModelFamilies: React.FC = () => {
                     <h4 className="text-white font-bold text-md">13.1 Unified Text-to-Text Framework</h4>
                     <p className="text-slate-350 text-sm">
                         T5 (Text-to-Text Transfer Transformer) maps all NLP problems (translation, summarization, QA) into a standardized string-to-string format.
-                        {"During training, T5 uses a **Span Corruption** denoising objective: it replaces random spans of text (average 3 tokens) with unique sentinel tokens ($ \\langle \\text{extra\\_id\\_0} \\rangle $) and trains the decoder to reconstruct them sequentially."}
+                        During training, T5 uses a **Span Corruption** denoising objective: it replaces random spans of text (average 3 tokens) with unique sentinel tokens (<MathEquation formula=" \\langle \\text{extra\\_id\\_0} \\rangle " />) and trains the decoder to reconstruct them sequentially.
                     </p>
                 </Card>
 
@@ -383,9 +383,9 @@ export const Part4_ModelFamilies: React.FC = () => {
                     <h4 className="text-white font-bold text-md">14.1 Gating Networks & Load Balancing</h4>
                     <p className="text-slate-350 text-sm">
                         Mixture of Experts (MoE) replaces standard FFN layers with a routing gate and multiple expert networks. This scales model parameter capacity without increasing compute FLOPs per token.
-                        The gating network selects the Top-$k$ experts for each input token:
-                        <MathEquation formula="y = \sum_{i \in \operatorname{TopK}(x)} G(x)_i \cdot E_i(x)" block />
-                        {"where $G(x) = \\operatorname{softmax}(\\operatorname{TopK}(x\\mathbf{W}_g, k))$ are gating coefficients."}
+                        The gating network selects the Top-<MathEquation formula="k" /> experts for each input token:
+                        <MathEquation formula="y = \\sum_{i \\in \\operatorname{TopK}(x)} G(x)_i \\cdot E_i(x)" block />
+                        where <MathEquation formula="G(x) = \\operatorname{softmax}(\\operatorname{TopK}(x\\mathbf{W}_g, k))" /> are gating coefficients.
                     </p>
                 </Card>
 
@@ -395,8 +395,8 @@ export const Part4_ModelFamilies: React.FC = () => {
                     <h5 className="text-white font-semibold text-xs mt-2">Load Balancing Loss Prevention</h5>
                     <p className="text-slate-355 text-xs">
                         Without constraints, routing gating networks tend to over-utilize a few experts, leading to expert collapse. To prevent this, an **auxiliary load-balancing loss** is added:
-                        <MathEquation formula="\mathcal{L}_{\text{aux}} = \alpha \cdot N \sum_{i=1}^N f_i \cdot p_i" block />
-                        where $f_i$ is the fraction of tokens dispatched to expert $i$, and $p_i$ is the average gating probability for expert $i$ across the training batch. Minimizing this forces uniform routing.
+                        <MathEquation formula="\\mathcal{L}_{\\text{aux}} = \\alpha \\cdot N \\sum_{i=1}^N f_i \\cdot p_i" block />
+                        where <MathEquation formula="f_i" /> is the fraction of tokens dispatched to expert <MathEquation formula="i" />, and <MathEquation formula="p_i" /> is the average gating probability for expert <MathEquation formula="i" /> across the training batch. Minimizing this forces uniform routing.
                     </p>
                 </Card>
             </section>

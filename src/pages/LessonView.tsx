@@ -35,11 +35,14 @@ export function LessonView() {
     // layout: undefined/other → module renders a long scrollable content page (e.g. Backpropagation)
     if (isSelfContained) {
         const ownsLayout = module.layout === 'full';
-        return (
-            <div className={`h-[calc(100vh-100px)] ${ownsLayout ? 'flex flex-col overflow-hidden' : 'overflow-y-auto'}`}>
-                <TheoryComponent />
-            </div>
-        );
+        if (ownsLayout) {
+            return (
+                <div className="h-[calc(100vh-100px)] flex flex-col overflow-hidden">
+                    <TheoryComponent />
+                </div>
+            );
+        }
+        return <TheoryComponent />;
     }
 
     // Traditional dual-pane layout turned into Unified Tabbed Layout

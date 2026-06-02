@@ -137,7 +137,7 @@ export const Transformer: React.FC = () => {
                     <div className="space-y-4 text-xs">
                         <div className="space-y-1">
                             <label className="text-slate-400 flex justify-between">
-                                <span>{"Embedding Dimension ($d_{\\text{model}}$):"}</span>
+                                <span>Embedding Dimension (<MathEquation formula="d_{\\text{model}}" />):</span>
                                 <span className="font-mono text-indigo-400 font-bold">{dModel}</span>
                             </label>
                             <input 
@@ -150,7 +150,7 @@ export const Transformer: React.FC = () => {
 
                         <div className="space-y-1">
                             <label className="text-slate-400 flex justify-between">
-                                <span>Number of Layers ($L$):</span>
+                                <span>Number of Layers (<MathEquation formula="L" />):</span>
                                 <span className="font-mono text-indigo-400 font-bold">{nLayers}</span>
                             </label>
                             <input 
@@ -167,19 +167,19 @@ export const Transformer: React.FC = () => {
                         <div className="bg-slate-950 p-3 rounded-lg border border-slate-850 flex flex-col justify-center">
                             <span className="text-[8px] text-slate-500 uppercase font-mono">Model Parameters</span>
                             <span className="text-lg font-bold text-indigo-400 font-mono">{(totalParams / 1e9).toFixed(1)}B</span>
-                            <span className="text-[7px] text-slate-650 font-sans mt-0.5">{"$12 \\cdot L \\cdot d_{\\text{model}}^2$"}</span>
+                            <span className="text-[7px] text-slate-650 font-sans mt-0.5"><MathEquation formula="12 \\cdot L \\cdot d_{\\text{model}}^2" /></span>
                         </div>
 
                         <div className="bg-slate-950 p-3 rounded-lg border border-slate-850 flex flex-col justify-center">
                             <span className="text-[8px] text-slate-500 uppercase font-mono">KV Cache / Token</span>
                             <span className="text-lg font-bold text-emerald-450 font-mono">{(kvCachePerToken / 1024).toFixed(1)} KB</span>
-                            <span className="text-[7px] text-slate-650 font-sans mt-0.5">{"$4 \\cdot L \\cdot d_{\\text{model}}$ bytes"}</span>
+                            <span className="text-[7px] text-slate-650 font-sans mt-0.5"><MathEquation formula="4 \\cdot L \\cdot d_{\\text{model}}" /> bytes</span>
                         </div>
 
                         <div className="bg-slate-950 p-3 rounded-lg border border-slate-850 flex flex-col justify-center col-span-2 sm:col-span-1">
                             <span className="text-[8px] text-slate-500 uppercase font-mono">Training Compute</span>
                             <span className="text-lg font-bold text-pink-400 font-mono">{(totalParams * 6 / 1e12).toFixed(1)}T FLOPs</span>
-                            <span className="text-[7px] text-slate-650 font-sans mt-0.5">{"$6 \\cdot \\text{Params}$ per token"}</span>
+                            <span className="text-[7px] text-slate-650 font-sans mt-0.5"><MathEquation formula="6 \\cdot \\text{Params}" /> per token</span>
                         </div>
                     </div>
                 </div>
