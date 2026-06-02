@@ -193,19 +193,56 @@ export const Theory: React.FC = () => {
                         </div>
 
                         {/* FlashAttention */}
-                        <div className="bg-slate-950/40 p-5 rounded-xl border border-slate-800 space-y-3">
+                        <div className="bg-slate-950/40 p-5 rounded-xl border border-slate-800 space-y-4">
                             <h4 className="text-white font-bold">2. FlashAttention (IO-Aware Tiling)</h4>
                             <p className="text-sm text-slate-400">
                                 Standard attention writes the intermediate $N \times N$ attention matrix to slow High Bandwidth Memory (HBM). **FlashAttention** computes softmax incrementally by dividing keys and queries into blocks, loading them into fast SRAM, computing attention, and updating the output without materializing the full matrix.
                             </p>
+                            <div className="bg-slate-950 p-4 rounded-lg border border-slate-900 space-y-3">
+                                <span className="text-xs text-violet-400 font-mono font-bold block">Online Softmax Update Mathematics</span>
+                                <p className="text-xs text-slate-400">
+                                    To compute attention block-by-block without global communication, FlashAttention tracks running row-wise maximums <MathEquation formula="m_i" /> and scaling denominators <MathEquation formula="d_i" />. When combining a current block state with a new block segment (denoted with tildes <MathEquation formula="\tilde{m}_i" />, <MathEquation formula="\tilde{d}_i" />, and <MathEquation formula="\tilde{O}_i" />), the parameters update as follows:
+                                </p>
+                                <div className="space-y-2.5 pt-1">
+                                    <div className="text-[11px] font-mono text-slate-350">
+                                        <span className="text-slate-500 font-bold block">1. Update Row Max:</span>
+                                        <MathEquation formula="m_i^{\text{new}} = \max(m_i, \tilde{m}_i)" block />
+                                    </div>
+                                    <div className="text-[11px] font-mono text-slate-350">
+                                        <span className="text-slate-500 font-bold block">2. Update Normalizing Denominator:</span>
+                                        <MathEquation formula="d_i^{\text{new}} = d_i e^{m_i - m_i^{\text{new}}} + \tilde{d}_i e^{\tilde{m}_i - m_i^{\text{new}}}" block />
+                                    </div>
+                                    <div className="text-[11px] font-mono text-slate-350">
+                                        <span className="text-slate-500 font-bold block">3. Update Output Accumulator:</span>
+                                        <MathEquation formula="O_i^{\text{new}} = \operatorname{diag}\left(e^{m_i - m_i^{\text{new}}}\right) O_i + e^{\tilde{m}_i - m_i^{\text{new}}} \tilde{P}_i V_i" block />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         {/* MoE */}
-                        <div className="bg-slate-950/40 p-5 rounded-xl border border-slate-800 space-y-3">
+                        <div className="bg-slate-950/40 p-5 rounded-xl border border-slate-800 space-y-4">
                             <h4 className="text-white font-bold">3. Mixture of Experts (MoE)</h4>
                             <p className="text-sm text-slate-400">
                                 Scaling dense networks increases computational cost per token. **MoE** replaces feed-forward layers with a set of independent "experts". An active routing gate directs each token to only one or two experts, allowing models to scale to trillions of parameters while keeping active FLOPs per token constant.
                             </p>
+                            <div className="bg-slate-950 p-4 rounded-lg border border-slate-900 space-y-3">
+                                <span className="text-xs text-violet-400 font-mono font-bold block">Differentiable Load Balancing Loss</span>
+                                <p className="text-xs text-slate-400">
+                                    Without constraints, routing gates often collapse to a few popular experts. To ensure balanced routing across <MathEquation formula="N" /> experts for a batch of <MathEquation formula="T" /> tokens, models optimize an auxiliary load balancing loss:
+                                </p>
+                                <MathEquation formula="L_{\text{bal}} = N \sum_{i=1}^N f_i \cdot P_i" block />
+                                <div className="space-y-1.5 text-[11px] font-sans text-slate-450 leading-relaxed">
+                                    <p>
+                                        Where <MathEquation formula="f_i" /> is the actual fraction of tokens routed to expert <MathEquation formula="i" />:
+                                        <MathEquation formula="f_i = \frac{1}{T} \sum_{t=1}^T \mathbb{I}(\text{Expert } i \text{ is selected for token } t)" block />
+                                    </p>
+                                    <p>
+                                        And <MathEquation formula="P_i" /> is the average gating probability assigned to expert <MathEquation formula="i" /> across the batch:
+                                        <MathEquation formula="P_i = \frac{1}{T} \sum_{t=1}^T G(x_t)_i" block />
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </Card>

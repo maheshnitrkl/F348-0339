@@ -389,7 +389,7 @@ const MockRuntime: React.FC = () => {
    ═══════════════════════════════════════════════════════════════════════ */
 
 const PyTorchReference: React.FC = () => {
-    const [codeTab, setCodeTab] = useState<'mha' | 'rope' | 'decoder'>('mha');
+    const [codeTab, setCodeTab] = useState<'mha' | 'rope' | 'rmsnorm' | 'swiglu' | 'moe' | 'decoder'>('mha');
 
     const snippets = {
         mha: `import torch
@@ -465,7 +465,7 @@ class RotaryPositionEmbedding(nn.Module):
         emb = torch.cat((freqs, freqs), dim=-1)
         self.register_buffer("cos_cached", emb.cos(), persistent=False)
         self.register_buffer("sin_cached", emb.sin(), persistent=False)
-
+ 
     def rotate_half(self, x: torch.Tensor) -> torch.Tensor:
         # Split vector features and swap signs to implement complex rotation
         x1 = x[..., :self.dim // 2]
@@ -482,6 +482,126 @@ class RotaryPositionEmbedding(nn.Module):
         k_rot = (k.transpose(0, 2) * cos) + (self.rotate_half(k.transpose(0, 2)) * sin)
         
         return q_rot.transpose(0, 2), k_rot.transpose(0, 2)`,
+
+        rmsnorm: `import torch
+import torch.nn as nn
+
+class RMSNorm(nn.Module):
+    """
+    Root Mean Square Normalization (saves computational variance scaling).
+    Used in LLaMA models to stabilize training instead of LayerNorm.
+    """
+    def __init__(self, dim: int, eps: float = 1e-6):
+        super().__init__()
+        self.eps = eps
+        self.weight = nn.Parameter(torch.ones(dim))
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        # Compute root mean square variance over embedding dimension
+        variance = x.pow(2).mean(-1, keepdim=True)
+        # Apply inverse square root scaling with scale weight
+        return x * torch.rsqrt(variance + self.eps) * self.weight`,
+
+        swiglu: `import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+class SwiGLUMLP(nn.Module):
+    """
+    Swish Gated Linear Unit used in modern Transformer feed-forward networks (e.g. LLaMA).
+    Replaces standard two-layer MLP with a gated mechanism.
+    """
+    def __init__(self, d_model: int, d_ff: int):
+        super().__init__()
+        # w1 projects to gate dimension, w3 projects to values dimension
+        self.w1 = nn.Linear(d_model, d_ff, bias=False)
+        self.w3 = nn.Linear(d_model, d_ff, bias=False)
+        # w2 projects back to original model dimension
+        self.w2 = nn.Linear(d_ff, d_model, bias=False)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        # silu(w1(x)) performs Swish gating on w3(x) before projection back
+        return self.w2(F.silu(self.w1(x)) * self.w3(x))`,
+
+        moe: `import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+class SparseMoEGating(nn.Module):
+    """
+    Top-2 Sparse Mixture of Experts (MoE) Gating layer.
+    Routes tokens to top-2 experts and computes auxiliary load balancing loss.
+    """
+    def __init__(self, d_model: int, num_experts: int):
+        super().__init__()
+        self.num_experts = num_experts
+        # Gating network weights projecting to experts
+        self.gate = nn.Linear(d_model, num_experts, bias=False)
+
+    def forward(self, x: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        # Input shape: [Tokens (T), d_model (D)]
+        T, D = x.shape
+        logits = self.gate(x)
+        
+        if self.training:
+            # Add routing noise for exploration during training
+            noise = torch.randn_like(logits) * (1.0 / self.num_experts)
+            logits = logits + noise
+            
+        gate_probs = F.softmax(logits, dim=-1) # [T, num_experts]
+        
+        # Select top-2 experts
+        top2_probs, top2_indices = torch.topk(gate_probs, k=2, dim=-1) # [T, 2]
+        
+        # Normalize top-2 probabilities to sum to 1
+        top2_probs = top2_probs / top2_probs.sum(dim=-1, keepdim=True)
+        
+        # Compute load balancing loss metrics
+        top1_indices = top2_indices[:, 0]
+        f = torch.zeros(self.num_experts, device=x.device)
+        f.scatter_add_(0, top1_indices, torch.ones_like(top1_indices, dtype=torch.float32))
+        f = f / T
+        
+        P = gate_probs.mean(dim=0)
+        aux_loss = self.num_experts * torch.sum(f * P)
+        
+        return top2_probs, top2_indices, aux_loss
+
+class SparseMoELayer(nn.Module):
+    """
+    Full Sparse MoE layer swapping standard MLP with Experts.
+    """
+    def __init__(self, d_model: int, d_ff: int, num_experts: int):
+        super().__init__()
+        self.gating = SparseMoEGating(d_model, num_experts)
+        self.experts = nn.ModuleList([
+            nn.Sequential(
+                nn.Linear(d_model, d_ff, bias=False),
+                nn.SiLU(),
+                nn.Linear(d_ff, d_model, bias=False)
+            ) for _ in range(num_experts)
+        ])
+
+    def forward(self, x: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+        orig_shape = x.shape
+        x_flat = x.view(-1, orig_shape[-1])
+        T, D = x_flat.shape
+        
+        top2_probs, top2_indices, aux_loss = self.gating(x_flat)
+        out = torch.zeros_like(x_flat)
+        
+        # Process active tokens in batches per expert
+        for expert_id, expert in enumerate(self.experts):
+            mask = (top2_indices == expert_id)
+            token_indices, expert_ranks = torch.where(mask)
+            
+            if len(token_indices) > 0:
+                tokens = x_flat[token_indices]
+                expert_out = expert(tokens)
+                scaled_out = expert_out * top2_probs[token_indices, expert_ranks].unsqueeze(-1)
+                out.index_add_(0, token_indices, scaled_out)
+                
+        return out.view(*orig_shape), aux_loss`,
         
         decoder: `import torch
 import torch.nn as nn
@@ -542,7 +662,7 @@ class LLaMADecoderBlock(nn.Module):
                     Modular PyTorch Implementations
                 </span>
 
-                <div className="flex bg-slate-950 p-1 rounded-lg border border-slate-850 gap-1 font-mono text-[9px]">
+                <div className="flex flex-wrap bg-slate-950 p-1 rounded-lg border border-slate-850 gap-1 font-mono text-[9px]">
                     <button
                         onClick={() => setCodeTab('mha')}
                         className={`px-2.5 py-1 rounded transition-all ${
@@ -558,6 +678,30 @@ class LLaMADecoderBlock(nn.Module):
                         }`}
                     >
                         ROPE (ROTARY EMBED)
+                    </button>
+                    <button
+                        onClick={() => setCodeTab('rmsnorm')}
+                        className={`px-2.5 py-1 rounded transition-all ${
+                            codeTab === 'rmsnorm' ? 'bg-violet-500/20 text-violet-400' : 'text-slate-500 hover:text-slate-300'
+                        }`}
+                    >
+                        RMSNORM
+                    </button>
+                    <button
+                        onClick={() => setCodeTab('swiglu')}
+                        className={`px-2.5 py-1 rounded transition-all ${
+                            codeTab === 'swiglu' ? 'bg-violet-500/20 text-violet-400' : 'text-slate-500 hover:text-slate-300'
+                        }`}
+                    >
+                        SWIGLU MLP
+                    </button>
+                    <button
+                        onClick={() => setCodeTab('moe')}
+                        className={`px-2.5 py-1 rounded transition-all ${
+                            codeTab === 'moe' ? 'bg-violet-500/20 text-violet-400' : 'text-slate-500 hover:text-slate-300'
+                        }`}
+                    >
+                        SPARSE MOE
                     </button>
                     <button
                         onClick={() => setCodeTab('decoder')}
