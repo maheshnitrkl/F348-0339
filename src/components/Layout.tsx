@@ -1,7 +1,8 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Brain, BookOpen, GitGraph, Activity, LayoutDashboard, Menu } from 'lucide-react';
+import { Brain, BookOpen, GitGraph, LayoutDashboard, Menu, CheckCircle2, Circle } from 'lucide-react';
+import { useProgress } from '../hooks/progressContext';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -9,6 +10,17 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
     const [sidebarOpen, setSidebarOpen] = React.useState(true);
+    const location = useLocation();
+    const { nodeForModule, statusOf, toggleComplete, stats } = useProgress();
+
+    // The sidebar carries the "mark this module complete" control so it is
+    // available on every lesson layout, including modules that render their own
+    // internal navigation.
+    const activeModuleId = location.pathname.startsWith('/lesson/')
+        ? decodeURIComponent(location.pathname.slice('/lesson/'.length))
+        : null;
+    const activeNode = activeModuleId ? nodeForModule(activeModuleId) : undefined;
+    const activeIsComplete = activeNode ? statusOf(activeNode) === 'completed' : false;
 
     const navItems = [
         { to: '/', icon: LayoutDashboard, label: "Dashboard" },
@@ -71,6 +83,40 @@ export function Layout({ children }: LayoutProps) {
                         </NavLink>
                     ))}
                 </nav>
+
+                {sidebarOpen && (
+                    <div className="px-4 pb-2 border-t border-white/10 pt-4 space-y-3">
+                        <div>
+                            <div className="flex justify-between text-[11px] text-gray-500 mb-1.5">
+                                <span className="uppercase tracking-widest">Progress</span>
+                                <span className="font-mono">{stats.completed}/{stats.total}</span>
+                            </div>
+                            <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                                <div
+                                    className="h-full rounded-full bg-gradient-to-r from-[var(--color-electric-cyan)] to-[var(--color-soft-violet)] transition-all duration-500"
+                                    style={{ width: `${stats.pct}%` }}
+                                />
+                            </div>
+                        </div>
+
+                        {activeNode && (
+                            <button
+                                onClick={() => toggleComplete(activeNode.id)}
+                                aria-pressed={activeIsComplete}
+                                className={`w-full flex items-center gap-2 p-2.5 rounded-lg text-xs font-semibold text-left transition-colors border ${
+                                    activeIsComplete
+                                        ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20'
+                                        : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:bg-white/10'
+                                }`}
+                            >
+                                {activeIsComplete ? <CheckCircle2 className="w-4 h-4 shrink-0" /> : <Circle className="w-4 h-4 shrink-0" />}
+                                <span className="truncate">
+                                    {activeIsComplete ? 'Completed — click to undo' : 'Mark module complete'}
+                                </span>
+                            </button>
+                        )}
+                    </div>
+                )}
 
                 <div className="p-4 border-t border-white/10">
                     <button

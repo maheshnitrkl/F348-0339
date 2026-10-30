@@ -107,9 +107,20 @@ export const Foundations: React.FC = () => {
         setLoopLog(['t=0: System initialized. Agent at S_0 (Resting)']);
     };
 
+    const getDefaultActionForState = (s: 'S0' | 'S1' | 'S2') => {
+        if (s === 'S0') return 'Relax';
+        if (s === 'S1') return 'Take Exam';
+        return 'Reset';
+    };
+
+    const handleSelectState = (s: 'S0' | 'S1' | 'S2') => {
+        setSelectedState(s);
+        setSelectedAction(getDefaultActionForState(s));
+    };
+
     // --- MDP Simulation logic ---
     const handleTransition = () => {
-        let rand = Math.random();
+        const rand = Math.random();
         let next: 'S0' | 'S1' | 'S2' = 'S0';
         let reward = 0;
         let message = '';
@@ -161,20 +172,10 @@ export const Foundations: React.FC = () => {
         }
 
         setSelectedState(next);
+        setSelectedAction(getDefaultActionForState(next));
         setTransitionResult(`Outcome: State -> ${next === 'S0' ? 'Idle' : next === 'S1' ? 'Focused' : 'Graduate'}, Reward: ${reward >= 0 ? '+' : ''}${reward}. (${message})`);
         setTransitionHistory(h => [`${selectedState} --(${selectedAction})--> ${next} (R:${reward})`, ...h.slice(0, 4)]);
     };
-
-    // Update valid actions based on selectedState
-    useEffect(() => {
-        if (selectedState === 'S0') {
-            setSelectedAction('Relax');
-        } else if (selectedState === 'S1') {
-            setSelectedAction('Take Exam');
-        } else {
-            setSelectedAction('Reset');
-        }
-    }, [selectedState]);
 
     return (
         <div className="space-y-12">
@@ -400,17 +401,17 @@ export const Foundations: React.FC = () => {
                             <text x="15" y="155" fill="#94a3b8" fontSize="10" textAnchor="middle" fontWeight="bold">Relax (100% S0, R:+1)</text>
 
                             {/* State S0 Circle */}
-                            <circle cx="80" cy="150" r="28" fill={selectedState === 'S0' ? '#6d28d9' : '#1f2937'} stroke={selectedState === 'S0' ? '#c084fc' : '#4b5563'} strokeWidth="2" className="cursor-pointer" onClick={() => setSelectedState('S0')} />
+                            <circle cx="80" cy="150" r="28" fill={selectedState === 'S0' ? '#6d28d9' : '#1f2937'} stroke={selectedState === 'S0' ? '#c084fc' : '#4b5563'} strokeWidth="2" className="cursor-pointer" onClick={() => handleSelectState('S0')} />
                             <text x="80" y="146" fill="#ffffff" fontSize="12" textAnchor="middle" fontWeight="bold" className="pointer-events-none">Idle</text>
                             <text x="80" y="162" fill="#a855f7" fontSize="10" textAnchor="middle" className="pointer-events-none">S0</text>
 
                             {/* State S1 Circle */}
-                            <circle cx="320" cy="150" r="28" fill={selectedState === 'S1' ? '#1e3a8a' : '#1f2937'} stroke={selectedState === 'S1' ? '#60a5fa' : '#4b5563'} strokeWidth="2" className="cursor-pointer" onClick={() => setSelectedState('S1')} />
+                            <circle cx="320" cy="150" r="28" fill={selectedState === 'S1' ? '#1e3a8a' : '#1f2937'} stroke={selectedState === 'S1' ? '#60a5fa' : '#4b5563'} strokeWidth="2" className="cursor-pointer" onClick={() => handleSelectState('S1')} />
                             <text x="320" y="146" fill="#ffffff" fontSize="12" textAnchor="middle" fontWeight="bold" className="pointer-events-none">Focused</text>
                             <text x="320" y="162" fill="#60a5fa" fontSize="10" textAnchor="middle" className="pointer-events-none">S1</text>
 
                             {/* State S2 Circle */}
-                            <circle cx="440" cy="150" r="24" fill={selectedState === 'S2' ? '#064e3b' : '#1f2937'} stroke={selectedState === 'S2' ? '#34d399' : '#4b5563'} strokeWidth="2" className="cursor-pointer" onClick={() => setSelectedState('S2')} />
+                            <circle cx="440" cy="150" r="24" fill={selectedState === 'S2' ? '#064e3b' : '#1f2937'} stroke={selectedState === 'S2' ? '#34d399' : '#4b5563'} strokeWidth="2" className="cursor-pointer" onClick={() => handleSelectState('S2')} />
                             <text x="440" y="146" fill="#ffffff" fontSize="10" textAnchor="middle" fontWeight="bold" className="pointer-events-none">Graduate</text>
                             <text x="440" y="160" fill="#34d399" fontSize="8" textAnchor="middle" className="pointer-events-none">S2 (Goal)</text>
                         </svg>
@@ -431,7 +432,7 @@ export const Foundations: React.FC = () => {
                                     {(['S0', 'S1', 'S2'] as const).map(s => (
                                         <button 
                                             key={s} 
-                                            onClick={() => setSelectedState(s)}
+                                            onClick={() => handleSelectState(s)}
                                             className={`px-2 py-1 rounded text-xs font-bold flex-1 ${selectedState === s ? 'bg-violet-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
                                         >
                                             {s === 'S0' ? 'Idle' : s === 'S1' ? 'Focused' : 'Graduate'}
@@ -495,6 +496,14 @@ export const Foundations: React.FC = () => {
                             <div className="bg-slate-900/40 p-4 rounded-xl border border-violet-500/20 text-xs font-mono">
                                 <div className="text-violet-400 font-bold mb-1">&gt; Transition Result:</div>
                                 <div className="text-slate-200">{transitionResult}</div>
+                                {transitionHistory.length > 0 && (
+                                    <div className="mt-2 pt-2 border-t border-slate-800 text-[11px] text-slate-400">
+                                        <span className="text-slate-500 font-bold block mb-1">Recent Steps:</span>
+                                        {transitionHistory.map((h, i) => (
+                                            <div key={i} className="text-slate-400">&bull; {h}</div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>

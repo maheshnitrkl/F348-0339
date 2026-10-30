@@ -1,5 +1,6 @@
 import type { ConceptModule } from '../../../types/module';
 import { DLEfficiencyTheory } from './Theory';
+import { DLEfficiencyPython } from './Python';
 
 export const DLEfficiencyModule: ConceptModule = {
     id: 'adv-5',
@@ -7,5 +8,6 @@ export const DLEfficiencyModule: ConceptModule = {
     description: 'Gradient Checkpointing and Mixed Precision Training',
     components: {
         Theory: DLEfficiencyTheory,
+        Code: DLEfficiencyPython,
     },
 };

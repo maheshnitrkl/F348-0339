@@ -181,12 +181,8 @@ export const NeuralNet3DViz: React.FC = () => {
 
     // Orchestrate Forward Pass Simulation using useEffect
     useEffect(() => {
-        if (!isPlaying) {
-            setActiveLayer(-1);
-            return;
-        }
+        if (!isPlaying) return;
 
-        setActiveLayer(0);
         const interval = setInterval(() => {
             setActiveLayer((prev) => {
                 if (prev >= LAYERS.length - 1) return -1; // Reset
@@ -198,7 +194,15 @@ export const NeuralNet3DViz: React.FC = () => {
     }, [isPlaying]);
 
     const togglePlay = () => {
-        setIsPlaying(!isPlaying);
+        setIsPlaying((prev) => {
+            const next = !prev;
+            if (next) {
+                setActiveLayer(0);
+            } else {
+                setActiveLayer(-1);
+            }
+            return next;
+        });
     };
 
     return (

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { getAllModules } from '../modules/registry';
 import { roadmapData } from '../data/roadmapData';
+import { useProgress, type ModuleStatus } from '../hooks/progressContext';
 import {
     Search, BookOpen, Sigma, Cpu, Rocket,
     Check, Loader, Lock, Unlock, ArrowRight,
@@ -15,6 +16,8 @@ const CATEGORY_CONFIG: Record<string, {
     icon: React.ComponentType<{ size?: number; className?: string }>;
     gradient: string;
     accentColor: string;
+    /** Full class name — Tailwind cannot generate `group-hover:${accentColor}` at build time. */
+    hoverText: string;
     glowColor: string;
     bgGradient: string;
     borderColor: string;
@@ -25,6 +28,7 @@ const CATEGORY_CONFIG: Record<string, {
         icon: BookOpen,
         gradient: 'from-slate-500 to-slate-700',
         accentColor: 'text-slate-300',
+        hoverText: 'group-hover:text-slate-200',
         glowColor: 'rgba(100,116,139,0.4)',
         bgGradient: 'from-slate-500/10 to-slate-700/5',
         borderColor: 'border-slate-500/30',
@@ -35,6 +39,7 @@ const CATEGORY_CONFIG: Record<string, {
         icon: Sigma,
         gradient: 'from-blue-500 to-indigo-600',
         accentColor: 'text-blue-400',
+        hoverText: 'group-hover:text-blue-300',
         glowColor: 'rgba(59,130,246,0.4)',
         bgGradient: 'from-blue-500/10 to-indigo-600/5',
         borderColor: 'border-blue-500/30',
@@ -45,6 +50,7 @@ const CATEGORY_CONFIG: Record<string, {
         icon: Cpu,
         gradient: 'from-violet-500 to-purple-600',
         accentColor: 'text-violet-400',
+        hoverText: 'group-hover:text-violet-300',
         glowColor: 'rgba(139,92,246,0.4)',
         bgGradient: 'from-violet-500/10 to-purple-600/5',
         borderColor: 'border-violet-500/30',
@@ -55,6 +61,7 @@ const CATEGORY_CONFIG: Record<string, {
         icon: Rocket,
         gradient: 'from-cyan-500 to-teal-600',
         accentColor: 'text-cyan-400',
+        hoverText: 'group-hover:text-cyan-300',
         glowColor: 'rgba(6,182,212,0.4)',
         bgGradient: 'from-cyan-500/10 to-teal-600/5',
         borderColor: 'border-cyan-500/30',
@@ -65,6 +72,7 @@ const CATEGORY_CONFIG: Record<string, {
         icon: Sparkles,
         gradient: 'from-amber-500 to-orange-600',
         accentColor: 'text-amber-400',
+        hoverText: 'group-hover:text-amber-300',
         glowColor: 'rgba(245,158,11,0.4)',
         bgGradient: 'from-amber-500/10 to-orange-600/5',
         borderColor: 'border-amber-500/30',
@@ -99,24 +107,27 @@ const STATUS_CONFIG = {
     },
 };
 
-// Categorize module by ID prefix
-function getCategory(id: string): string {
-    if (id.startsWith('foundation-')) return 'Foundation';
-    if (id.startsWith('math-') || id.startsWith('med-')) return 'Mathematics';
-    if (id.startsWith('adv-')) return 'Advanced';
-    if (id.startsWith('app-')) return 'Applications';
-    return 'Other';
-}
+const CATEGORY_BY_TRACK: Record<string, string> = {
+    foundation: 'Foundation',
+    math: 'Mathematics',
+    advanced: 'Advanced',
+    application: 'Applications',
+};
 
-// Get roadmap status for a module
-function getStatus(moduleId: string) {
-    const node = roadmapData.find(n => n.id === moduleId);
-    return node?.status || 'unlocked';
+// Categorize by the roadmap, so the catalog and the roadmap never disagree about
+// where a module belongs (e.g. Neural Networks is an Advanced module even though
+// its id starts with "foundation-").
+function getCategory(moduleId: string): string {
+    const node =
+        roadmapData.find(n => n.id === moduleId) ??
+        roadmapData.find(n => n.moduleId === moduleId);
+    return node ? (CATEGORY_BY_TRACK[node.category] ?? 'Other') : 'Other';
 }
 
 export function Modules() {
     const navigate = useNavigate();
     const modules = getAllModules();
+    const { statusOfModule } = useProgress();
     const [searchQuery, setSearchQuery] = useState('');
     const [activeFilter, setActiveFilter] = useState<string | null>(null);
 
@@ -140,10 +151,11 @@ export function Modules() {
         return { grouped, filteredCount: filtered.length };
     }, [modules, searchQuery, activeFilter]);
 
-    // Stats
+    // Stats, scoped to modules rather than roadmap nodes (one module can serve
+    // several roadmap nodes).
     const totalModules = modules.length;
-    const completedCount = modules.filter(m => getStatus(m.id) === 'completed').length;
-    const inProgressCount = modules.filter(m => getStatus(m.id) === 'in-progress').length;
+    const completedCount = modules.filter(m => statusOfModule(m.id) === 'completed').length;
+    const inProgressCount = modules.filter(m => statusOfModule(m.id) === 'in-progress').length;
 
     // Ordered categories
     const categoryOrder = ['Foundation', 'Mathematics', 'Advanced', 'Applications', 'Other'];
@@ -273,7 +285,7 @@ export function Modules() {
                             {/* Module Cards */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                                 {categoryModules.map((module, idx) => {
-                                    const status = getStatus(module.id);
+                                    const status: ModuleStatus = statusOfModule(module.id);
                                     const statusCfg = STATUS_CONFIG[status];
                                     const StatusIcon = statusCfg.icon;
                                     const isLocked = status === 'locked';
@@ -311,7 +323,7 @@ export function Modules() {
 
                                                 {/* Title */}
                                                 <h3 className={`text-lg font-bold mb-2 leading-tight transition-colors ${
-                                                    isLocked ? 'text-gray-500' : `text-white group-hover:${config.accentColor}`
+                                                    isLocked ? 'text-gray-500' : `text-white ${config.hoverText}`
                                                 }`}>
                                                     {module.title}
                                                 </h3>

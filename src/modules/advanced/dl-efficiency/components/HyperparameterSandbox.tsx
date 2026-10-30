@@ -20,6 +20,12 @@ export function HyperparameterSandbox() {
         let tLoss = 4.0;
         let vLoss = 4.0;
 
+        // Deterministic pseudo-random generator for purity
+        const pseudoRandom = (stepIdx: number, offset: number) => {
+            const val = Math.sin(stepIdx * 12.9898 + offset * 78.233) * 43758.5453;
+            return val - Math.floor(val);
+        };
+
         for (let i = 0; i < epochs; i++) {
             // Very simplified simulation logic to visually demonstrate concepts
             
@@ -27,7 +33,7 @@ export function HyperparameterSandbox() {
             let step = (lr / 10) * 0.1;
             if (lr > 8) { // Learning rate too high -> divergence/bouncing
                 step = -0.05 * (lr - 8); 
-                tLoss += (Math.random() - 0.4) * 0.2;
+                tLoss += (pseudoRandom(i, 1) - 0.4) * 0.2;
             } else if (lr < 3) { // Learning rate too slow
                 step = 0.01;
             }
@@ -56,8 +62,8 @@ export function HyperparameterSandbox() {
             }
 
             // Add slight noise
-            tLoss += (Math.random() - 0.5) * 0.02;
-            vLoss += (Math.random() - 0.5) * 0.03;
+            tLoss += (pseudoRandom(i, 2) - 0.5) * 0.02;
+            vLoss += (pseudoRandom(i, 3) - 0.5) * 0.03;
 
             trainLoss.push({ x: i, y: tLoss });
             valLoss.push({ x: i, y: vLoss });

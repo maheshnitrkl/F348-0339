@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { ConceptModule } from '../../../types/module';
 import { PhilosophyTheory } from './Theory';
 import { PhilosophyPython } from './Python';
@@ -11,8 +11,17 @@ import { PhilosophyCodeBridge } from './components/PhilosophyCodeBridge';
 import { Book, Code2, Cpu, Lightbulb, Scale, Brain, Code } from 'lucide-react';
 
 // Main wrapper component that includes tabbed navigation
-const PhilosophyMainView: React.FC = () => {
-    const [activeTab, setActiveTab] = useState<string>('theory');
+interface PhilosophyMainViewProps {
+    /** Tab id coming from a roadmap deep link (`?section=ethics`). */
+    initialSection?: string;
+}
+
+const PhilosophyMainView: React.FC<PhilosophyMainViewProps> = ({ initialSection }) => {
+    const [activeTab, setActiveTab] = useState<string>(initialSection ?? 'theory');
+
+    useEffect(() => {
+        if (initialSection) setActiveTab(initialSection);
+    }, [initialSection]);
 
     const tabs = [
         { id: 'theory', label: 'Theory', icon: Book },

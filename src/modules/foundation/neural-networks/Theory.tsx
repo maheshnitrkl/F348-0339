@@ -37,24 +37,6 @@ import { Generative } from './sections/14_Generative';
 import { GNN } from './sections/15_GNN';
 import { SOTAFrontier } from './sections/16_SOTAFrontier';
 
-// ── Placeholder Factory for sequential development ──────────────────────────
-const PlaceholderFactory = (title: string, chapter: number) => {
-    return () => (
-        <div className="bg-slate-900/30 border border-slate-800 rounded-2xl p-8 space-y-4">
-            <h3 className="text-2xl font-bold text-white">Chapter {chapter}: {title}</h3>
-            <div className="flex items-center gap-3 text-sky-400 bg-sky-500/10 border border-sky-500/25 px-4 py-3 rounded-xl text-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" width={20} height={20} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="flex-shrink-0">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>This chapter is scheduled for sequential development in the Neural Networks roadmap.</span>
-            </div>
-            <p className="text-slate-400 leading-relaxed font-sans">
-                We are implementing the Neural Networks module chapters sequentially. This section will soon be populated with mathematical derivations, interactive widgets, hand-worked numerical steps, and PyTorch implementations.
-            </p>
-        </div>
-    );
-};
-
 // ── Section Config ───────────────────────────────────────────────────────────
 const SECTIONS = [
     {
@@ -204,8 +186,16 @@ const SECTIONS = [
 ];
 
 // ── Component ────────────────────────────────────────────────────────────────
-export const Theory: React.FC = () => {
-    const [activeSection, setActiveSection] = useState(0);
+interface TheoryProps {
+    /** Section id coming from a roadmap deep link (`?section=llm-scaling`). */
+    initialSection?: string;
+}
+
+export const Theory: React.FC<TheoryProps> = ({ initialSection }) => {
+    // LessonView keys this component on the requested section, so a new deep
+    // link remounts it and the initial index is always correct.
+    const initialIndex = initialSection ? SECTIONS.findIndex((s) => s.id === initialSection) : -1;
+    const [activeSection, setActiveSection] = useState(initialIndex >= 0 ? initialIndex : 0);
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const contentRef = useRef<HTMLDivElement>(null);
 
@@ -344,10 +334,36 @@ export const Theory: React.FC = () => {
                         <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-violet-200 to-violet-400 mb-4">
                             Neural Networks
                         </h1>
-                        <p className="text-xl text-slate-400 max-w-2xl leading-relaxed mb-8">
-                            From a single artificial neuron to the architectures that power modern AI.
-                            Build deep understanding through interactive visualizations and real mathematics.
-                        </p>
+                    <p className="text-xl text-slate-400 max-w-2xl leading-relaxed mb-6">
+                        From a single artificial neuron to the architectures that power modern AI.
+                        Build deep understanding through interactive visualizations and real mathematics.
+                    </p>
+
+                    {/* Learning Objectives */}
+                    <div className="bg-gradient-to-r from-violet-500/10 to-blue-500/10 border border-violet-500/30 rounded-xl p-6 max-w-3xl mb-8">
+                        <h3 className="text-violet-300 font-bold mb-3 flex items-center gap-2">
+                            <Brain size={18} />
+                            What You'll Master
+                        </h3>
+                        <div className="grid md:grid-cols-2 gap-2 text-sm text-slate-300">
+                            <div className="flex items-start gap-2">
+                                <span className="text-violet-400 mt-1">•</span>
+                                <span>Perceptrons, MLPs & universal approximation</span>
+                            </div>
+                            <div className="flex items-start gap-2">
+                                <span className="text-violet-400 mt-1">•</span>
+                                <span>Backpropagation & gradient descent optimization</span>
+                            </div>
+                            <div className="flex items-start gap-2">
+                                <span className="text-violet-400 mt-1">•</span>
+                                <span>CNNs, RNNs, and the Transformer revolution</span>
+                            </div>
+                            <div className="flex items-start gap-2">
+                                <span className="text-violet-400 mt-1">•</span>
+                                <span>Modern LLMs, vision models & generative AI</span>
+                            </div>
+                        </div>
+                    </div>
                         {/* Track overview pills */}
                         <div className="flex flex-wrap gap-2 mb-8">
                             {SECTIONS.map((s, i) => (

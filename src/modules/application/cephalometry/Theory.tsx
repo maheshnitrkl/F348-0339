@@ -49,8 +49,12 @@ export const CephalometryTheory: React.FC = () => {
             </p>
 
             <div className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 rounded-xl p-4 mt-6">
-                <p className="text-sm text-gray-400 italic">
-                    <span className="text-indigo-400 font-bold">Visualization Note:</span> A rotating 3D skull model (transparent/wireframe) would show bright glowing dots at specific anatomical points (e.g., Sella, Nasion). A coordinate grid (X, Y, Z) would surround the skull, updating landmark coordinates as the model rotates.
+                <p className="text-sm text-gray-400">
+                    <span className="text-indigo-400 font-bold">Try the simulation:</span> the{' '}
+                    <span className="text-white font-semibold">Simulation</span> tab renders an interactive
+                    wireframe skull in the same X / Y / Z patient space, with Sella, Nasion, A-Point, B-Point,
+                    Pogonion and Gonion landmarks. Drag to orbit, pick a landmark to read its coordinates, and
+                    inject a prediction error to watch the coordinate loss respond in real time.
                 </p>
             </div>
         </div>

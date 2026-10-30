@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, useState } from 'react';
+import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Line } from '@react-three/drei';
 import * as THREE from 'three';
@@ -24,7 +24,7 @@ const SURFACES: Record<SurfaceType, SurfaceConfig> = {
         name: 'The Ravine',
         desc: 'Steep on the Z-axis, very flat on the X-axis. Shows why momentum and adaptive scaling (Adam) are needed to avoid oscillating wildly.',
         f: (x, z) => (x * x) / 10 + (z * z),
-        dx: (x, z) => (x) / 5,
+        dx: (x, _z) => (x) / 5,
         dz: (x, z) => 2 * z,
         initialPos: new THREE.Vector3(-6, 0, 5),
         targetPos: new THREE.Vector3(0, 0, 0),
@@ -35,7 +35,7 @@ const SURFACES: Record<SurfaceType, SurfaceConfig> = {
         name: 'Simple Bowl',
         desc: 'A perfectly symmetric convex bowl. All optimizers will eventually find the center, but some take a more direct path.',
         f: (x, z) => (x * x) / 5 + (z * z) / 5,
-        dx: (x, z) => (2 * x) / 5,
+        dx: (x, _z) => (2 * x) / 5,
         dz: (x, z) => (2 * z) / 5,
         initialPos: new THREE.Vector3(-6, 0, -6),
         targetPos: new THREE.Vector3(0, 0, 0),
@@ -46,7 +46,7 @@ const SURFACES: Record<SurfaceType, SurfaceConfig> = {
         name: 'Saddle Point',
         desc: 'A critical point that is a minimum along X but a maximum along Z. Optimizers must escape it rather than converge to it.',
         f: (x, z) => (x * x) / 5 - (z * z) / 5,
-        dx: (x, z) => (2 * x) / 5,
+        dx: (x, _z) => (2 * x) / 5,
         dz: (x, z) => -(2 * z) / 5,
         initialPos: new THREE.Vector3(0.1, 0, 0.1), // Start very close to the saddle (0,0)
         scaleY: 0.2
@@ -142,8 +142,10 @@ interface OptimizerBallProps {
 function OptimizerBall({ config, surface, isRunning, resetKey }: OptimizerBallProps) {
     const ballRef = useRef<THREE.Mesh>(null);
     
-    const getInitialY = () => surface.f(surface.initialPos.x, surface.initialPos.z) * surface.scaleY + 0.3;
-    const startPos = new THREE.Vector3(surface.initialPos.x, getInitialY(), surface.initialPos.z);
+    const startPos = useMemo(() => {
+        const initialY = surface.f(surface.initialPos.x, surface.initialPos.z) * surface.scaleY + 0.3;
+        return new THREE.Vector3(surface.initialPos.x, initialY, surface.initialPos.z);
+    }, [surface]);
     
     const position = useRef(startPos.clone());
     
@@ -156,7 +158,7 @@ function OptimizerBall({ config, surface, isRunning, resetKey }: OptimizerBallPr
 
     const [trail, setTrail] = useState<THREE.Vector3[]>([startPos.clone()]);
 
-    useMemo(() => {
+    useEffect(() => {
         position.current.copy(startPos);
         velocity.current = { x: 0, z: 0 };
         gAccum.current = { x: 0, z: 0 };
@@ -164,7 +166,7 @@ function OptimizerBall({ config, surface, isRunning, resetKey }: OptimizerBallPr
         t.current = 0;
         accumulator.current = 0;
         setTrail([startPos.clone()]);
-    }, [resetKey, surface]);
+    }, [resetKey, surface, startPos]);
 
     useFrame((_, delta) => {
         if (!ballRef.current) return;

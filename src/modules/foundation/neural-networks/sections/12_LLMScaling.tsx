@@ -1,22 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
     Sparkles, 
-    Layers, 
     Activity, 
-    AlertTriangle, 
     Terminal, 
     BookOpen, 
     Award, 
-    HelpCircle, 
-    CheckCircle,
-    Eye,
-    Zap,
-    Cpu,
-    GitFork
+    HelpCircle
 } from 'lucide-react';
 import { MathEquation } from '../../../../components/MathEquation';
 import { SectionTitle, Card, Callout } from '../../../../components/SectionElements';
+import { SamplingPlayground } from './12_SamplingWidget';
 
 /* ═══════════════════════════════════════════════════════════════════════
    HELPER: Reusable styled sub-components
@@ -253,7 +247,7 @@ const QuantizationBitShrinker: React.FC = () => {
             </div>
 
             {/* SVG Plot */}
-            <div className="flex justify-center bg-slate-905 p-2 rounded-lg border border-slate-900">
+            <div className="flex justify-center bg-slate-900 p-2 rounded-lg border border-slate-900">
                 <svg width="200" height="100" className="block">
                     {/* Zero line */}
                     <line x1="10" y1="50" x2="190" y2="50" stroke="#1e293b" strokeWidth="1" strokeDasharray="2,2" />
@@ -406,7 +400,7 @@ export const LLMScaling: React.FC = () => {
                                 Quantization projects 32-bit floats down to lower bit widths (e.g. INT8 or INT4):
                             </p>
                             <div className="bg-slate-950/60 p-4 rounded-xl border border-slate-800 space-y-3 text-xs font-mono">
-                                <MathEquation formula="q = \operatorname{round}\left( \frac{x}{S} \right) + Z, \\ \quad S = \frac{\max(x) - \min(x)}{2^b - 1}" block />
+                                <MathEquation formula="q = \operatorname{round}\left( \frac{x}{S} \right) + Z, \quad S = \frac{\max(x) - \min(x)}{2^b - 1}" block />
                                 <div className="text-center font-sans text-slate-500">Symmetric quantization (with Zero-point Z = 0) simplifies to:</div>
                                 <MathEquation formula="q = \operatorname{round}\left(\frac{x}{S}\right), \quad S = \frac{\max(|x|)}{2^{b-1} - 1}" block />
                             </div>
@@ -424,6 +418,7 @@ export const LLMScaling: React.FC = () => {
                     <MoERouter />
                     <LORADimensionSolver />
                     <QuantizationBitShrinker />
+                    <SamplingPlayground />
                 </div>
             </motion.section>
 
@@ -467,7 +462,7 @@ export const LLMScaling: React.FC = () => {
                         <div className="bg-slate-950/60 p-5 rounded-xl border border-slate-800 font-mono text-xs space-y-3 leading-relaxed">
                             <div>
                                 <span className="text-sky-400 font-bold block mb-1">1. Find Absolute Max & Scale (S):</span>
-                                <MathEquation formula="\max(|w|) = 4.0, \\ \quad \text{INT8 Max Bound} = 2^7 - 1 = 127" block />
+                                <MathEquation formula="\max(|w|) = 4.0, \quad \text{INT8 Max Bound} = 2^7 - 1 = 127" block />
                                 <MathEquation formula="S = \frac{\max(|w|)}{127} = \frac{4.0}{127} \approx 0.031496" block />
                             </div>
                             <div className="border-t border-slate-900 pt-3">
@@ -482,8 +477,8 @@ export const LLMScaling: React.FC = () => {
                             <div className="border-t border-slate-900 pt-3">
                                 <span className="text-sky-400 font-bold block mb-1">3. Dequantized check (w_approx = q * S):</span>
                                 <div className="grid grid-cols-1 gap-1 pl-2 mt-1">
-                                    <div><MathEquation formula="w_0 \approx 111 \times 0.031496 = 3.496 \quad (\\Delta = -0.004)" /></div>
-                                    <div><MathEquation formula="w_1 \approx -64 \times 0.031496 = -2.016 \quad (\\Delta = -0.016)" /></div>
+                                    <div><MathEquation formula="w_0 \approx 111 \times 0.031496 = 3.496 \quad (\Delta = -0.004)" /></div>
+                                    <div><MathEquation formula="w_1 \approx -64 \times 0.031496 = -2.016 \quad (\Delta = -0.016)" /></div>
                                 </div>
                             </div>
                         </div>

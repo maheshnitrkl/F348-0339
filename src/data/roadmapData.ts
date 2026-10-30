@@ -7,6 +7,15 @@ export interface SkillNode {
     order: number;       // Left-to-right order within track
     connections: string[]; // IDs of downstream nodes
     status: 'locked' | 'unlocked' | 'completed' | 'in-progress';
+    /**
+     * Module to open when this node is clicked. Defaults to the node's own id.
+     * Several roadmap nodes can point at one module (e.g. the LLM and GAN nodes
+     * both live inside the Neural Networks module) — use `section` to land on the
+     * right tab/section inside it.
+     */
+    moduleId?: string;
+    /** Section/tab id inside the target module, read from the `?section=` query param. */
+    section?: string;
 }
 
 export interface Track {
@@ -45,6 +54,8 @@ export const roadmapData: SkillNode[] = [
         order: 1,
         connections: [],
         status: 'locked',
+        moduleId: 'foundation-1',
+        section: 'ethics',
     },
 
     // --- Math Track ---
@@ -65,8 +76,18 @@ export const roadmapData: SkillNode[] = [
         category: 'math',
         track: 'math',
         order: 1,
-        connections: ['math-3', 'adv-2'],
+        connections: ['math-calc', 'adv-2'],
         status: 'in-progress',
+    },
+    {
+        id: 'math-calc',
+        label: 'Calculus & Gradients',
+        description: 'Partial derivatives and the chain rule — the mechanics behind learning.',
+        category: 'math',
+        track: 'math',
+        order: 2,
+        connections: ['math-3'],
+        status: 'unlocked',
     },
     {
         id: 'math-3',
@@ -74,7 +95,7 @@ export const roadmapData: SkillNode[] = [
         description: 'The engine of learning: computational graphs and the chain rule.',
         category: 'math',
         track: 'math',
-        order: 2,
+        order: 3,
         connections: ['math-4', 'foundation-neural-networks'],
         status: 'unlocked',
     },
@@ -84,7 +105,7 @@ export const roadmapData: SkillNode[] = [
         description: 'Fourier transforms, wavelets, and frequency domain analysis.',
         category: 'math',
         track: 'math',
-        order: 3,
+        order: 4,
         connections: ['med-img-1'],
         status: 'unlocked',
     },
@@ -94,7 +115,7 @@ export const roadmapData: SkillNode[] = [
         description: 'Diagnose with AI: DICOM, Radon Transform, and U-Net.',
         category: 'math',
         track: 'math',
-        order: 4,
+        order: 5,
         connections: ['app-1'],
         status: 'unlocked',
     },
@@ -161,6 +182,8 @@ export const roadmapData: SkillNode[] = [
         order: 1,
         connections: [],
         status: 'unlocked',
+        moduleId: 'foundation-neural-networks',
+        section: 'vision-architectures',
     },
     {
         id: 'app-1',
@@ -168,7 +191,7 @@ export const roadmapData: SkillNode[] = [
         description: 'Medical AI: 3D landmark detection on CBCT scans.',
         category: 'application',
         track: 'application',
-        order: 3,
+        order: 2,
         connections: [],
         status: 'locked',
     },
@@ -181,6 +204,8 @@ export const roadmapData: SkillNode[] = [
         order: 3,
         connections: [],
         status: 'locked',
+        moduleId: 'foundation-neural-networks',
+        section: 'llm-scaling',
     },
     {
         id: 'gan-1',
@@ -191,6 +216,8 @@ export const roadmapData: SkillNode[] = [
         order: 4,
         connections: ['adv-4'],
         status: 'locked',
+        moduleId: 'foundation-neural-networks',
+        section: 'generative',
     },
     {
         id: 'adv-4',
@@ -201,5 +228,16 @@ export const roadmapData: SkillNode[] = [
         order: 5,
         connections: [],
         status: 'locked',
+        moduleId: 'foundation-neural-networks',
+        section: 'generative',
     },
 ];
+
+/** The module a node opens, falling back to the node id for one-to-one modules. */
+export const nodeModuleId = (node: SkillNode) => node.moduleId ?? node.id;
+
+/** Route for a roadmap node, including the in-module section when it has one. */
+export function lessonPathFor(node: SkillNode): string {
+    const base = `/lesson/${encodeURIComponent(nodeModuleId(node))}`;
+    return node.section ? `${base}?section=${encodeURIComponent(node.section)}` : base;
+}

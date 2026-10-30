@@ -2,6 +2,7 @@
 import React from 'react';
 import { Network, Copy, Layers, Target, Scissors, BookOpen } from 'lucide-react';
 import { TransferLearningViz, type TransferModelType } from '../components/TransferLearningViz';
+import { Term } from '../../../../components/Term';
 
 interface ModelSectionProps {
     type: TransferModelType;
@@ -52,7 +53,7 @@ export const TransferLearning: React.FC = () => {
                             </li>
                             <li className="flex items-start gap-2">
                                 <span className="text-rose-500 mt-0.5">•</span>
-                                Highly prone to overfitting on small datasets.
+                                Highly prone to <Term word="overfitting">overfitting</Term> on small datasets.
                             </li>
                         </ul>
                     </div>

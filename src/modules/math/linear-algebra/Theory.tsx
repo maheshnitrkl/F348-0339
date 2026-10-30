@@ -11,6 +11,45 @@ import {
     GradientDescentViz,
     TensorShapeViz,
 } from './components/TheoryVisualizations';
+import { QuizCard, type QuizQuestion } from '../../../components/QuizCard';
+import { PCAExplorer } from './components/PCAExplorer';
+import { Term } from '../../../components/Term';
+
+const linearAlgebraQuiz: QuizQuestion[] = [
+    {
+        id: 'la-1',
+        question: 'From Worked Example 1, what are the eigenvalues of A = [4 1; 2 3]?',
+        options: ['7 and 0', '5 and 2', '4 and 3', '10 and 2'],
+        correctIndex: 1,
+        explanation: 'The characteristic polynomial is λ² − 7λ + 10 = (λ − 5)(λ − 2), so λ₁ = 5 and λ₂ = 2, with eigenvectors [1, 1] and [1, −2].',
+    },
+    {
+        id: 'la-2',
+        question: 'In PCA, the first principal component corresponds to…',
+        options: [
+            'The eigenvector of the covariance matrix with the largest eigenvalue',
+            'The smallest singular vector of U',
+            'The mean of the data points',
+            'A projection of each point onto the unit sphere',
+        ],
+        correctIndex: 0,
+        explanation: 'Eigendecomposition of the covariance matrix reveals the natural axes of the data; the eigenvector with the largest eigenvalue captures the most variance. Av = λv.',
+    },
+    {
+        id: 'la-3',
+        question: 'Keeping the first 50 singular values of a 1000×500 matrix that capture 95% of the energy reduces the data by roughly…',
+        options: ['2×', '10×', '50×', 'It stores the same information'],
+        correctIndex: 1,
+        explanation: 'X ≈ U[:, :50] Σ[:50] Vᵀ[:50] stores 1000·50 + 50 + 50·500 numbers instead of 1000·500 — about a 10× reduction while preserving 95% of the variance.',
+    },
+    {
+        id: 'la-4',
+        question: 'A square matrix is invertible if and only if…',
+        options: ['It is symmetric', 'Its entries are all positive', 'Its determinant is non-zero', 'It is larger than 2×2'],
+        correctIndex: 2,
+        explanation: 'A zero determinant means some input dimension is collapsed (column-dependence), so the transformation loses information and cannot be reversed.',
+    },
+]
 
 export const LinearAlgebraTheory: React.FC = () => {
     return (
@@ -667,11 +706,22 @@ export const LinearAlgebraTheory: React.FC = () => {
 
                 <p className="mb-4">
                     Most vectors change direction when transformed by a matrix. But special vectors—
-                    <strong className="text-[var(--color-electric-cyan)]">eigenvectors</strong>—
+                    <strong className="text-[var(--color-electric-cyan)]"><Term word="eigenvector">eigenvectors</Term></strong>—
                     only get stretched or squished, never rotated.
                 </p>
 
                 <EigenViz />
+
+                <div className="mt-8">
+                    <h3 className="text-2xl font-bold text-white mb-3">🔗 From Eigenvectors to PCA: the 2D Pancake</h3>
+                    <p className="text-sm text-slate-300 mb-4">
+                        PCA is eigendecomposition applied to a covariance matrix: the eigenvectors point along
+                        the natural axes of a dataset and the eigenvalues measure how much variance each axis
+                        captures. Drag the projection slider to compress the 2D cloud onto its principal axis
+                        — the exact move that powers dimensionality reduction, compression and denoising.
+                    </p>
+                    <PCAExplorer />
+                </div>
 
                 <div className="bg-gradient-to-br from-purple-900/20 to-indigo-900/20 border border-purple-500/30 rounded-2xl p-8 mb-4">
                     <h3 className="text-2xl font-bold text-white mb-4 text-center">The Eigenvalue Equation</h3>
@@ -1392,6 +1442,16 @@ export const LinearAlgebraTheory: React.FC = () => {
                     </div>
                 </div>
             </div >
+
+            {/* Knowledge Check */}
+            <section className="mt-12 max-w-3xl mx-auto">
+                <QuizCard
+                    id="math-lin-alg.quiz"
+                    title="Linear Algebra Knowledge Check"
+                    questions={linearAlgebraQuiz}
+                    nextHint="Pass this, then continue to Calculus & Gradients."
+                />
+            </section>
         </div >
     );
 };

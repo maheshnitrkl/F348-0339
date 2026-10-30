@@ -38,8 +38,10 @@ export function generateDataset(type: DatasetType, numPoints: number, noise: num
             const cx = label === 1 ? 2 : -2;
             const cy = label === 1 ? 2 : -2;
             
-            // Box-Muller transform for gaussian noise
-            const u1 = Math.random();
+            // Box-Muller transform for gaussian noise.
+            // Math.random() can return exactly 0, and Math.log(0) is -Infinity,
+            // which would poison the whole dataset with NaN coordinates.
+            const u1 = Math.max(Math.random(), Number.EPSILON);
             const u2 = Math.random();
             const z1 = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
             const z2 = Math.sqrt(-2.0 * Math.log(u1)) * Math.sin(2.0 * Math.PI * u2);
@@ -76,6 +78,7 @@ export function generateDataset(type: DatasetType, numPoints: number, noise: num
     let maxX = 0;
     let maxY = 0;
     points.forEach(p => {
+        if (!Number.isFinite(p.x[0]) || !Number.isFinite(p.x[1])) return;
         maxX = Math.max(maxX, Math.abs(p.x[0]));
         maxY = Math.max(maxY, Math.abs(p.x[1]));
     });
@@ -87,5 +90,5 @@ export function generateDataset(type: DatasetType, numPoints: number, noise: num
         p.x[1] /= scale;
     });
 
-    return points;
+    return points.filter(p => Number.isFinite(p.x[0]) && Number.isFinite(p.x[1]));
 }

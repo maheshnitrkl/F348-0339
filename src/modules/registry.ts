@@ -13,22 +13,33 @@ import { NeuralNetworksModule } from './foundation/neural-networks';
 import { RLModule } from './advanced/rl';
 import { TransformersModule } from './application/transformers';
 
-// Registry of all available modules
-const modules: Record<string, ConceptModule> = {
-    [CalculusProbabilityModule.id]: CalculusProbabilityModule,
-    [PhilosophyModule.id]: PhilosophyModule,
-    [LinearAlgebraModule.id]: LinearAlgebraModule,
-    [CalculusModule.id]: CalculusModule,
-    [BackPropagationModule.id]: BackPropagationModule,
-    [SignalProcessingModule.id]: SignalProcessingModule,
-    [DLEfficiencyModule.id]: DLEfficiencyModule,
-    [CephalometryModule.id]: CephalometryModule,
-    [MedicalImagingModule.id]: MedicalImagingModule,
-    [StatisticalLearningModule.id]: StatisticalLearningModule,
-    [NeuralNetworksModule.id]: NeuralNetworksModule,
-    [RLModule.id]: RLModule,
-    [TransformersModule.id]: TransformersModule,
-};
+const moduleList: ConceptModule[] = [
+    CalculusProbabilityModule,
+    PhilosophyModule,
+    LinearAlgebraModule,
+    CalculusModule,
+    BackPropagationModule,
+    SignalProcessingModule,
+    DLEfficiencyModule,
+    CephalometryModule,
+    MedicalImagingModule,
+    StatisticalLearningModule,
+    NeuralNetworksModule,
+    RLModule,
+    TransformersModule,
+];
+
+const modules: Record<string, ConceptModule> = {};
+for (const mod of moduleList) {
+    // Two modules sharing an id used to silently overwrite each other, which made
+    // a whole module unreachable from the catalog and from its roadmap node.
+    if (modules[mod.id] && import.meta.env.DEV) {
+        console.error(
+            `Duplicate module id "${mod.id}": "${modules[mod.id].title}" is shadowed by "${mod.title}".`
+        );
+    }
+    modules[mod.id] = mod;
+}
 
 export const getModule = (id: string): ConceptModule | undefined => {
     return modules[id];

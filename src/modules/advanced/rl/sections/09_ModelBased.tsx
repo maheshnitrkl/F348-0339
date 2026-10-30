@@ -80,6 +80,14 @@ const GOAL_CELL: GridCell = { row: 0, col: 5 };
 const ROWS = 6;
 const COLS = 6;
 
+// Directions: 0: Up, 1: Down, 2: Left, 3: Right
+const ACTIONS = [
+    { dr: -1, dc: 0, label: '↑' },
+    { dr: 1, dc: 0, label: '↓' },
+    { dr: 0, dc: -1, label: '←' },
+    { dr: 0, dc: 1, label: '→' }
+];
+
 const isWall = (r: number, c: number) => {
     return DYNA_WALLS.some(w => w.r === r && w.c === c);
 };
@@ -94,6 +102,11 @@ export const DynaQGridworld: React.FC = () => {
     const [lastPlanningUpdates, setLastPlanningUpdates] = useState<GridCell[]>([]);
     
     // Q-table: Q[row][col][action] where action is 0:Up, 1:Down, 2:Left, 3:Right
+    const [qTable, setQTable] = useState<number[][][]>(() =>
+        Array.from({ length: ROWS }, () =>
+            Array.from({ length: COLS }, () => [0, 0, 0, 0])
+        )
+    );
     const qTableRef = useRef<number[][][]>(
         Array.from({ length: ROWS }, () =>
             Array.from({ length: COLS }, () => [0, 0, 0, 0])
@@ -111,14 +124,6 @@ export const DynaQGridworld: React.FC = () => {
     const gamma = 0.95;
     const epsilon = 0.1;
 
-    // Directions: 0: Up, 1: Down, 2: Left, 3: Right
-    const ACTIONS = [
-        { dr: -1, dc: 0, label: '↑' },
-        { dr: 1, dc: 0, label: '↓' },
-        { dr: 0, dc: -1, label: '←' },
-        { dr: 0, dc: 1, label: '→' }
-    ];
-
     const resetAgent = useCallback(() => {
         setAgentPos(START_CELL);
         setStepsCount(0);
@@ -126,9 +131,11 @@ export const DynaQGridworld: React.FC = () => {
 
     const resetFull = () => {
         setIsRunning(false);
-        qTableRef.current = Array.from({ length: ROWS }, () =>
+        const freshQ = Array.from({ length: ROWS }, () =>
             Array.from({ length: COLS }, () => [0, 0, 0, 0])
         );
+        qTableRef.current = freshQ;
+        setQTable(freshQ);
         modelRef.current = {};
         visitedSARef.current = [];
         setEpisodeHistory([]);
@@ -140,7 +147,6 @@ export const DynaQGridworld: React.FC = () => {
     const getBestAction = (r: number, c: number): number => {
         const qVals = qTableRef.current[r][c];
         let maxVal = -Infinity;
-        let bestAct = 0;
         // Break ties randomly
         const candidates: number[] = [];
         
@@ -153,7 +159,7 @@ export const DynaQGridworld: React.FC = () => {
                 candidates.push(a);
             }
         }
-        return candidates[Math.floor(Math.random() * candidates.length)];
+        return candidates[Math.floor(Math.random() * candidates.length)] ?? 0;
     };
 
     const stepSimulation = useCallback(() => {
@@ -228,6 +234,7 @@ export const DynaQGridworld: React.FC = () => {
         
         setLastPlanningUpdates(planningUpdates);
         setStepsCount(prev => prev + 1);
+        setQTable(qTableRef.current.map(row => row.map(cell => [...cell])));
 
         if (isGoal) {
             // Episode finished
@@ -251,7 +258,6 @@ export const DynaQGridworld: React.FC = () => {
     const runMultipleEpisodes = (n: number) => {
         setIsRunning(false);
         let currentPos = { ...agentPos };
-        let localSteps = stepsCount;
         let localEpisode = episodeCount;
         const newHistory: number[] = [];
 
@@ -319,6 +325,7 @@ export const DynaQGridworld: React.FC = () => {
             }
         }
         
+        setQTable(qTableRef.current.map(row => row.map(cell => [...cell])));
         setEpisodeHistory(prev => [...prev.slice(-(30 - n)), ...newHistory]);
         setEpisodeCount(localEpisode);
         setAgentPos(START_CELL);
@@ -418,12 +425,19 @@ export const DynaQGridworld: React.FC = () => {
                                 const isAgent = r === agentPos.row && c === agentPos.col;
                                 
                                 // Color strength based on Max Q value
-                                const qVals = qTableRef.current[r][c];
+                                const qVals = qTable[r][c];
                                 const maxQ = Math.max(...qVals);
                                 const intensity = maxQ > 0 ? Math.min(0.8, maxQ / 10) : 0;
                                 
                                 // Best action indicator arrow
-                                const bestActIdx = getBestAction(r, c);
+                                let bestActIdx = 0;
+                                let maxVal = -Infinity;
+                                for (let a = 0; a < 4; a++) {
+                                    if (qVals[a] > maxVal) {
+                                        maxVal = qVals[a];
+                                        bestActIdx = a;
+                                    }
+                                }
                                 const showArrow = maxQ > 0.01 && !wall && !isGoal;
                                 const arrow = ACTIONS[bestActIdx].label;
 
@@ -702,7 +716,7 @@ export const MCTSTreeVisualizer: React.FC = () => {
     // Runs a complete cycle (4 phases) instantly
     const runFullIteration = () => {
         // Selection
-        let path: string[] = ['root'];
+        const path: string[] = ['root'];
         let current = tree['root'];
         
         while (current.children.length > 0) {
@@ -759,10 +773,10 @@ export const MCTSTreeVisualizer: React.FC = () => {
     const runMultipleIterations = (count: number) => {
         setIsRunning(true);
         // We will execute them synchronously with state
-        let currentTree = { ...tree };
+        const currentTree = { ...tree };
         
         for (let iter = 0; iter < count; iter++) {
-            let path: string[] = ['root'];
+            const path: string[] = ['root'];
             let current = currentTree['root'];
             
             while (current.children.length > 0) {

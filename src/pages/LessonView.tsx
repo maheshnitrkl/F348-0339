@@ -1,16 +1,38 @@
-import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Code, Book, Maximize2 } from 'lucide-react';
 import { getModule } from '../modules/registry';
+import { useProgress } from '../hooks/progressContext';
 
 export function LessonView() {
     const { moduleId } = useParams<{ moduleId: string }>();
-    const [viewMode, setViewMode] = useState<'theory' | 'code' | 'visualization'>('theory');
+    const [searchParams] = useSearchParams();
 
     // Handle legacy ID and default
     const targetModuleId = moduleId === 'math-1' ? 'math-lin-alg' : (moduleId || 'math-lin-alg');
     const module = getModule(targetModuleId);
+
+    // The tab selection is stored together with the module it belongs to, so
+    // navigating to another module starts on Theory without a reset effect.
+    type ViewMode = 'theory' | 'code' | 'visualization';
+    const [tab, setTab] = useState<{ moduleId: string; mode: ViewMode }>({
+        moduleId: targetModuleId,
+        mode: 'theory',
+    });
+    const viewMode: ViewMode = tab.moduleId === targetModuleId ? tab.mode : 'theory';
+    const setViewMode = (mode: ViewMode) => setTab({ moduleId: targetModuleId, mode });
+
+    // A roadmap node can deep-link into a specific section of a module.
+    const initialSection = searchParams.get('section') ?? undefined;
+
+    const { markVisited, nodeForModule } = useProgress();
+    const progressNode = module ? nodeForModule(module.id) : undefined;
+
+    // Opening a module should register it as started, not leave it untouched.
+    useEffect(() => {
+        if (progressNode) markVisited(progressNode.id);
+    }, [progressNode, markVisited]);
 
     if (!module) {
         return (
@@ -18,6 +40,12 @@ export function LessonView() {
                 <div className="text-center">
                     <h2 className="text-2xl font-bold mb-2">Module Not Found</h2>
                     <p className="text-gray-400">The requested learning module "{moduleId}" does not exist.</p>
+                    <Link
+                        to="/modules"
+                        className="inline-block mt-6 px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm font-semibold text-[var(--color-electric-cyan)] hover:bg-white/10 transition-colors"
+                    >
+                        Browse all modules
+                    </Link>
                 </div>
             </div>
         );
@@ -28,8 +56,10 @@ export function LessonView() {
     const CodeComponent = components.Code;
     const VisualizationComponent = components.Visualization;
 
-    // Check if this is a self-contained module with its own navigation
-    const isSelfContained = !VisualizationComponent && TheoryComponent;
+    // Check if this is a self-contained module with its own navigation.
+    // A Code tab must also move the module into the tabbed layout, otherwise
+    // Theory-only modules never expose their Implementation view.
+    const isSelfContained = !VisualizationComponent && !CodeComponent && TheoryComponent;
 
     // layout: 'full' → module owns its own sidebar + internal scroll (e.g. Neural Networks, Statistical Learning)
     // layout: undefined/other → module renders a long scrollable content page (e.g. Backpropagation)
@@ -38,11 +68,19 @@ export function LessonView() {
         if (ownsLayout) {
             return (
                 <div className="h-[calc(100vh-100px)] flex flex-col overflow-hidden">
-                    <TheoryComponent />
+                    <TheoryComponent
+                        key={`${module.id}:${initialSection ?? ''}`}
+                        initialSection={initialSection}
+                    />
                 </div>
             );
         }
-        return <TheoryComponent />;
+        return (
+            <TheoryComponent
+                key={`${module.id}:${initialSection ?? ''}`}
+                initialSection={initialSection}
+            />
+        );
     }
 
     // Traditional dual-pane layout turned into Unified Tabbed Layout
@@ -98,7 +136,11 @@ export function LessonView() {
                         >
                             <h1 className="text-4xl font-bold mb-6 text-left bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">{module.title}</h1>
                             <div className="prose prose-invert prose-lg max-w-none w-full pb-20">
-                                <TheoryComponent onNavigate={(view: 'theory' | 'code' | 'visualization') => setViewMode(view)} />
+                                <TheoryComponent
+                                    key={`${module.id}:${initialSection ?? ''}`}
+                                    initialSection={initialSection}
+                                    onNavigate={(view: 'theory' | 'code' | 'visualization') => setViewMode(view)}
+                                />
                             </div>
                         </motion.div>
                     )}

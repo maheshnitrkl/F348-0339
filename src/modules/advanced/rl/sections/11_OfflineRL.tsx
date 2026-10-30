@@ -244,23 +244,26 @@ export const DTSequenceGenerator: React.FC = () => {
 
     const GOAL_POS = 5;
 
-    const resetSimulator = useCallback(() => {
+    const resetSimulator = () => {
         setAgentPos(0);
         setStepCount(0);
         setIsFinished(false);
         setHistory([{ rtg: targetRTG, s: 0, a: null }]);
-    }, [targetRTG]);
+    };
 
-    useEffect(() => {
-        resetSimulator();
-    }, [targetRTG, resetSimulator]);
+    const handleTargetRTGChange = (val: number) => {
+        setTargetRTG(val);
+        setAgentPos(0);
+        setStepCount(0);
+        setIsFinished(false);
+        setHistory([{ rtg: val, s: 0, a: null }]);
+    };
 
     const stepDT = () => {
         if (isFinished || agentPos === GOAL_POS) return;
 
         // Current trajectory elements
         const currentRTG = history[history.length - 1].rtg;
-        const currentS = agentPos;
 
         // Decision Transformer action generation based on Target RTG
         // If Target RTG is high (+10), model generates optimal actions (Right, Right, ...)
@@ -341,7 +344,7 @@ export const DTSequenceGenerator: React.FC = () => {
                         {[10.0, 4.0, -2.0].map(val => {
                             const labels: Record<number, string> = { 10.0: 'High (+10)', 4.0: 'Medium (+4)', [-2.0]: 'Low (-2)' };
                             return (
-                                <button key={val} onClick={() => setTargetRTG(val)}
+                                <button key={val} onClick={() => handleTargetRTGChange(val)}
                                     className={`flex-1 py-1 px-3 rounded-lg text-xs font-mono font-bold transition-all ${targetRTG === val ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/40' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>
                                     {labels[val]}
                                 </button>

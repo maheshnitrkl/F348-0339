@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Term } from '../../../../components/Term';
 
 type Gate = 'AND' | 'OR' | 'XOR';
 
@@ -262,7 +263,7 @@ export const XORProblemViz: React.FC = () => {
                 <p className="text-amber-300 text-sm font-semibold mb-1">💡 The Key Insight</p>
                 <p className="text-slate-400 text-sm">
                     The XOR problem in the 1960s–70s led to the first "AI Winter". It wasn't until 1986, with the invention
-                    of <strong className="text-white">backpropagation</strong>, that researchers learned how to train multi-layer networks
+                    of <strong className="text-white"><Term word="backpropagation">backpropagation</Term></strong>, that researchers learned how to train multi-layer networks
                     that could solve XOR — and any non-linear problem. The MLP creates a <em>new feature space</em> in the hidden layer where the data becomes linearly separable.
                 </p>
             </div>

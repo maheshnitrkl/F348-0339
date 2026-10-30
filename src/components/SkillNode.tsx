@@ -1,9 +1,11 @@
 import { motion } from 'framer-motion';
 import { Check, Lock, Loader } from 'lucide-react';
 import type { SkillNode as SkillNodeType } from '../data/roadmapData';
+import type { ModuleStatus } from '../hooks/progressContext';
 
 interface SkillNodeProps {
     node: SkillNodeType;
+    status: ModuleStatus;
     onClick: (node: SkillNodeType) => void;
     index: number;
 }
@@ -14,28 +16,24 @@ const CATEGORY_STYLES = {
         glow: 'hover:shadow-[0_0_30px_rgba(100,116,139,0.3)]',
         accent: 'bg-slate-500',
         accentText: 'text-slate-400',
-        iconBg: 'bg-slate-500/20',
     },
     math: {
         border: 'border-blue-500/40',
         glow: 'hover:shadow-[0_0_30px_rgba(59,130,246,0.3)]',
         accent: 'bg-blue-500',
         accentText: 'text-blue-400',
-        iconBg: 'bg-blue-500/20',
     },
     advanced: {
         border: 'border-violet-500/40',
         glow: 'hover:shadow-[0_0_30px_rgba(139,92,246,0.3)]',
         accent: 'bg-violet-500',
         accentText: 'text-violet-400',
-        iconBg: 'bg-violet-500/20',
     },
     application: {
         border: 'border-cyan-500/40',
         glow: 'hover:shadow-[0_0_30px_rgba(6,182,212,0.3)]',
         accent: 'bg-cyan-500',
         accentText: 'text-cyan-400',
-        iconBg: 'bg-cyan-500/20',
     },
 };
 
@@ -66,25 +64,33 @@ const STATUS_CONFIG = {
     },
 };
 
-export function SkillNode({ node, onClick, index }: SkillNodeProps) {
+export function SkillNode({ node, status, onClick, index }: SkillNodeProps) {
     const catStyle = CATEGORY_STYLES[node.category];
-    const statusCfg = STATUS_CONFIG[node.status];
+    const statusCfg = STATUS_CONFIG[status];
     const StatusIcon = statusCfg.icon;
-    const isClickable = node.status !== 'locked';
+    const isClickable = status !== 'locked';
 
     return (
-        <motion.div
+        <motion.button
+            type="button"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.08, duration: 0.4, ease: 'easeOut' }}
-            onClick={() => isClickable && onClick(node)}
+            onClick={() => onClick(node)}
+            disabled={!isClickable}
+            aria-label={
+                isClickable
+                    ? `${node.label} — ${statusCfg.badge}. Open module.`
+                    : `${node.label} — locked. Complete the prerequisite module to unlock.`
+            }
             className={`
-                group relative flex flex-col
+                group relative flex flex-col text-left shrink-0
                 w-56 min-h-[140px] p-[1px] rounded-xl
                 bg-gradient-to-br from-white/10 to-white/5
                 ${isClickable ? 'cursor-pointer' : 'cursor-not-allowed'}
                 ${catStyle.glow}
                 transition-all duration-300
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-electric-cyan)] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950
                 ${statusCfg.cardExtra}
             `}
         >
@@ -109,7 +115,7 @@ export function SkillNode({ node, onClick, index }: SkillNodeProps) {
                     {StatusIcon && (
                         <StatusIcon
                             size={14}
-                            className={`inline-block mr-1.5 -mt-0.5 ${node.status === 'in-progress' ? 'animate-spin' : ''} ${catStyle.accentText}`}
+                            className={`inline-block mr-1.5 -mt-0.5 ${status === 'in-progress' ? 'animate-spin' : ''} ${catStyle.accentText}`}
                         />
                     )}
                     {node.label}
@@ -120,13 +126,17 @@ export function SkillNode({ node, onClick, index }: SkillNodeProps) {
                     {node.description}
                 </p>
 
-                {/* Bottom: Enter hint */}
-                {isClickable && (
-                    <div className={`mt-3 text-[10px] font-bold uppercase tracking-wider ${catStyle.accentText} opacity-0 group-hover:opacity-100 transition-opacity`}>
-                        Enter Module &rarr;
+                {/* Bottom: enter hint / unlock note */}
+                {isClickable ? (
+                    <div className={`mt-3 text-[10px] font-bold uppercase tracking-wider ${catStyle.accentText} opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity`}>
+                        {status === 'completed' ? 'Review Module' : 'Enter Module'} &rarr;
+                    </div>
+                ) : (
+                    <div className="mt-3 text-[10px] font-bold uppercase tracking-wider text-gray-600">
+                        Locked
                     </div>
                 )}
             </div>
-        </motion.div>
+        </motion.button>
     );
 }

@@ -1,17 +1,19 @@
 import { useNavigate } from 'react-router-dom';
 import { GlassCard } from '../components/GlassCard';
-import { Brain, Calculator, Code, Zap } from 'lucide-react';
-import { roadmapData } from '../data/roadmapData';
+import { Brain, Calculator, Code, Zap, RotateCcw } from 'lucide-react';
+import { roadmapData, lessonPathFor, tracks } from '../data/roadmapData';
+import { useProgress } from '../hooks/progressContext';
 
 export function Dashboard() {
     const navigate = useNavigate();
+    const { statusOf, stats, reset } = useProgress();
 
-    // Derive real stats from roadmap data
-    const totalNodes = roadmapData.length;
-    const completedNodes = roadmapData.filter(n => n.status === 'completed').length;
-    const inProgressNodes = roadmapData.filter(n => n.status === 'in-progress').length;
-    const unlockedNodes = roadmapData.filter(n => n.status === 'unlocked').length;
-    const progressPct = Math.round((completedNodes / totalNodes) * 100);
+    // Derived from the learner's own progress, not the seeded roadmap labels
+    const totalNodes = stats.total;
+    const completedNodes = stats.completed;
+    const progressPct = stats.pct;
+    const inProgressNodes = roadmapData.filter(n => statusOf(n) === 'in-progress');
+    const unlockedNodes = roadmapData.filter(n => statusOf(n) === 'unlocked');
 
     return (
         <div className="space-y-8">
@@ -26,8 +28,8 @@ export function Dashboard() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 {[
                     { icon: Brain, label: "Modules Completed", value: `${completedNodes}`, color: "text-emerald-400" },
-                    { icon: Calculator, label: "In Progress", value: `${inProgressNodes}`, color: "text-amber-400" },
-                    { icon: Code, label: "Ready to Start", value: `${unlockedNodes}`, color: "text-[var(--color-electric-cyan)]" },
+                    { icon: Calculator, label: "In Progress", value: `${inProgressNodes.length}`, color: "text-amber-400" },
+                    { icon: Code, label: "Ready to Start", value: `${unlockedNodes.length}`, color: "text-[var(--color-electric-cyan)]" },
                     { icon: Zap, label: "Overall Progress", value: `${progressPct}%`, color: "text-[var(--color-soft-violet)]" },
                 ].map((stat, idx) => (
                     <GlassCard key={idx} hoverEffect className="p-6 flex items-center gap-4">
@@ -46,7 +48,16 @@ export function Dashboard() {
             <GlassCard className="p-6">
                 <div className="flex justify-between text-sm text-gray-400 mb-3">
                     <span className="font-semibold text-white">Learning Progress</span>
-                    <span>{completedNodes} of {totalNodes} modules</span>
+                    <span className="flex items-center gap-3">
+                        {completedNodes} of {totalNodes} modules
+                        <button
+                            onClick={reset}
+                            title="Reset all saved progress"
+                            className="flex items-center gap-1 text-xs text-gray-500 hover:text-white transition-colors"
+                        >
+                            <RotateCcw size={12} /> Reset
+                        </button>
+                    </span>
                 </div>
                 <div className="w-full bg-white/10 rounded-full h-2.5 mb-3">
                     <div
@@ -59,27 +70,84 @@ export function Dashboard() {
                         <span className="w-2 h-2 rounded-full bg-emerald-500" /> {completedNodes} Completed
                     </span>
                     <span className="flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" /> {inProgressNodes} Active
+                        <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" /> {inProgressNodes.length} Active
                     </span>
                     <span className="flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-cyan-400" /> {unlockedNodes} Ready
+                        <span className="w-2 h-2 rounded-full bg-cyan-400" /> {unlockedNodes.length} Ready
                     </span>
+                </div>
+            </GlassCard>
+
+            {/* Per-Track Progress Breakdown */}
+            <GlassCard className="p-6">
+                <div className="flex justify-between items-center mb-4">
+                    <span className="font-semibold text-white text-sm">Progress by Track</span>
+                    <button
+                        onClick={() => navigate('/roadmap')}
+                        className="text-xs text-[var(--color-electric-cyan)] hover:underline"
+                    >
+                        open roadmap
+                    </button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {tracks.map((track) => {
+                        const nodes = roadmapData.filter(n => n.track === track.id);
+                        const done = nodes.filter(n => statusOf(n) === 'completed').length;
+                        const active = nodes.filter(n => ['in-progress', 'unlocked'].includes(statusOf(n))).length;
+                        const pct = nodes.length > 0 ? Math.round((done / nodes.length) * 100) : 0;
+                        // Categorical color per roadmap track (matches SkillNode badges)
+                        const color =
+                            track.category === 'foundation' ? 'from-cyan-400' :
+                            track.category === 'math' ? 'from-violet-400' :
+                            track.category === 'advanced' ? 'from-amber-400' : 'from-rose-400';
+                        return (
+                            <button
+                                key={track.id}
+                                onClick={() => navigate('/roadmap')}
+                                className="text-left bg-white/5 border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-colors"
+                            >
+                                <div className="flex justify-between items-baseline mb-2">
+                                    <span className="text-sm font-bold text-white flex items-center gap-2">
+                                        <span>{track.icon}</span> {track.label}
+                                    </span>
+                                    <span className="font-mono text-xs text-gray-500">{done}/{nodes.length}</span>
+                                </div>
+                                <div className="w-full bg-white/10 rounded-full h-2 mb-2">
+                                    <div
+                                        className={`h-2 rounded-full bg-gradient-to-r ${color} to-white/30 transition-all duration-500`}
+                                        style={{ width: `${pct}%` }}
+                                    />
+                                </div>
+                                <p className="text-[11px] text-gray-500">
+                                    {pct}% complete · {active > 0 ? `${active} open` : `${nodes.length - done} remaining`}
+                                </p>
+                            </button>
+                        );
+                    })}
                 </div>
             </GlassCard>
 
             {/* Continue Learning Section */}
             <section>
                 <h2 className="text-2xl font-semibold mb-4 text-white">Continue Learning</h2>
+                {inProgressNodes.length === 0 && unlockedNodes.length === 0 && (
+                    <GlassCard className="p-6 text-gray-400">
+                        Nothing is open right now. Finish a prerequisite on the{' '}
+                        <button onClick={() => navigate('/roadmap')} className="text-[var(--color-electric-cyan)] hover:underline">
+                            roadmap
+                        </button>{' '}
+                        to unlock the next module.
+                    </GlassCard>
+                )}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Show in-progress modules dynamically */}
-                    {roadmapData
-                        .filter(n => n.status === 'in-progress')
+                    {inProgressNodes
                         .map(node => (
                             <GlassCard
                                 key={node.id}
                                 hoverEffect
                                 className="p-0 group cursor-pointer"
-                                onClick={() => navigate(`/lesson/${node.id}`)}
+                                onClick={() => navigate(lessonPathFor(node))}
                             >
                                 <div className="h-32 bg-gradient-to-br from-indigo-900 to-purple-900 relative overflow-hidden">
                                     <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-electric-cyan)]/10 to-[var(--color-soft-violet)]/10" />
@@ -102,15 +170,14 @@ export function Dashboard() {
                         ))}
 
                     {/* Show next unlocked modules */}
-                    {roadmapData
-                        .filter(n => n.status === 'unlocked')
-                        .slice(0, 2 - roadmapData.filter(n => n.status === 'in-progress').length)
+                    {unlockedNodes
+                        .slice(0, Math.max(0, 2 - inProgressNodes.length))
                         .map(node => (
                             <GlassCard
                                 key={node.id}
                                 hoverEffect
                                 className="p-0 group cursor-pointer"
-                                onClick={() => navigate(`/lesson/${node.id}`)}
+                                onClick={() => navigate(lessonPathFor(node))}
                             >
                                 <div className="h-32 bg-gradient-to-br from-slate-900 to-slate-800 relative overflow-hidden">
                                     <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-violet-500/5" />

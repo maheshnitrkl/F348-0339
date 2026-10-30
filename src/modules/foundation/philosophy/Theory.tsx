@@ -1,4 +1,5 @@
 import React from 'react';
+import { AiOscillationTimeline } from './components/AiOscillationTimeline';
 
 export const PhilosophyTheory: React.FC = () => {
     return (
@@ -49,6 +50,11 @@ export const PhilosophyTheory: React.FC = () => {
                         </p>
                     </div>
                 </div>
+            </section>
+
+            {/* Interactive: the hype-wave of AI history (spec from learning_content.json) */}
+            <section>
+                <AiOscillationTimeline />
             </section>
 
             {/* The Turing Inflection Point */}

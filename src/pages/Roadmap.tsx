@@ -1,8 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { roadmapData, tracks, type SkillNode as SkillNodeType } from '../data/roadmapData';
+import { roadmapData, tracks, lessonPathFor, type SkillNode as SkillNodeType } from '../data/roadmapData';
 import { SkillNode } from '../components/SkillNode';
+import { useProgress } from '../hooks/progressContext';
 import { ChevronRight } from 'lucide-react';
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -14,6 +15,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 export function Roadmap() {
     const navigate = useNavigate();
+    const { statusOf, stats } = useProgress();
     // Group nodes by track
     const nodesByTrack = React.useMemo(() => {
         const grouped: Record<string, SkillNodeType[]> = {};
@@ -26,13 +28,13 @@ export function Roadmap() {
     }, []);
 
     // Progress stats
-    const totalNodes = roadmapData.length;
-    const completedNodes = roadmapData.filter(n => n.status === 'completed').length;
-    const inProgressNodes = roadmapData.filter(n => n.status === 'in-progress').length;
-    const progressPct = Math.round((completedNodes / totalNodes) * 100);
+    const totalNodes = stats.total;
+    const completedNodes = stats.completed;
+    const inProgressNodes = stats.inProgress;
+    const progressPct = stats.pct;
 
     const handleNodeClick = (node: SkillNodeType) => {
-        navigate(`/lesson/${node.id}`);
+        navigate(lessonPathFor(node));
     };
 
     return (
@@ -122,7 +124,7 @@ export function Roadmap() {
                                         <p className="text-xs text-gray-500 mt-0.5">{track.description}</p>
                                     </div>
                                     <span className="text-xs text-gray-600 font-mono">
-                                        {nodes.filter(n => n.status === 'completed').length}/{nodes.length}
+                                        {nodes.filter(n => statusOf(n) === 'completed').length}/{nodes.length}
                                     </span>
                                 </div>
 
@@ -132,6 +134,7 @@ export function Roadmap() {
                                         <React.Fragment key={node.id}>
                                             <SkillNode
                                                 node={node}
+                                                status={statusOf(node)}
                                                 onClick={handleNodeClick}
                                                 index={trackIdx * 4 + nodeIdx}
                                             />

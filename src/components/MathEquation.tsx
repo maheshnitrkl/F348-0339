@@ -12,21 +12,28 @@ export const MathEquation: React.FC<MathEquationProps> = ({
     block = false,
     className = ''
 }) => {
+    let html: string | null = null;
+    let hasError = false;
+
     try {
-        const html = katex.renderToString(formula, {
+        html = katex.renderToString(formula, {
             displayMode: block,
             throwOnError: false,
             output: 'html',
         });
-
-        return (
-            <span
-                className={`katex-container ${block ? 'block my-4 text-center' : 'inline-block'} ${className}`}
-                dangerouslySetInnerHTML={{ __html: html }}
-            />
-        );
     } catch (error) {
         console.error("KaTeX rendering error:", error);
+        hasError = true;
+    }
+
+    if (hasError || html === null) {
         return <span className="text-red-400 font-mono text-sm">{formula}</span>;
     }
+
+    return (
+        <span
+            className={`katex-container ${block ? 'block my-4 text-center' : 'inline-block'} ${className}`}
+            dangerouslySetInnerHTML={{ __html: html }}
+        />
+    );
 };

@@ -11,6 +11,54 @@ import { NeuralNetworkBackpropViz } from './components/NeuralNetworkBackpropViz'
 import { LossLandscape3D } from './components/LossLandscape3D';
 import { GradientFlowDemo } from './components/GradientFlowDemo';
 import { StepByStepCalculator } from './components/StepByStepCalculator';
+import { BackPropagationPython } from './Python';
+import { QuizCard, type QuizQuestion } from '../../../components/QuizCard';
+
+const backpropQuiz: QuizQuestion[] = [
+    {
+        id: 'bp-1',
+        question: 'During the backward pass, the gradient of the loss with respect to a weight in the FIRST hidden layer requires what?',
+        options: [
+            'Only the current layer activations',
+            'A chain of local derivatives from the loss all the way back to that weight',
+            'The Hessian of the loss function',
+            'Re-running the forward pass from scratch for each parameter',
+        ],
+        correctIndex: 1,
+        explanation: 'Early-layer gradients are chained products of local derivatives: dL/dW = (dL/da)·(da/dz)·(dz/dW). The computational graph memoizes each local derivative so the backward pass costs only ~2x a forward pass.',
+    },
+    {
+        id: 'bp-2',
+        question: 'A sigmoid layer saturated at z = 8 is far from the decision boundary. What happens to its gradient contribution?',
+        options: [
+            'It explodes exponentially',
+            'It equals 1',
+            'It shrinks toward zero, since σ′(8) ≈ 0.0003',
+            'It flips sign',
+        ],
+        correctIndex: 2,
+        explanation: "σ'(z) = σ(z)(1 − σ(z)) ≈ 0 when |z| is large — the neuron is saturated and contributes almost nothing to upstream gradients, which is why ReLU became the default.",
+    },
+    {
+        id: 'bp-3',
+        question: 'In the mini autograd engine, what must each operation record for the backward pass to work?',
+        options: [
+            'The random seed used to initialize it',
+            'Its local derivative and its parent (input) nodes',
+            'The full weight matrix of the network',
+            'Nothing — gradients are recomputed numerically',
+        ],
+        correctIndex: 1,
+        explanation: 'Autograd builds a dynamic computational graph: every node stores its local derivative and references to its children, so reverse-mode differentiation can multiply local gradients backwards.',
+    },
+    {
+        id: 'bp-4',
+        question: 'For MSE loss L = mean((ŷ − y)²) over a batch, what is dL/dŷ?',
+        options: ['(ŷ − y)²/n', '2(ŷ − y)/n', 'ŷ − y without any scaling', 'log(ŷ) − log(y)'],
+        correctIndex: 1,
+        explanation: 'Differentiating L = (ŷ − y)² gives 2(ŷ − y); averaging over n samples adds the 1/n factor — exactly the bias-corrected gradient the backward-pass code uses.',
+    },
+]
 
 const BackPropagationContent: React.FC = () => {
     return (
@@ -265,6 +313,24 @@ const BackPropagationContent: React.FC = () => {
                     <GradientFlowDemo />
                 </section>
 
+                {/* Knowledge Check */}
+                <section className="space-y-8 pb-8">
+                    <div className="text-center max-w-3xl mx-auto">
+                        <div className="text-cyan-400 font-bold uppercase tracking-widest text-sm mb-2">11 &bull; Checkpoint</div>
+                        <h2 className="text-3xl font-bold text-white mb-4">Knowledge Check</h2>
+                        <p className="text-slate-400">
+                            Chain rule, saturation, autograd and loss gradients — four questions before you move on.
+                        </p>
+                    </div>
+                    <QuizCard
+                        id="math-3.quiz"
+                        title="Backpropagation Knowledge Check"
+                        questions={backpropQuiz}
+                        nextHint="Pass this, then open Neural Networks from the sidebar to build on it."
+                    />
+                </section>
+
+
                 {/* Footer / Next Steps */}
                 <footer className="border-t border-white/10 pt-12 pb-24 text-center">
                     <h3 className="text-2xl font-bold text-white mb-6">What&apos;s Next?</h3>
@@ -294,5 +360,6 @@ export const BackPropagationModule: ConceptModule = {
     description: 'The engine of learning: Computational graphs & chain rule.',
     components: {
         Theory: BackPropagationContent,
+        Code: BackPropagationPython,
     },
 };

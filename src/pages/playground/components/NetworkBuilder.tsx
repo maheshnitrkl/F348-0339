@@ -33,7 +33,14 @@ export const NetworkBuilder: React.FC<NetworkBuilderProps> = ({ hiddenLayers, on
     const PAD_X = 60;
 
     const layerSizes = useMemo(() => [2, ...hiddenLayers, 1], [hiddenLayers]); // Input, Hidden, Output
-    
+
+    // The network is rebuilt in an effect after `hiddenLayers` changes, so for one
+    // render the old network and the new layer layout disagree. Drawing weights
+    // across mismatched shapes used to crash the whole page, so gate on a match.
+    const architectureMatches = !!network
+        && network.weights.length === layerSizes.length - 1
+        && network.weights.every((layer, i) => layer.length === layerSizes[i + 1]);
+
     const nodePositions = useMemo(() => {
         const pos: {x: number, y: number}[][] = [];
         const numLayers = layerSizes.length;
@@ -73,7 +80,7 @@ export const NetworkBuilder: React.FC<NetworkBuilderProps> = ({ hiddenLayers, on
             {/* SVG Background for Lines */}
             <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto max-h-[400px]">
                 {/* Draw Weights (Lines) */}
-                {network && network.weights.map((wLayer, l) => {
+                {architectureMatches && network && network.weights.map((wLayer, l) => {
                     return wLayer.map((wNeuron, n) => {
                         return wNeuron.map((weightValue, prevN) => {
                             const from = nodePositions[l][prevN];
@@ -143,7 +150,7 @@ export const NetworkBuilder: React.FC<NetworkBuilderProps> = ({ hiddenLayers, on
                                 {isHidden && (
                                     <foreignObject x={pos.x - 12} y={pos.y - 12} width={24} height={24}>
                                         <div className="w-full h-full rounded-full overflow-hidden border border-cyan-500/30">
-                                            <NeuronHeatmap network={network} layerIndex={l - 1} neuronIndex={n} />
+                                            <NeuronHeatmap network={architectureMatches ? network : null} layerIndex={l - 1} neuronIndex={n} />
                                         </div>
                                     </foreignObject>
                                 )}

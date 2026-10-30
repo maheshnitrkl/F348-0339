@@ -8,6 +8,58 @@ import { RadonTransformViz } from './components/interactive/RadonTransformViz';
 import { MRISimulator } from './components/interactive/MRISimulator';
 import { InteractiveFFT } from './components/interactive/InteractiveFFT';
 import { VolumeRenderer } from './components/interactive/VolumeRenderer';
+import { QuizCard, type QuizQuestion } from '../../components/QuizCard';
+
+const medicalImagingQuiz: QuizQuestion[] = [
+    {
+        id: 'mi-1',
+        question: 'A radiologist sets a window at center 50 HU, width 350 HU. What does this accomplish?',
+        options: [
+            'Removes noise from air regions of the scan',
+            'Maps Hounsfield units in [-125, 225] onto [0, 255] to emphasize soft tissue',
+            'Downsamples the volume by a factor of 350',
+            'Linearly re-scales the entire bone channel',
+        ],
+        correctIndex: 1,
+        explanation: 'Window level/width is an affine remap of a chosen HU range onto the display range — soft tissue windowing hides bone (≈1000 HU) and air (≈ −1000 HU) just like the volume-render threshold.',
+    },
+    {
+        id: 'mi-2',
+        question: 'The Fourier slice theorem says that one 1D projection of a scanners views equals…',
+        options: [
+            'A random sample of the body image',
+            'A column of the image in real space',
+            'A radial line through the 2D Fourier transform of the body',
+            'The Laplacian of the projection',
+        ],
+        correctIndex: 2,
+        explanation: 'FFT of the projection along one angle gives one slice through frequency space at the matching angle. Fill in slices over all angles and inverse-FFT to reconstruct the image — this is why CT works.',
+    },
+    {
+        id: 'mi-3',
+        question: 'Why does naive back-projection of the Radon sinogram look blurred, and what fixes it?',
+        options: [
+            'Detector drift — recalibration fixes it',
+            'Coarse sampling — increase the angles to 360°',
+            'Low-pass smearing from uniform back-projection — apply a ramp filter in the frequency domain (filtered back-projection)',
+            'The patient moved — motion correction is required',
+        ],
+        correctIndex: 2,
+        explanation: 'Each smeared projection adds a 1/r falloff in frequency space. Multiplying the spectrum by |frequency| (a ramp filter) restores sharpness — the medical analog of a sharpening convolution.',
+    },
+    {
+        id: 'mi-4',
+        question: 'A 3D U-Net predicts landmark positions as heatmaps. How are the (x, y, z) coordinates recovered?',
+        options: [
+            'The highest voxel is picked via argmax',
+            'A learned linear layer with 3 outputs per landmark',
+            'The K-means cluster center of active voxels',
+            'A differentiable soft-argmax: voxel probabilities weighted by their grid position',
+        ],
+        correctIndex: 3,
+        explanation: 'A differentiable expectation over the probability volume (soft-argmax) gives sub-voxel precision and back-propagates an unbroken gradient — in contrast to a hard argmax peak.',
+    },
+]
 
 interface ComputerVisionTheoryProps {
     onNavigate?: (view: 'theory' | 'code' | 'visualization') => void;
@@ -373,6 +425,26 @@ export const MedicalImagingTheory: React.FC<ComputerVisionTheoryProps> = ({ onNa
                         </div>
                     </div>
                 </div>
+            </section>
+
+            {/* Sixth Phase: Knowledge Check */}
+            <section className="space-y-12 pb-16">
+                <div className="flex items-center gap-6 mb-2 border-b border-white/5 pb-6">
+                    <div className="p-5 bg-violet-500/20 rounded-2xl text-violet-400 border border-violet-500/30">
+                        <Eye size={48} />
+                    </div>
+                    <div>
+                        <div className="text-sm font-bold text-violet-500 uppercase tracking-wider mb-1">Phase VI</div>
+                        <h2 className="text-4xl font-bold text-white">Knowledge Check</h2>
+                        <p className="text-violet-300 text-lg mt-2">DICOM, the slice theorem, and 3D landmark heads.</p>
+                    </div>
+                </div>
+                <QuizCard
+                    id="med-img-1.quiz"
+                    title="Medical Imaging Knowledge Check"
+                    questions={medicalImagingQuiz}
+                    nextHint="Next up on the path: 3D Cephalometry — real landmark detection on CBCT volumes."
+                />
             </section>
         </div>
     );

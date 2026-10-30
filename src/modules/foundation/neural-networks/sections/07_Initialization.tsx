@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { 
     Sliders, 
@@ -30,14 +30,18 @@ const VarianceSimulator: React.FC = () => {
     const [actType, setActType] = useState<ActType>('tanh');
     const [numLayers, setNumLayers] = useState<number>(6);
     
-    const [activationVariances, setActivationVariances] = useState<number[]>([]);
-    const [gradientVariances, setGradientVariances] = useState<number[]>([]);
-    const [neuronSymmetry, setNeuronSymmetry] = useState<number[][]>([]); // Sample activations per layer
+    // Simulation results computed via useMemo below
 
-    // Helper: generate normal distribution sample (Box-Muller transform)
+    // Helper: generate normal distribution sample (deterministic pseudo-random Box-Muller transform)
+    let seed = 42;
+    const pseudoRandom = () => {
+        seed = (seed * 1664525 + 1013904223) % 4294967296;
+        return seed / 4294967296;
+    };
+
     const randomNormal = (mean = 0, stdDev = 1) => {
-        const u = 1 - Math.random();
-        const v = Math.random();
+        const u = Math.max(1e-15, 1 - pseudoRandom());
+        const v = pseudoRandom();
         const z = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
         return mean + z * stdDev;
     };
@@ -145,13 +149,15 @@ const VarianceSimulator: React.FC = () => {
             gradVars.unshift(getVariance(delta));
         }
 
-        setActivationVariances(actVars);
-        setGradientVariances(gradVars);
-        setNeuronSymmetry(symGrid);
+        return {
+            activationVariances: actVars,
+            gradientVariances: gradVars,
+            neuronSymmetry: symGrid
+        };
     };
 
-    useEffect(() => {
-        runSimulation();
+    const { activationVariances, gradientVariances, neuronSymmetry } = useMemo(() => {
+        return runSimulation();
     }, [initMethod, actType, numLayers]);
 
     const W = 500;
@@ -178,8 +184,6 @@ const VarianceSimulator: React.FC = () => {
         const g = 100;
         return `rgb(${r}, ${g}, ${b})`;
     };
-
-    const strokeColor = '#a855f7';
 
     return (
         <Card className="space-y-6">

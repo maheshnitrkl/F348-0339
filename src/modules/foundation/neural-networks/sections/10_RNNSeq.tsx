@@ -407,7 +407,7 @@ export const RNNSeq: React.FC = () => {
                                 GRU (Cho et al. 2014) merges cell and hidden state, using only reset <MathEquation formula="\mathbf{r}_t" /> and update <MathEquation formula="\mathbf{z}_t" /> gates:
                             </p>
                             <div className="bg-slate-950/60 p-4 rounded-xl border border-slate-800 space-y-3 text-xs font-mono">
-                                <MathEquation formula="\mathbf{z}_t = \sigma(\mathbf{W}_z [\mathbf{h}_{t-1}, \mathbf{x}_t]), \\ \quad \mathbf{r}_t = \sigma(\mathbf{W}_r [\mathbf{h}_{t-1}, \mathbf{x}_t])" block />
+                                <MathEquation formula="\mathbf{z}_t = \sigma(\mathbf{W}_z [\mathbf{h}_{t-1}, \mathbf{x}_t]), \quad \mathbf{r}_t = \sigma(\mathbf{W}_r [\mathbf{h}_{t-1}, \mathbf{x}_t])" block />
                                 <MathEquation formula="\tilde{\mathbf{h}}_t = \tanh(\mathbf{W} [\mathbf{r}_t \odot \mathbf{h}_{t-1}, \mathbf{x}_t])" block />
                                 <MathEquation formula="\mathbf{h}_t = (1 - \mathbf{z}_t) \odot \mathbf{h}_{t-1} + \mathbf{z}_t \odot \tilde{\mathbf{h}}_t" block />
                             </div>
@@ -501,7 +501,7 @@ export const RNNSeq: React.FC = () => {
                             </div>
                             <div className="border-t border-slate-900 pt-3">
                                 <span className="text-indigo-400 font-bold block mb-1">2. Softmax Normalization:</span>
-                                <MathEquation formula="\exp(e_1) = e^{0.8} \approx 2.22554, \\ \quad \exp(e_2) = e^{-0.5} \approx 0.60653" block />
+                                <MathEquation formula="\exp(e_1) = e^{0.8} \approx 2.22554, \quad \exp(e_2) = e^{-0.5} \approx 0.60653" block />
                                 <MathEquation formula="\text{Sum} = 2.22554 + 0.60653 = 2.83207" block />
                                 <div className="grid grid-cols-1 gap-1 pl-2 mt-1">
                                     <div><MathEquation formula="\alpha_1 = 2.22554 / 2.83207 \approx 0.7858" /></div>

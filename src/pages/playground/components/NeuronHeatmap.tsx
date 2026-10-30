@@ -39,7 +39,9 @@ export const NeuronHeatmap: React.FC<NeuronHeatmapProps> = ({ network, layerInde
                 const { activations } = network.forward([x, y]);
                 
                 // +1 because activations[0] is input layer
-                const act = activations[layerIndex + 1][neuronIndex];
+                const layer = activations[layerIndex + 1];
+                const act = layer?.[neuronIndex];
+                if (act === undefined) continue;
 
                 // Normalize for visualization:
                 // Activation ranges: relu(0..inf), tanh(-1..1), sigmoid(0..1)

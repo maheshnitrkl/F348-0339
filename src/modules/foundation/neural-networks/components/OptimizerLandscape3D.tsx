@@ -157,31 +157,28 @@ const OptimizerParticles = ({ isPlaying }: { isPlaying: boolean }) => {
         });
     });
 
+    const initialWorldX = (INITIAL_POS.x / 3) * 5;
+    const initialWorldY = (INITIAL_POS.y / 3) * 5;
+    const initialWorldZ = heightMap(INITIAL_POS.x, INITIAL_POS.y);
+
     return (
         <group position={[0, -2, 0]}>
-            {OptimizersList.map((opt, i) => {
-                const state = statesRef.current[i];
-                const worldX = (state.x / 3) * 5;
-                const worldY = (state.y / 3) * 5;
-                const worldZ = heightMap(state.x, state.y);
-
-                return (
-                    <group 
-                        key={i} 
-                        ref={el => { particleRefs.current[i] = el; }}
-                        position={[worldX, worldZ + 0.2, -worldY]}
-                    >
-                        <mesh>
-                            <sphereGeometry args={[0.2, 16, 16]} />
-                            <meshStandardMaterial color={opt.color} emissive={opt.color} emissiveIntensity={0.8} />
-                            <pointLight color={opt.color} intensity={1} distance={2} />
-                        </mesh>
-                        <Text position={[0, 0.4, 0]} fontSize={0.2} color="white" anchorX="center" anchorY="middle" renderOrder={1}>
-                            {opt.name}
-                        </Text>
-                    </group>
-                );
-            })}
+            {OptimizersList.map((opt, i) => (
+                <group 
+                    key={i} 
+                    ref={el => { particleRefs.current[i] = el; }}
+                    position={[initialWorldX, initialWorldZ + 0.2, -initialWorldY]}
+                >
+                    <mesh>
+                        <sphereGeometry args={[0.2, 16, 16]} />
+                        <meshStandardMaterial color={opt.color} emissive={opt.color} emissiveIntensity={0.8} />
+                        <pointLight color={opt.color} intensity={1} distance={2} />
+                    </mesh>
+                    <Text position={[0, 0.4, 0]} fontSize={0.2} color="white" anchorX="center" anchorY="middle" renderOrder={1}>
+                        {opt.name}
+                    </Text>
+                </group>
+            ))}
         </group>
     );
 };

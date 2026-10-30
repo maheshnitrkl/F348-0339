@@ -6,6 +6,59 @@ import { UNetDiagram } from './components/UNetDiagram';
 import { SPRoadmap } from './components/SPRoadmap';
 import { AudioComparison } from './components/common/AudioComparison';
 import { Waves, Activity, Radio, Mic, Layers, Zap, Music, Brain, Filter, Sigma, Move, Grid, Code, ArrowRight } from 'lucide-react';
+import { QuizCard, type QuizQuestion } from '../../../components/QuizCard';
+import { Term } from '../../../components/Term';
+
+const signalProcessingQuiz: QuizQuestion[] = [
+    {
+        id: 'sp-1',
+        question: 'The plain Fourier transform of an ECG is computed. What key information has it lost?',
+        options: [
+            'The signal amplitude',
+            'Which frequencies are present',
+            'WHEN in time each frequency occurred',
+            'The noise floor',
+        ],
+        correctIndex: 2,
+        explanation: 'The Fourier transform is a global operation: it mixes the whole signal, so time localization is gone. The STFT (spectrogram) recovers it using sliding windows.',
+    },
+    {
+        id: 'sp-2',
+        question: 'In a spectrogram, a short ECG heartbeat spike should appear as…',
+        options: [
+            'A horizontal band across all frequencies',
+            'A brief bright vertical flare spanning many frequency bins',
+            'A single dim isolated dot',
+            'Nothing — spikes are removed by the window function',
+        ],
+        correctIndex: 1,
+        explanation: 'A transient spike is broadband (energy across frequencies) but short-lived (narrow in time) — exactly a vertical flash on a time-frequency plot. That is how CNNs "see" arrhythmias.',
+    },
+    {
+        id: 'sp-3',
+        question: 'The convolution theorem states that convolution in the time domain equals…',
+        options: [
+            'Convolution in the frequency domain',
+            'Addition in the frequency domain',
+            'Matrix inversion in the frequency domain',
+            'Element-wise multiplication in the frequency domain',
+        ],
+        correctIndex: 3,
+        explanation: 'y[n] = x[n] * h[n] ⇔ Y[k] = X[k] · H[k]. This is why an FIR filter can be applied as a spectral mask — and why Convs are computationally cheap via FFT.',
+    },
+    {
+        id: 'sp-4',
+        question: 'Why does audio reconstructed from a spectrogram with random phase sound metallic (Griffin-Lim)?',
+        options: [
+            'The sampling rate is lower than Nyquist',
+            'The magnitude spectrogram carries amplitude, but random phase destroys the waveform alignment between partials',
+            'Hann windows leak energy into neighboring bins',
+            'Mel scaling lossy-compresses the frequencies',
+        ],
+        correctIndex: 1,
+        explanation: 'Phase determines how the frequency partials line up as a wave. Generative models like HiFi-GAN win precisely by hallucinating coherent phase.',
+    },
+]
 
 interface SignalProcessingTheoryProps {
     onNavigate?: (view: 'theory' | 'code' | 'visualization') => void;
@@ -509,7 +562,7 @@ cA5, cD5, cD4, cD3, cD2, cD1 = coeffs
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                     {/* Classical Filters */}
                     <div className="space-y-6">
-                        <h3 className="text-2xl font-bold text-white">The Convolution Theorem</h3>
+                        <h3 className="text-2xl font-bold text-white">The <Term word="Convolution">Convolution</Term> Theorem</h3>
                         <p className="text-gray-300">
                             Filtering a signal in the Time Domain is equivalent to multiplying it in the Frequency Domain.
                         </p>
@@ -601,6 +654,26 @@ cA5, cD5, cD4, cD3, cD2, cD1 = coeffs
                         </ol>
                     </div>
                 </div>
+            </section>
+
+            {/* Knowledge Check */}
+            <section className="space-y-12 pb-16">
+                <div className="flex items-center gap-6 mb-2 border-b border-white/5 pb-6">
+                    <div className="p-5 bg-violet-500/20 rounded-2xl text-violet-400 border border-violet-500/30">
+                        <Brain size={48} />
+                    </div>
+                    <div>
+                        <div className="text-sm font-bold text-violet-500 uppercase tracking-wider mb-1">Module 9</div>
+                        <h2 className="text-4xl font-bold text-white">Knowledge Check</h2>
+                        <p className="text-violet-300 text-lg mt-2">Four questions covering FFT, STFT, filtering and phase.</p>
+                    </div>
+                </div>
+                <QuizCard
+                    id="math-4.quiz"
+                    title="Signal Processing Knowledge Check"
+                    questions={signalProcessingQuiz}
+                    nextHint="Done? Mark the module complete from the sidebar, then continue to Medical Image Processing."
+                />
             </section>
         </div >
     );

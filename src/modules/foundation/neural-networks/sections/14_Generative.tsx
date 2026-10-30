@@ -101,7 +101,8 @@ const ReparameterizationTrick: React.FC = () => {
                         // z = mu + sigma * eps
                         const z = mu + sigma * eps;
                         const x = W / 2 + z * 30;
-                        const y = H - 18 - Math.random() * 25; // jitter for overlap
+                        const jitter = Math.abs(Math.sin((idx + 1) * 12.9898)) * 25;
+                        const y = H - 18 - jitter; // deterministic jitter for overlap
                         return (
                             <circle 
                                 key={`pt-${idx}`} 
